@@ -1,6 +1,18 @@
 <template>
   <div class="col-12 col-md-6 col-lg-4 offset-lg-8 d-flex align-items-center justify-content-center">
-    <div class="py-5 px-4 bg-white w-100 text-left">
+    <div class="py-5 px-4 bg-white w-100 text-left position-relative">
+      <div :class="{'not-allowed':(!servidor)}" class="bg-white position-absolute"></div>
+      <div v-if="loading" class="alert bg-warning alert-dismissible fade show" role="alert">
+        <div v-if="loading" class="spinner-border spinner-border-sm mr-3" role="status"></div>
+        Aguarde
+      </div>
+      <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
+        role="alert">
+        Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
+      </div>
+      <div @click="status()" :class="{'alert': (!loading)}" class="m-0 p-0 text-center">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
+      </div>
       <div class="position-relative">
         <label for="login">Usuário:</label>
         <input @blur="valid('login')" id="login" type="text" v-model="user" class="form-control"
@@ -21,9 +33,6 @@
         <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
           <i class="fas fa-sign-in-alt mr-5"></i>
           <span class="text-white mr-5"> Entrar</span>
-          <div v-if="loading" class="spinner-border spinner-border-sm text-light" role="status">
-            <!-- <span class="sr-only"></span> -->
-          </div>
         </button>
       </div>
     </div>
@@ -36,27 +45,34 @@ export default {
   data() {
     return {
       loading: false,
+      servidor: false,
       user: "",
       password: "",
     };
   },
-  async beforeMount() {
-    this.loading = true;
-    await this.axios
-      .get(process.env.VUE_APP_BASE_URL)
-      .then((response) => {
-        console.log(response.data.start);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    this.loading = false;
+  beforeMount() {
+    this.status();
   },
   methods: {
+    async status() {
+      this.loading = true;
+      await this.axios
+        .get(`${this.api}`)
+        .then((response) => {
+          console.log(response.data.start);
+          this.servidor = true;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.servidor = false;
+        });
+      this.loading = false;
+    },
     valid(payload) {
       if (payload == "login" || !payload) {
         let styleUser = document.querySelector("#login").style;
-        let spanUser = document.querySelectorAll("span")[0].style;
+        let spanUser = document.querySelectorAll("span.position-absolute")[0]
+          .style;
 
         styleUser.borderColor = !this.user ? "#dd1818aa" : "#333";
         spanUser.color = !this.user ? "#dd1818aa" : "dimgray";
@@ -64,7 +80,8 @@ export default {
 
       if (payload == "password" || !payload) {
         let stylePass = document.querySelector("#password").style;
-        let spanPass = document.querySelectorAll("span")[1].style;
+        let spanPass = document.querySelectorAll("span.position-absolute")[1]
+          .style;
 
         stylePass.borderColor = !this.password ? "#dd1818aa" : "#333";
         spanPass.color = !this.password ? "#dd1818aa" : "dimgray";
@@ -76,13 +93,12 @@ export default {
 
       this.loading = true;
       await this.axios
-        .post(`${process.env.VUE_APP_BASE_URL}/autenticar`, {
+        .post(`${this.api}/autenticar`, {
           usuario: this.user,
           senha: this.password,
         })
         .then((response) => {
-          console.log(response.data);
-          localStorage.setItem("auth", response.data);
+          localStorage.setItem("auth", JSON.stringify(response.data));
           this.$router.push("/home");
         })
         .catch((err) => {
@@ -95,6 +111,20 @@ export default {
 </script>
 
 <style scoped>
+.not-allowed {
+  cursor: not-allowed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.4;
+  z-index: 10;
+}
+
+.alert {
+  z-index: 11;
+}
+
 .col-12 {
   height: 100vh;
 }

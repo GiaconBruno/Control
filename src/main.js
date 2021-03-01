@@ -19,7 +19,10 @@ const router = new VueRouter({
 Vue.use(VueRouter)
 Vue.use(allcss, fontawesome, bootstrapcss)
 Vue.use(alljs, bootstrapjs)
+
+// DEFINE VARIAVEIS GLOBAL
 Vue.prototype.axios = axios
+Vue.prototype.api = process.env.VUE_APP_BASE_URL
 
 Vue.config.productionTip = false
 console.log(process.env.VUE_APP_BASE_URL)
