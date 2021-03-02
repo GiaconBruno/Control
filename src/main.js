@@ -16,7 +16,8 @@ require('@/assets/css/fontawesome.min.css')
 
 
 const router = new VueRouter({
-  routes
+  routes: routes,
+  mode: 'history',
 })
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
