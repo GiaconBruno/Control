@@ -10,7 +10,8 @@
         role="alert">
         Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
       </div>
-      <div @click="status()" :class="{'alert': (!loading)}" class="m-0 p-0 text-center">
+      <div v-if="(!servidor && (!loading))" @click="status()" :class="{'alert': (!loading)}"
+        class="m-0 p-0 text-center">
         <button type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
       </div>
       <div class="position-relative">
@@ -90,6 +91,7 @@ export default {
     async sigIn() {
       this.valid();
       if (!this.user || !this.password) return;
+      this.status();
 
       this.loading = true;
       await this.axios

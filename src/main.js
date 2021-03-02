@@ -3,22 +3,24 @@ import VueRouter from 'vue-router'
 import routes from './routes'
 import axios from 'axios'
 import App from './App.vue'
+import {
+  BootstrapVue,
+  IconsPlugin
+} from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import allcss from '@/assets/css/all.min.css'
-import bootstrapcss from '@/assets/css/bootstrap.min.css'
-import fontawesome from '@/assets/css/fontawesome.min.css'
+require('@/assets/css/all.min.css')
+require('@/assets/css/fontawesome.min.css')
+// require('@/assets/webfonts/')
 
-import alljs from '@/assets/js/all.min.js'
-import bootstrapjs from '@/assets/js/bootstrap.min.js'
-
-// import webfonts from '@/assets/webfonts/*.woff'
 
 const router = new VueRouter({
   routes
 })
 Vue.use(VueRouter)
-Vue.use(allcss, fontawesome, bootstrapcss)
-Vue.use(alljs, bootstrapjs)
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
 
 // DEFINE VARIAVEIS GLOBAL
 Vue.prototype.axios = axios
