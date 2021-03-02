@@ -20,7 +20,7 @@ export default {
   },
   beforeMount() {
     let auth = JSON.parse(localStorage.getItem("auth"));
-    if (!auth) this.$router.push("/");
+    if (!auth.auth) this.$router.push("/");
   },
   methods: {
     sigOut() {

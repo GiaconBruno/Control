@@ -3,29 +3,28 @@
     <div class="py-5 px-4 bg-white w-100 text-left position-relative">
       <div :class="{'not-allowed':(!servidor)}" class="bg-white position-absolute"></div>
       <div v-if="loading" class="alert bg-warning alert-dismissible fade show" role="alert">
-        <div v-if="loading" class="spinner-border spinner-border-sm mr-3" role="status"></div>
-        Aguarde
+        <div class="spinner-border spinner-border-sm mr-3" role="status"></div>
+        <strong>Aguarde!</strong>
       </div>
       <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
         role="alert">
         Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
       </div>
-      <div v-if="(!servidor && (!loading))" @click="status()" :class="{'alert': (!loading)}"
-        class="m-0 p-0 text-center">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
+      <div v-if="(!servidor && (!loading))" :class="{'alert': (!loading)}" class="m-0 p-0 text-center">
+        <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
       </div>
       <div class="position-relative">
         <label for="login">Usuário:</label>
-        <input @blur="valid('login')" id="login" type="text" v-model="user" class="form-control"
-          placeholder="Digite seu usuário" />
+        <input @blur="valid('login')" @keypress="valid('login')" id="login" type="text" v-model="user"
+          class="form-control" placeholder="Digite seu usuário" />
         <span class="position-absolute">
           <i class="fa fa-user"></i>
         </span>
       </div>
       <div class="position-relative">
         <label for="password">Senha:</label>
-        <input @keypress.enter="sigIn()" @blur="valid('password')" id="password" type="password" v-model="password"
-          class="form-control" placeholder="Digite sua senha" />
+        <input @keypress.enter="sigIn()" @blur="valid('password')" @keypress="valid('password')" id="password"
+          type="password" v-model="password" class="form-control" placeholder="Digite sua senha" />
         <span class="position-absolute">
           <i class="fas fa-lock"></i>
         </span>
@@ -64,7 +63,7 @@ export default {
           this.servidor = true;
         })
         .catch((err) => {
-          console.log(err);
+          console.log("" + err);
           this.servidor = false;
         });
       this.loading = false;
