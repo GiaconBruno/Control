@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="position-absolute">
     <!-- <div id="nav">
       <router-link to="/">Home</router-link>|
       <router-link to="/about">About</router-link>
@@ -10,11 +10,17 @@
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
+  width: 100vw;
+  min-height: 100vh;
+  background: #093028;
+  background: -webkit-linear-gradient(to bottom, #237a57, #093028);
+  background: linear-gradient(to bottom, #237a57, #093028);
 }
 
 #nav {

@@ -40,7 +40,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 export default {
   data() {
     return {
@@ -89,7 +88,16 @@ export default {
     },
     async sigIn() {
       this.valid();
-      if (!this.user || !this.password) return;
+      if (!this.user || !this.password) {
+        this.$toasted.show("Preencha os dados", {
+          iconPack: "fontawesome",
+          icon: "times",
+          duration: 3000,
+          className: "bg-danger",
+          theme: "bubble",
+        });
+        return;
+      }
       this.status();
 
       this.loading = true;
@@ -104,6 +112,13 @@ export default {
         })
         .catch((err) => {
           console.log("" + err);
+          this.$toasted.show("Dados não autorizados!", {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          });
         });
       this.loading = false;
     },
