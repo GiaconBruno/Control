@@ -40,90 +40,91 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      loading: false,
-      servidor: false,
-      user: "",
-      password: "",
-    };
-  },
-  beforeMount() {
-    this.status();
-  },
-  methods: {
-    async status() {
-      this.loading = true;
-      await this.axios
-        .get(`${this.api}`)
-        .then((response) => {
-          console.log(response.data.start);
-          this.servidor = true;
-        })
-        .catch((err) => {
-          console.log("" + err);
-          this.servidor = false;
-        });
-      this.loading = false;
+  export default {
+    data() {
+      return {
+        loading: false,
+        servidor: false,
+        user: "",
+        password: "",
+      };
     },
-    valid(payload) {
-      if (payload == "login" || !payload) {
-        let styleUser = document.querySelector("#login").style;
-        let spanUser = document.querySelectorAll("span.position-absolute")[0]
-          .style;
-
-        styleUser.borderColor = !this.user ? "#dd1818aa" : "#333";
-        spanUser.color = !this.user ? "#dd1818aa" : "dimgray";
-      }
-
-      if (payload == "password" || !payload) {
-        let stylePass = document.querySelector("#password").style;
-        let spanPass = document.querySelectorAll("span.position-absolute")[1]
-          .style;
-
-        stylePass.borderColor = !this.password ? "#dd1818aa" : "#333";
-        spanPass.color = !this.password ? "#dd1818aa" : "dimgray";
-      }
-    },
-    async sigIn() {
-      this.valid();
-      if (!this.user || !this.password) {
-        this.$toasted.show("Preencha os dados", {
-          iconPack: "fontawesome",
-          icon: "times",
-          duration: 3000,
-          className: "bg-danger",
-          theme: "bubble",
-        });
-        return;
-      }
+    beforeMount() {
       this.status();
+    },
+    methods: {
+      async status() {
+        this.loading = true;
+        await this.axios
+          .get(`${this.api}`)
+          .then((response) => {
+            console.log(response.data.start);
+            this.servidor = true;
+          })
+          .catch((err) => {
+            console.log("" + err);
+            this.servidor = false;
+          });
+        this.loading = false;
+      },
+      valid(payload) {
+        if (payload == "login" || !payload) {
+          let styleUser = document.querySelector("#login").style;
+          let spanUser = document.querySelectorAll("span.position-absolute")[0]
+            .style;
 
-      this.loading = true;
-      await this.axios
-        .post(`${this.api}/autenticar`, {
-          usuario: this.user,
-          senha: this.password,
-        })
-        .then((response) => {
-          localStorage.setItem("auth", JSON.stringify(response.data));
-          this.$router.push("/home");
-        })
-        .catch((err) => {
-          console.log("" + err);
-          this.$toasted.show("Dados não autorizados!", {
+          styleUser.borderColor = !this.user ? "#dd1818aa" : "#333";
+          spanUser.color = !this.user ? "#dd1818aa" : "dimgray";
+        }
+
+        if (payload == "password" || !payload) {
+          let stylePass = document.querySelector("#password").style;
+          let spanPass = document.querySelectorAll("span.position-absolute")[1]
+            .style;
+
+          stylePass.borderColor = !this.password ? "#dd1818aa" : "#333";
+          spanPass.color = !this.password ? "#dd1818aa" : "dimgray";
+        }
+      },
+      async sigIn() {
+        this.valid();
+        if (!this.user || !this.password) {
+          this.$toasted.show("Preencha os dados", {
             iconPack: "fontawesome",
             icon: "times",
             duration: 3000,
             className: "bg-danger",
             theme: "bubble",
           });
-        });
-      this.loading = false;
+          return;
+        }
+        await this.status();
+
+        this.loading = true;
+        await this.axios
+          .post(`${this.api}/autenticar`, {
+            usuario: this.user,
+            senha: this.password,
+          })
+          .then((response) => {
+            localStorage.setItem("auth", JSON.stringify(response.data));
+            this.$router.push("/home");
+            this.loading = false;
+          })
+          .catch((err) => {
+            console.log("" + err);
+            this.$toasted.show("Dados não autorizados!", {
+              iconPack: "fontawesome",
+              icon: "times",
+              duration: 3000,
+              className: "bg-danger",
+              theme: "bubble",
+            });
+            this.loading = false;
+          });
+      },
     },
-  },
-};
+  };
 </script>
 
 <style scoped>
