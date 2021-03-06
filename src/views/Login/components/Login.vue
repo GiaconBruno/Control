@@ -60,13 +60,13 @@
           .then((response) => {
             console.log(response.data.start);
             this.servidor = true;
+            this.redirect();
           })
           .catch((err) => {
             console.log("" + err);
             this.servidor = false;
           });
         this.loading = false;
-        this.redirect();
       },
       redirect() {
         let auth = this.auth()

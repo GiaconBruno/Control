@@ -25,6 +25,7 @@
       <hr />
       <component :is="visible" :functions="{changeVisible}" />
     </div>
+    <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
   </section>
 </template>
 
@@ -60,13 +61,7 @@
           })
           .catch((err) => {
             console.log("" + err);
-            this.$toasted.show("Dados não autorizados!", {
-              iconPack: "fontawesome",
-              icon: "times",
-              duration: 3000,
-              className: "bg-danger",
-              theme: "bubble",
-            });
+            this.$router.push("/");
           });
       },
       changeVisible(payload) {
