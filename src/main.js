@@ -9,7 +9,6 @@ import {
 } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Toasted from 'vue-toasted';
 import service from './services/auth';
@@ -23,7 +22,8 @@ const router = new VueRouter({
   mode: 'history',
 });
 Vue.use(VueRouter);
-Vue.use(BootstrapVue, IconsPlugin);
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 Vue.use(Toasted);
 
 // DEFINE VARIAVEIS GLOBAL
