@@ -10,26 +10,38 @@
       <div class="row">
         <div class="col-12 col-md-11 offset-md-1 d-flex justify-content-between align-items-center">
           <h2>
-            <span class="smallText">Bem Vindo, </span> {{ usuario }}
+            <span class="smallText">Bem Vindo, </span> {{ usuario.nome }}
           </h2>
-          <div><i class="fa fa-edit px-2 float-right"></i></div>
+          <div>
+            <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')"
+              class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
+            <i v-if="(usuario.permissao)" @click="changeVisible('Usuario')"
+              class="btn fa fa-user-plus text-success px-1 mx-2"></i>
+            <i class="btn fa fa-edit text-primary px-1 mx-2"></i>
+            <i v-if="(usuario.permissao)" class="btn fa fa-trash text-danger px-1 mx-2"></i>
+          </div>
         </div>
       </div>
       <hr />
-      <contas />
+      <component :is="visible" :functions="{changeVisible}" />
     </div>
   </section>
 </template>
 
 <script>
-  import Contas from './Contas.vue';
+  import Contas from './components/Contas';
+  import TodosUsuarios from './components/TodosUsuarios';
+  import Usuario from './components/Usuario';
   export default {
     components: {
-      Contas
+      Contas,
+      TodosUsuarios,
+      Usuario,
     },
     data() {
       return {
         usuario: null,
+        visible: 'Contas',
       }
     },
     beforeMount() {
@@ -44,7 +56,7 @@
         await this.axios
           .get(`${this.api}/api/usuario/${auth.id}`)
           .then((response) => {
-            this.usuario = response.data.nome;
+            this.usuario = response.data;
           })
           .catch((err) => {
             console.log("" + err);
@@ -56,6 +68,9 @@
               theme: "bubble",
             });
           });
+      },
+      changeVisible(payload) {
+        this.visible = payload;
       },
       sigOut() {
         localStorage.clear();
@@ -72,8 +87,10 @@ section {
 
 .container {
   min-height: calc(100vh - 6rem);
+  max-height: calc(100vh - 6rem);
   border-radius: 5px;
   background: ghostwhite;
+  overflow-y: auto;
 }
 
 .smallText {

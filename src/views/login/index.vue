@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import LogIn from "./components/login.vue";
+  import LogIn from "./components/Login";
   export default {
     components: {
       LogIn,

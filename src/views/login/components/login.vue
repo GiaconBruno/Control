@@ -66,6 +66,12 @@
             this.servidor = false;
           });
         this.loading = false;
+        this.redirect();
+      },
+      redirect() {
+        let auth = this.auth()
+        if (!auth) return
+        this.$router.push("/home");
       },
       valid(payload) {
         if (payload == "login" || !payload) {

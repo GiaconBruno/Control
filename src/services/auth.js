@@ -9,7 +9,9 @@ export default {
             return auth
         } catch (e) {
             localStorage.clear();
-            this.$router.push("/");
+            if (this.$router.app._route.path != '/') {
+                this.$router.push("/");
+            }
             return false
         }
     }
