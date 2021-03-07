@@ -1,11 +1,8 @@
 <template>
   <section class="py-5">
-    <div v-if="usuario" class="container">
-      <div class="d-block text-right p-3 pb-2">
-        <span @click="sigOut()" class="btn">
-          <i class="fas fa-sign-in-alt"></i> Sair
-        </span>
-      </div>
+    <div v-if="usuario" class="container position-relative">
+      <!-- <div class="d-block text-right p-3 pb-2">
+      </div> -->
       <hr class="mt-0" />
       <div class="row">
         <div class="col-12 col-md-11 offset-md-1 d-flex justify-content-between align-items-center">
@@ -15,15 +12,18 @@
           <div>
             <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')"
               class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
-            <i v-if="(usuario.permissao)" @click="changeVisible('Usuario')"
+            <i v-if="(usuario.permissao)" @click="createUsuario()"
               class="btn fa fa-user-plus text-success px-1 mx-2"></i>
-            <i class="btn fa fa-edit text-primary px-1 mx-2"></i>
-            <i v-if="(usuario.permissao)" class="btn fa fa-trash text-danger px-1 mx-2"></i>
+            <i class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+            <span @click="sigOut()" class="btn">
+              <i class="fas fa-sign-in-alt"></i> Sair
+            </span>
           </div>
         </div>
       </div>
       <hr />
-      <component :is="visible" :functions="{changeVisible}" />
+      <component :is="visible" v-bind="{usuarioEdit}" :functions="{changeVisible, setEditUsuario, reset, tokenValido}"
+        class="position-relative" />
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
   </section>
@@ -43,6 +43,10 @@
       return {
         usuario: null,
         visible: 'Contas',
+        usuarioEdit: {
+          permissao: false,
+          ativo: true,
+        },
       }
     },
     beforeMount() {
@@ -66,6 +70,19 @@
       },
       changeVisible(payload) {
         this.visible = payload;
+      },
+      createUsuario() {
+        this.reset();
+        this.changeVisible('Usuario');
+      },
+      setEditUsuario(payload) {
+        this.usuarioEdit = payload;
+      },
+      reset() {
+        this.usuarioEdit = {
+          permissao: false,
+          ativo: true,
+        };
       },
       sigOut() {
         localStorage.clear();

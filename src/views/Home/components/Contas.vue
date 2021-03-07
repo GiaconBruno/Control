@@ -9,10 +9,11 @@
             <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
               :class="{'contabord': (parcelas.length)}"
               class="btn text-left alert-success row m-0 d-flex justify-content-between align-items-center">
-              <div class="col px-0">
-                <i @click.stop="click('Editar')" class="fa fa-edit text-primary px-2 py-1"></i>
+              <div class="col-auto px-0">
+                <i :class="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
+                  class="fa text-warning px-2 py-1"></i>
               </div>
-              <div class="col-9 col-lg-10 px-0">
+              <div class="col-8 col-lg-10 px-0">
                 <div class="row m-0">
                   <div class="col-12 px-0">
                     <div class="row m-0">
@@ -43,9 +44,10 @@
                   </div>
                 </div>
               </div>
-              <div class="col px-0">
-                <div class="col px-0 text-right">
-                  <i @click.stop="click('Deletar')" class="fa fa-trash text-danger px-2"></i>
+              <div class="col-auto px-0">
+                <div class="row m-0 px-0 text-right justify-content-around">
+                  <i @click.stop="click('Editar')" class="fa fa-edit text-primary px-2 py-1"></i>
+                  <i @click.stop="click('Deletar')" class="fa fa-trash text-danger px-2 py-1"></i>
                 </div>
               </div>
             </div>
@@ -84,8 +86,10 @@
         let auth = JSON.parse(localStorage.getItem("auth"));
         this.loading = true;
         await this.axios
-          .post(`${this.api}/api/contas/${auth.id}`, {
-            token: auth.token,
+          .get(`${this.api}/api/contas/${auth.id}`, {
+            headers: {
+              token: auth.token,
+            }
           })
           .then((response) => {
             this.contas = response.data;
@@ -98,12 +102,18 @@
         this.loading = false;
       },
       async getParcelas(payload) {
+        let conta = 0;
+        if (this.parcelas.length) conta = this.parcelas[0].fk_conta_id;
         this.parcelas = [];
+        if (conta == payload) return;
+
         let auth = JSON.parse(localStorage.getItem("auth"));
         this.loadingParcelas = true;
         await this.axios
-          .post(`${this.api}/api/${payload}/parcelas`, {
-            token: auth.token,
+          .get(`${this.api}/api/${payload}/parcelas`, {
+            headers: {
+              token: auth.token,
+            }
           })
           .then((response) => {
             this.parcelas = response.data;
@@ -115,7 +125,6 @@
           });
 
         this.formatting();
-
         this.loadingParcelas = false;
       },
       formatting() {

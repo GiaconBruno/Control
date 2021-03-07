@@ -26,20 +26,33 @@
             </div>
           </div>
           <div class="col px-0">
-            <i class="btn fa fa-edit text-primary p-0 mx-2"></i>
-            <i class="btn fa fa-trash text-danger p-0 mx-2"></i>
+            <i @click="editUsuario(usuario)" class="btn fa fa-edit text-primary p-0 mx-2"></i>
+            <i @click="showDeletar(usuario)" class="btn fa fa-trash text-danger p-0 mx-2"></i>
           </div>
         </div>
       </div>
-      <span class="text-white">@ - usuario</span>
+      <div class="col-3 offset-9 text-right" style="font-size: 10px; margin-top: -5px;">
+        <span>@ = usuario</span>
+      </div>
     </div>
-    <div v-else class="spinner-border spinner-border-sm ml-2" role="status"></div>
+    <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
     <div class="row text-center">
-      <div class="col-12">
+      <div class="col-12 mb-3">
         <button @click="functions.changeVisible('Contas')"
           class="btn btn-sm btn-light border border-secondary">Voltar</button>
       </div>
     </div>
+    <b-modal v-if="deletar" ref="mConfirm" id="mConfirm" hide-footer centered no-close-on-esc no-close-on-backdrop
+      title="Deletar Usuário">
+      <p class="my-4">Deseja deletar o usuário <strong> {{ deletar.nome }} </strong>?</p>
+      <hr>
+      <div class="row m-0 justify-content-around">
+        <button @click="$bvModal.hide('mConfirm')" class="btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="deletarUsuario()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
+          <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+        </button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -48,7 +61,9 @@
     props: ['functions'],
     data() {
       return {
+        loading: false,
         usuarios: [],
+        deletar: {},
       }
     },
     beforeMount() {
@@ -58,24 +73,54 @@
       async getUsuarios() {
         let auth = JSON.parse(localStorage.getItem("auth"));
         await this.axios
-          .post(`${this.api}/api/usuarios`, {
-            token: auth.token,
+          .get(`${this.api}/api/usuarios`, {
+            headers: {
+              token: auth.token,
+            }
           })
           .then((response) => {
             this.usuarios = response.data;
           })
           .catch((err) => {
             console.log("" + err);
-            this.$toasted.show("Ocorreu um erro!", {
+            this.$router.push("/");
+          });
+      },
+      editUsuario(payload) {
+        this.functions.setEditUsuario(payload);
+        this.functions.changeVisible('Usuario');
+      },
+      showDeletar(payload) {
+        this.deletar = payload;
+        this.$refs['mConfirm'].show()
+      },
+      async deletarUsuario() {
+        this.loading = true;
+        let auth = JSON.parse(localStorage.getItem("auth"));
+        await this.axios
+          .delete(`${this.api}/api/deletar-usuario/${this.deletar.id}`, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then((response) => {
+            this.$toasted.show(`${response.data.mensagem}`, {
               iconPack: "fontawesome",
-              icon: "times",
+              icon: "check",
               duration: 3000,
-              className: "bg-danger",
+              className: "bg-success",
               theme: "bubble",
             });
-            this.functions.changeVisible('Contas');
+          })
+          .catch((err) => {
+            console.log("" + err);
+            this.$router.push("/");
+            this.loading = false;
           });
-      }
+        this.deletar = null;
+        await this.getUsuarios();
+        this.loading = false;
+      },
     }
   }
 </script>

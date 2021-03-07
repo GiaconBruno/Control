@@ -1,7 +1,7 @@
 <template>
   <div class="row mb-3">
     <div class="col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4 card border-secondary p-3 shadow-lg">
-      <label class="m-0">Cadastro de Usuário</label>
+      <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
       <div class="row px-3">
         <div class="col-12 text-left">
@@ -16,8 +16,8 @@
           <label for="usuario">Usuário:</label>
           <div class="position-relative">
             <i class="fa fa-user text-gray"></i>
-            <input v-model="usuario.usuario" type="text" name="usuario" id="usuario" class="form-control"
-              placeholder="Digite um Usuário" />
+            <input v-model="usuario.usuario" :disabled="(usuario.id)" type="text" name="usuario" id="usuario"
+              class="form-control" placeholder="Digite um Usuário" />
           </div>
         </div>
         <div class="col-12 text-left">
@@ -46,8 +46,8 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="functions.changeVisible('Contas')" class="btn btn-sm btn-danger">Cancelar</button>
-        <button @click="createUsuario()" :disabled="loading" class="btn btn-sm btn-success">Criar
+        <button @click="functions.changeVisible(rota)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="createUsuario()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
       </div>
@@ -57,7 +57,7 @@
 
 <script>
   export default {
-    props: ['functions'],
+    props: ['usuarioEdit', 'functions'],
     data() {
       return {
         loading: false,
@@ -66,6 +66,21 @@
           permissao: false,
           ativo: true,
         },
+        title: 'Cadastro de Usuário',
+        url: 'usuario',
+        rota: 'Contas',
+        mensagem: 'Usuário cadastrado com exito!',
+        action: 'Criar'
+      }
+    },
+    beforeMount() {
+      this.usuario = this.usuarioEdit;
+      if (this.usuario.id) {
+        this.title = `Edição de Usuário`;
+        this.url = `atualizar-usuario/${this.usuario.id}`;
+        this.mensagem = `Usuário atualizado com exito!`;
+        this.rota = `TodosUsuarios`;
+        this.action = `Alterar`;
       }
     },
     methods: {
@@ -77,7 +92,6 @@
             duration: 3000,
             className: "bg-danger",
             theme: "bubble",
-            position: 'bottom-center'
           });
           return false;
         } else return true;
@@ -85,14 +99,25 @@
       async createUsuario() {
         if (!this.valid()) return
 
+        this.usuario.usuario = this.usuario.usuario.toLowerCase();
+
         this.loading = true;
         let auth = JSON.parse(localStorage.getItem("auth"));
-        this.usuario.token = auth.token;
         await this.axios
-          .post(`${this.api}/api/usuario`, this.usuario)
-          .then((response) => {
+          .post(`${this.api}/api/${this.url}`, this.usuario, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then(async (response) => {
             if (response.status == 200) {
-              this.$toasted.show("Usuário cadastrado com exito!", {
+
+              if (this.usuario.id == auth.id) {
+                await this.renewToken();
+                await this.functions.tokenValido();
+              }
+
+              this.$toasted.show(`${this.mensagem}`, {
                 iconPack: "fontawesome",
                 icon: "check",
                 duration: 3000,
@@ -103,7 +128,8 @@
                 permissao: false,
                 ativo: true,
               };
-              this.functions.changeVisible('Contas');
+              this.functions.reset();
+              this.functions.changeVisible(this.rota);
             } else {
               this.$toasted.show(`${response.data.mensagem}`, {
                 iconPack: "fontawesome",
@@ -125,6 +151,27 @@
               theme: "bubble",
             });
             this.loading = false;
+            this.$router.push("/");
+          });
+      },
+      async renewToken() {
+        await this.axios
+          .post(`${this.api}/autenticar`, {
+            usuario: this.usuario.usuario,
+            senha: this.usuario.senha,
+          })
+          .then((response) => {
+            localStorage.setItem("auth", JSON.stringify(response.data));
+          })
+          .catch((err) => {
+            console.log("", err);
+            this.$toasted.show("Dados não autorizados!", {
+              iconPack: "fontawesome",
+              icon: "times",
+              duration: 3000,
+              className: "bg-danger",
+              theme: "bubble",
+            });
           });
       }
     }

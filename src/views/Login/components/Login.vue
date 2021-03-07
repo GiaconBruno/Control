@@ -106,6 +106,7 @@
         }
         await this.status();
 
+        this.user = this.user.toLowerCase();
         this.loading = true;
         await this.axios
           .post(`${this.api}/autenticar`, {
