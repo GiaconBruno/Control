@@ -30,9 +30,10 @@
           </div>
           <div class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
-              <span @click="usuario.permissao = !usuario.permissao" class="btn d-flex p-0">
+              <span v-if="auth.permissao" @click="usuario.permissao = !usuario.permissao" class="btn d-flex p-0">
                 <span class="mr-2">Permissao: </span>
-                <b-form-checkbox v-model="usuario.permissao" switch></b-form-checkbox>
+                <b-form-checkbox v-model="usuario.permissao" switch>
+                </b-form-checkbox>
               </span>
             </div>
             <div class="col-4 offset-1 px-0 text-left pt-3">
@@ -57,7 +58,7 @@
 
 <script>
   export default {
-    props: ['usuarioEdit', 'functions'],
+    props: ['usuarioEdit', 'auth', 'functions'],
     data() {
       return {
         loading: false,
@@ -68,18 +69,19 @@
         },
         title: 'Cadastro de Usuário',
         url: 'usuario',
-        rota: 'Contas',
+        rota: 'TodasContas',
         mensagem: 'Usuário cadastrado com exito!',
         action: 'Criar'
       }
     },
     beforeMount() {
       this.usuario = this.usuarioEdit;
+
       if (this.usuario.id) {
         this.title = `Edição de Usuário`;
         this.url = `atualizar-usuario/${this.usuario.id}`;
         this.mensagem = `Usuário atualizado com exito!`;
-        this.rota = `TodosUsuarios`;
+        if (this.auth.permissao) this.rota = `TodosUsuarios`;
         this.action = `Alterar`;
       }
     },

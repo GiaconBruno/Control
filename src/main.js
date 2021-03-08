@@ -15,7 +15,6 @@ import service from './services/auth';
 
 require('@/assets/css/all.min.css');
 require('@/assets/css/fontawesome.min.css');
-// require('@/assets/webfonts/')
 
 const router = new VueRouter({
   routes: routes,

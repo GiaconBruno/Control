@@ -23,13 +23,13 @@
                       <div class="col-12 col-lg-8 px-0 text-center text-sm text-lg-left">
                         <div v-if="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id))"
                           class="row m-0 h-100 align-items-center">
-                          <div class="col-6 col-lg-4 px-0">
-                            Parcelas:
+                          <div class="col-6 col-lg-5 px-0">
+                            Parcelas: {{ parcelas.length }}
                             <span class="pl-2 text-xs h-100">Pagos: </span>
-                            {{ parcelasPagas }} | {{ parcelas.length }}
+                            {{ parcelasPagas }} | {{ parcelas.length-parcelasPagas }}
                             <span class="text-xs h-100"> Abertos</span>
                           </div>
-                          <div class="col-6 col-lg-7 offset-lg-1 px-0">
+                          <div class="col-6 col-lg-7 px-0">
                             Total:
                             <span class="pl-2 text-xs h-100">Pagos: </span>
                             {{ totalPago }} | {{ total }}
@@ -47,35 +47,48 @@
               <div class="col-auto px-0">
                 <div class="row m-0 px-0 text-right justify-content-around">
                   <i @click.stop="click('Editar')" class="fa fa-edit text-primary px-2 py-1"></i>
-                  <i @click.stop="click('Deletar')" class="fa fa-trash text-danger px-2 py-1"></i>
+                  <i @click.stop="showDeletar(conta)" class="fa fa-trash text-danger px-2 py-1"></i>
                 </div>
               </div>
             </div>
             <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
-              <parcelas v-bind="{loadingParcelas, contas, parcelas}" />
+              <TodasParcelas v-bind="{loadingParcelas, contas, parcelas}" />
             </b-collapse>
           </div>
         </div>
       </div>
+      <b-modal v-if="deletar" ref="mDelConta" id="mDelConta" hide-footer centered no-close-on-esc no-close-on-backdrop
+        title="Deletar Conta">
+        <p class="my-4">Deseja deletar a conta <strong> {{ deletar.descricao }} </strong>?</p>
+        <hr>
+        <div class="row m-0 justify-content-around">
+          <button @click="$bvModal.hide('mDelConta')" class="btn btn-sm btn-danger" block>Cancelar</button>
+          <button @click="deletarConta()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
+            <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          </button>
+        </div>
+      </b-modal>
     </div>
   </div>
 </template>
 
 <script>
-  import parcelas from './Parcelas'
+  import TodasParcelas from './TodasParcelas'
   export default {
     components: {
-      parcelas
+      TodasParcelas
     },
     data() {
       return {
         loading: false,
+        loadingDel: false,
         loadingParcelas: false,
         contas: [],
         parcelas: [],
         parcelasPagas: 0,
         totalPago: 0,
         total: 0,
+        deletar: null,
       }
     },
     beforeMount() {
@@ -155,7 +168,38 @@
       },
       click(payload) {
         console.log(payload);
-      }
+      },
+      async showDeletar(payload) {
+        await (this.deletar = payload);
+        this.$refs['mDelConta'].show()
+      },
+      async deletarConta() {
+        this.loadingDel = true;
+        let auth = JSON.parse(localStorage.getItem("auth"));
+        await this.axios
+          .delete(`${this.api}/api/deletar-conta/${this.deletar.id}`, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then((response) => {
+            this.$toasted.show(`${response.data.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            });
+          })
+          .catch((err) => {
+            console.log("" + err);
+            this.$router.push("/");
+            this.loadingDel = false;
+          });
+        this.deletar = null;
+        await this.getContas();
+        this.loadingDel = false;
+      },
     }
   }
 </script>

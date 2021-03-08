@@ -38,7 +38,7 @@
     <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
     <div class="row text-center">
       <div class="col-12 mb-3">
-        <button @click="functions.changeVisible('Contas')"
+        <button @click="functions.changeVisible('TodasContas')"
           class="btn btn-sm btn-light border border-secondary">Voltar</button>
       </div>
     </div>
@@ -88,7 +88,6 @@
       },
       editUsuario(payload) {
         this.functions.setEditUsuario(payload);
-        this.functions.changeVisible('Usuario');
       },
       showDeletar(payload) {
         this.deletar = payload;
