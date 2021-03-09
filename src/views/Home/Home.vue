@@ -6,7 +6,7 @@
       <hr class="mt-0" />
       <div class="row">
         <div class="col-12 col-md-11 offset-md-1 d-flex justify-content-between align-items-center">
-          <h2>
+          <h2 class="m-0">
             <span class="smallText">Bem Vindo, </span> {{ usuario.nome }}
           </h2>
           <div>
@@ -15,16 +15,16 @@
             <i v-if="(usuario.permissao)" @click="createUsuario()"
               class="btn fa fa-user-plus text-success px-1 mx-2"></i>
             <i @click="setEditUsuario()" class="btn fa fa-edit text-warning px-1 mx-2"></i>
-            <i @click="changeVisible('Conta')" class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
-            <span @click="sigOut()" class="btn">
-              <i class="fas fa-sign-in-alt"></i> Sair
-            </span>
+            <i @click="createConta()" class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
           </div>
+          <span @click="sigOut()" class="btn">
+            <i class="fas fa-sign-in-alt"></i> Sair
+          </span>
         </div>
       </div>
       <hr />
-      <component :is="visible" v-bind="{usuarioEdit}" :auth="usuario"
-        :functions="{changeVisible, setEditUsuario, reset, tokenValido}" class="position-relative" />
+      <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela}" :auth="usuario"
+        :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta}" class="position-relative" />
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
   </section>
@@ -35,12 +35,14 @@
   import Usuario from './components/Usuario';
   import TodasContas from './components/TodasContas';
   import Conta from './components/Conta';
+  import Parcela from './components/Parcela';
   export default {
     components: {
       TodosUsuarios,
       Usuario,
       TodasContas,
       Conta,
+      Parcela,
     },
     data() {
       return {
@@ -51,6 +53,8 @@
           permissao: false,
           ativo: true,
         },
+        contaEdit: {},
+        contaParcela: {},
       }
     },
     beforeMount() {
@@ -105,11 +109,24 @@
         if (!payload) await this.getUsuarios();
         this.changeVisible('Usuario');
       },
+      createConta() {
+        this.reset();
+        this.changeVisible('Conta');
+      },
+      setEditConta(payload) {
+        this.contaEdit = payload;
+        this.changeVisible('Conta')
+      },
+      setConta(payload) {
+        this.contaParcela = payload;
+        this.changeVisible('Parcela');
+      },
       reset() {
         this.usuarioEdit = {
           permissao: false,
           ativo: true,
         };
+        this.contaEdit = {};
       },
       sigOut() {
         localStorage.clear();

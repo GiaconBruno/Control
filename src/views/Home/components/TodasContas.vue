@@ -45,14 +45,15 @@
                 </div>
               </div>
               <div class="col-auto px-0">
-                <div class="row m-0 px-0 text-right justify-content-around">
-                  <i @click.stop="click('Editar')" class="fa fa-edit text-primary px-2 py-1"></i>
+                <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
+                  <i @click.stop="functions.setConta(conta)" class="fa fa-plus-circle text-success px-2 py-1"></i>
+                  <i @click.stop="functions.setEditConta(conta)" class="fa fa-edit text-primary px-2 py-1"></i>
                   <i @click.stop="showDeletar(conta)" class="fa fa-trash text-danger px-2 py-1"></i>
                 </div>
               </div>
             </div>
             <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
-              <TodasParcelas v-bind="{loadingParcelas, contas, parcelas}" />
+              <TodasParcelas v-bind="{loadingParcelas, contas, parcelas, functions}" />
             </b-collapse>
           </div>
         </div>
@@ -75,6 +76,7 @@
 <script>
   import TodasParcelas from './TodasParcelas'
   export default {
+    props: ['functions'],
     components: {
       TodasParcelas
     },
@@ -165,9 +167,6 @@
           });
         this.totalPago = `R$ ${String((this.totalPago).toFixed(2)).replaceAll('.', ',')}`;
         this.total = `R$ ${String((this.total).toFixed(2)).replaceAll('.', ',')}`;
-      },
-      click(payload) {
-        console.log(payload);
       },
       async showDeletar(payload) {
         await (this.deletar = payload);

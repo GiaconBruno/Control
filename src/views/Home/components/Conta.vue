@@ -5,10 +5,10 @@
       <hr class="mt-2" />
       <div class="row">
         <div class="col-12 text-left">
-          <label for="usuario">Descrição:</label>
+          <label for="conta">Descrição:</label>
           <div class="position-relative">
             <i class="fa fa-folder text-gray"></i>
-            <input v-model="conta.descricao" type="text" name="usuario" id="usuario" class="form-control"
+            <input v-model="conta.descricao" type="text" name="conta" id="conta" class="form-control"
               placeholder="Digite a descrição da conta" />
           </div>
         </div>
@@ -18,7 +18,7 @@
             <i class="fa fa-user text-gray"></i>
             <div class="row m-0 mb-3">
               <div class="col-11 px-0">
-                <select v-model="usuario" :class="{'text-sm': (usuario=='null')}" name="usuarios" id="usuario"
+                <select v-model="usuario" :class="{'text-sm': (usuario==null)}" name="usuarios" id="usuario"
                   class="form-control py-0">
                   <option :value="null" class="form-control">Selecione..</option>
                   <option v-for="user in (listaUsers)" :key="user.id" :value="user.id" class="form-control">
@@ -45,7 +45,7 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="functions.changeVisible(rota)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="functions.changeVisible('TodasContas')" class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="createConta()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
@@ -57,16 +57,17 @@
 
 <script>
   export default {
-    props: ['functions'],
+    props: ['functions', 'contaEdit'],
     data() {
       return {
         loading: false,
-        title: 'Criar Conta',
         conta: {},
         fk_usuario_id: [],
         usuario: null,
         usuarios: [],
-        rota: 'TodasContas',
+        title: 'Criar Conta',
+        url: 'contas',
+        mensagem: 'Conta criada com exito!',
         action: 'Criar',
       }
     },
@@ -77,6 +78,16 @@
       this.usuarios.map(user => {
         if (user.id == auth.id) this.fk_usuario_id.push(user.id);
       });
+
+      if (this.contaEdit.id) {
+        this.conta.descricao = this.contaEdit.descricao;
+        this.title = 'Editar Conta';
+        this.action = 'Alterar';
+        this.url = `atualizar-conta/${this.contaEdit.id}`;
+        this.mensagem = 'Conta Atualizada com exito!';
+
+        this.fk_usuario_id = (this.contaEdit.fk_usuario_id.replace(/[['\]]/g, "").split(",")).map(c => parseInt(c));
+      }
     },
     computed: {
       listaUsers() {
@@ -130,17 +141,17 @@
 
         let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
         this.conta.fk_usuario_id = contas;
-        
+
         this.loading = true;
         let auth = JSON.parse(localStorage.getItem("auth"));
         await this.axios
-          .post(`${this.api}/api/contas`, this.conta, {
+          .post(`${this.api}/api/${this.url}`, this.conta, {
             headers: {
               token: auth.token,
             }
           })
           .then(() => {
-            this.$toasted.show(`Conta criada com exito!`, {
+            this.$toasted.show(`${this.mensagem}`, {
               iconPack: "fontawesome",
               icon: "check",
               duration: 3000,
@@ -148,7 +159,7 @@
               theme: "bubble",
             });
             this.loading = false;
-            this.functions.changeVisible(this.rota)
+            this.functions.changeVisible('TodasContas')
           })
           .catch((err) => {
             console.log("" + err);

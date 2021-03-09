@@ -1,0 +1,275 @@
+<template>
+  <div class="row m-0 justify-content-center">
+    <div class="col-12 col-lg-6 card border-secondary p-3">
+      <label class="m-0"> {{ title }} </label>
+      <hr class="mt-2" />
+      <div class="row justify-content-between">
+        <!-- <div class="col-12 text-left">
+          <label for="parcela">Descrição:</label>
+          <div class="position-relative">
+            <i class="fa fa-folder text-gray"></i>
+            <input v-model="conta.descricao" type="text" name="parcela" id="parcela" class="form-control"
+              placeholder="Digite a descrição da conta" />
+          </div>
+        </div> -->
+        <div class="col-4 pr-2 text-left">
+          <label for="valor">Valor:</label>
+          <div class="position-relative">
+            <i class="fa fa-money-bill-alt text-gray"></i>
+            <input v-model="parcela.valor" type="number" name="valor" id="valor" class="form-control"
+              placeholder="R$ 0,00" />
+          </div>
+        </div>
+        <div class="position-relative" style="width: 14px;">
+          <i class="fa fa-plus text-gray" style="top: auto; left: 0; bottom: 0;"></i>
+        </div>
+        <div class="col-3 px-2 text-left">
+          <label for="outros">Outros:</label>
+          <div class="position-relative">
+            <i class="fa fa-money-bill-wave text-gray"></i>
+            <input v-model="parcela.outros" type="number" name="outros" id="outros" class="form-control"
+              placeholder="R$ 0,00" />
+          </div>
+        </div>
+        <div class="col-4 pl-2 text-left">
+          <label for="total">Total:</label>
+          <div class="position-relative">
+            <i class="fa fa-equals text-gray"></i>
+            <span class="pl-4">{{parseFloat(parcela.valor || 0) + parseFloat(parcela.outros || 0) || 'R$ 0,00'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 offset-3 text-left">
+          <label for="vencimento">Vencimento:</label>
+          <div class="position-relative">
+            <i class="fa fa-calendar-alt text-gray"></i>
+            <input v-model="parcela.vencimento" type="text" name="vencimento" id="vencimento" class="form-control"
+              placeholder="dd/MM/YY" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div :class="(formSelect.select)? 'pr-3':'pr-0' " class="col-5 text-left">
+          <label for="formaPagto">Forma de Pagto:</label>
+          <div class="position-relative">
+            <i class="fa fa-dollar-sign text-gray"></i>
+            <div v-if="formaPagto">
+              <select v-if="formSelect.select" v-model="parcela.forma_pagto"
+                @change="(parcela.forma_pagto == 'other')? (formSelect.select = false) : (formSelect.select = true)"
+                :class="{'text-sm': (parcela.forma_pagto==null)}" name="formaPagto" id="formaPagto"
+                class="form-control py-0 pl-3">
+                <option :value="null" class="form-control">Selecione..</option>
+                <option value="other" class="form-control">Criar</option>
+                <option v-for="(forma, f) in formaPagto" :key="f" :value="forma" class="form-control">
+                  {{ forma }}
+                </option>
+              </select>
+              <div v-else class="row m-0">
+                <div class="col-9 px-0">
+                  <input v-model="formSelect.descricao" class="form-control" type="text" placeholder="Digite.." />
+                </div>
+                <button @click="createForma()" class="btn btn-primary py-0 px-1 text-sm">OK!</button>
+              </div>
+            </div>
+            <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
+          </div>
+        </div>
+        <div class="col-3 pl-0 pr-3 text-left">
+          <label for="recebido">Recebido:</label>
+          <div class="position-relative">
+            <i class="fa fa-donate text-gray"></i>
+            <input v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control"
+              placeholder="R$ 0,00" />
+          </div>
+        </div>
+        <div class="col-4 pl-0 text-left">
+          <label for="pagamento">Pagamento:</label>
+          <div class="position-relative">
+            <i class="fa fa-calendar-check text-gray"></i>
+            <input v-model="parcela.data_pagto" type="text" name="pagamento" id="pagamento" class="form-control"
+              placeholder="dd/MM/yyyy" />
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row mt-4 justify-content-around">
+        <button @click="functions.changeVisible('TodasContas')" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="createParcela()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
+          <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+        </button>
+      </div>
+    </div>
+    <!-- <div  class="spinner-border spinner-border-sm my-2" role="status"></div> -->
+  </div>
+</template>
+
+<script>
+  export default {
+    props: ['contaParcela', 'functions'],
+    data() {
+      return {
+        loading: false,
+        title: 'Criar Parcela',
+        action: 'Criar',
+        parcela: {
+          forma_pagto: null,
+        },
+        formaPagto: [],
+        formSelect: {
+          descricao: '',
+          select: true,
+        },
+      }
+    },
+    async beforeMount() {
+      let auth = JSON.parse(localStorage.getItem("auth"));
+      await this.axios
+        .get(`${this.api}/api/formpagto`, {
+          headers: {
+            token: auth.token,
+          }
+        })
+        .then((response) => {
+          this.formaPagto = response.data;
+        })
+        .catch((err) => {
+          console.log("" + err);
+          this.$router.push("/");
+        });
+    },
+    methods: {
+      createForma() {
+        if (this.formSelect.descricao)
+          this.formaPagto.push(this.formSelect.descricao.toUpperCase())
+        this.formSelect = {
+          descricao: '',
+          select: true
+        };
+        this.parcela.forma_pagto = null;
+      },
+      async createParcela() {
+        if (!this.parcela.vencimento || !this.parcela.valor) {
+          this.$toasted.show(`Prenche o VALOR e VENCIMENTO`, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          });
+          return
+        }
+        this.loading = true;
+        let parcela = {
+          ...this.parcela
+        };
+        if (!this.parcela.outros) parcela.outros = 0;
+        parcela.valor = parseFloat(this.parcela.valor) + parseFloat(parcela.outros);
+        parcela.recebido = parseFloat(this.parcela.recebido);
+
+        if ((parcela.recebido) && (parcela.valor != parcela.recebido)) {
+          this.$toasted.show(`Valor Recebido dever ser igual ao Valor Total`, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          });
+        } else if (parcela.valor == parcela.recebido) {
+          parcela.status = true;
+        } else {
+          parcela.status = false;
+          parcela.recebido = 0;
+        }
+
+        let formatting = (this.parcela.vencimento.split("/"));
+        if (formatting.length > 1)
+          parcela.vencimento = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
+        else parcela.vencimento = formatting[0];
+
+        if (this.parcela.data_pagto) {
+          formatting = (this.parcela.data_pagto.split("/"));
+          if (formatting.length > 1)
+            parcela.data_pagto = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
+          else parcela.data_pagto = formatting[0];
+        }
+
+        console.log(parcela);
+        let auth = JSON.parse(localStorage.getItem("auth"));
+        await this.axios
+          .post(`${this.api}/api/${this.contaParcela.id}/parcelas`, parcela, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then(() => {
+            this.$toasted.show(`Parcela criada com exito!`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            });
+            this.functions.changeVisible('TodasContas');
+          })
+          .catch((err) => {
+            console.log("" + err);
+            // this.$router.push("/");
+          });
+        this.loading = false;
+      },
+    }
+  }
+</script>
+
+<style scoped>
+label {
+  margin: 1rem 0 0 0;
+}
+
+.fa {
+  color: dimgray;
+  top: 5px;
+  left: 5px;
+  position: absolute;
+  z-index: 9;
+}
+
+input,
+select {
+  height: 25px;
+  padding-left: 30px;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #333;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input:focus,
+select:focus {
+  border-color: #28a745;
+  box-shadow: none;
+}
+
+input::placeholder,
+.text-sm {
+  font-size: 12px;
+}
+
+hr {
+  margin: 1rem -15px 0 -15px;
+  border-color: #888888aa;
+}
+
+.btn:not(.btn-primary) {
+  min-width: 100px;
+}
+</style>
