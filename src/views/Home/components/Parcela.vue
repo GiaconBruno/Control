@@ -12,10 +12,10 @@
               placeholder="Digite a descrição da conta" />
           </div>
         </div> -->
-        <div class="col-4 pr-2 text-left">
-          <label for="valor">Valor:</label>
+        <div class="col-4 pr-2 text-left text-red">
+          <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
-            <i class="fa fa-money-bill-alt text-gray"></i>
+            <i id="iValor" class="fa fa-money-bill-alt text-gray"></i>
             <input v-model="parcela.valor" type="number" name="valor" id="valor" class="form-control"
               placeholder="R$ 0,00" />
           </div>
@@ -41,9 +41,9 @@
       </div>
       <div class="row">
         <div class="col-6 offset-3 text-left">
-          <label for="vencimento">Vencimento:</label>
+          <label id="lbVencimento" for="vencimento">Vencimento:</label>
           <div class="position-relative">
-            <i class="fa fa-calendar-alt text-gray"></i>
+            <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
             <input v-model="parcela.vencimento" type="text" name="vencimento" id="vencimento" class="form-control"
               placeholder="dd/MM/YY" />
           </div>
@@ -51,9 +51,9 @@
       </div>
       <div class="row">
         <div :class="(formSelect.select)? 'pr-3':'pr-0' " class="col-5 text-left">
-          <label for="formaPagto">Forma de Pagto:</label>
+          <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
-            <i class="fa fa-dollar-sign text-gray"></i>
+            <i id="iformaPagto" class="fa fa-dollar-sign text-gray"></i>
             <div v-if="formaPagto">
               <select v-if="formSelect.select" v-model="parcela.forma_pagto"
                 @change="(parcela.forma_pagto == 'other')? (formSelect.select = false) : (formSelect.select = true)"
@@ -67,7 +67,8 @@
               </select>
               <div v-else class="row m-0">
                 <div class="col-9 px-0">
-                  <input v-model="formSelect.descricao" class="form-control" type="text" placeholder="Digite.." />
+                  <input v-model="formSelect.descricao" id="ipformaPagto" class="form-control" type="text"
+                    placeholder="Digite.." />
                 </div>
                 <button @click="createForma()" class="btn btn-primary py-0 px-1 text-sm">OK!</button>
               </div>
@@ -76,17 +77,17 @@
           </div>
         </div>
         <div class="col-3 pl-0 pr-3 text-left">
-          <label for="recebido">Recebido:</label>
+          <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
-            <i class="fa fa-donate text-gray"></i>
+            <i id="iRecebido" class="fa fa-donate text-gray"></i>
             <input v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control"
               placeholder="R$ 0,00" />
           </div>
         </div>
         <div class="col-4 pl-0 text-left">
-          <label for="pagamento">Pagamento:</label>
+          <label id="lbPagamento" for="pagamento">Pagamento:</label>
           <div class="position-relative">
-            <i class="fa fa-calendar-check text-gray"></i>
+            <i id="iPagamento" class="fa fa-calendar-check text-gray"></i>
             <input v-model="parcela.data_pagto" type="text" name="pagamento" id="pagamento" class="form-control"
               placeholder="dd/MM/yyyy" />
           </div>
@@ -148,17 +149,60 @@
         };
         this.parcela.forma_pagto = null;
       },
-      async createParcela() {
+      valid() {
         if (!this.parcela.vencimento || !this.parcela.valor) {
-          this.$toasted.show(`Prenche o VALOR e VENCIMENTO`, {
+          if (!this.parcela.valor) {
+            document.querySelector('#lbValor').style.color = "#dc3545";
+            document.querySelector('#iValor').style.color = "#dc3545";
+            document.querySelector('#valor').style.borderColor = "#dc3545";
+          }
+          if (!this.parcela.vencimento) {
+            document.querySelector('#lbVencimento').style.color = "#dc3545";
+            document.querySelector('#iVencimento').style.color = "#dc3545";
+            document.querySelector('#vencimento').style.borderColor = "#dc3545";
+          }
+          this.$toasted.show(`Prenche os compos corretamente`, {
             iconPack: "fontawesome",
             icon: "times",
             duration: 3000,
             className: "bg-danger",
             theme: "bubble",
           });
-          return
+          return false
+        } else if (!this.parcela.recebido && !this.parcela.data_pagto && !this.parcela.forma_pagto) return true
+        else if (!this.parcela.recebido || !this.parcela.data_pagto ||
+          (!this.parcela.forma_pagto && !this.formaPagto.select)) {
+          if (!this.parcela.recebido) {
+            document.querySelector('#lbRecebido').style.color = "#dc3545";
+            document.querySelector('#iRecebido').style.color = "#dc3545";
+            document.querySelector('#recebido').style.borderColor = "#dc3545";
+          }
+          if (!this.parcela.data_pagto) {
+            document.querySelector('#lbPagamento').style.color = "#dc3545";
+            document.querySelector('#iPagamento').style.color = "#dc3545";
+            document.querySelector('#pagamento').style.borderColor = "#dc3545";
+          }
+          if (!this.parcela.forma_pagto && !this.formaPagto.select) {
+            document.querySelector('#lbformaPagto').style.color = "#dc3545";
+            document.querySelector('#iformaPagto').style.color = "#dc3545";
+            document.querySelector('#formaPagto').style.borderColor = "#dc3545";
+          }
+
+          this.$toasted.show(`Prencha os campos para parcelas pagas`, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 5000,
+            className: "bg-danger",
+            theme: "bubble",
+          });
+          return false
+        } else {
+          return true;
         }
+      },
+      async createParcela() {
+        if (!this.valid()) return
+
         this.loading = true;
         let parcela = {
           ...this.parcela
@@ -194,7 +238,6 @@
           else parcela.data_pagto = formatting[0];
         }
 
-        console.log(parcela);
         let auth = JSON.parse(localStorage.getItem("auth"));
         await this.axios
           .post(`${this.api}/api/${this.contaParcela.id}/parcelas`, parcela, {

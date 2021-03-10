@@ -4,6 +4,7 @@
       <div v-if="loading" class="spinner-border text-green spinner-border-sm mr-3" role="status"></div>
       <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
       <div v-else>
+        <h5 class="smallText">Contas: </h5>
         <div class="accordion" role="tablist">
           <div v-for="conta in contas" :key="conta.id" class="mb-3">
             <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
@@ -13,27 +14,47 @@
                 <i :class="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
                   class="fa text-warning px-2 py-1"></i>
               </div>
-              <div class="col-8 col-lg-10 px-0">
+              <div class="col-9 col-lg-10 px-0">
                 <div class="row m-0">
                   <div class="col-12 px-0">
-                    <div class="row m-0">
+                    <div class="row m-0 align-items-center">
                       <div class="col-12 col-lg-4 px-0 text-center text-lg-left">
-                        {{conta.descricao}}
+                        <span>{{conta.descricao}}</span>
                       </div>
                       <div class="col-12 col-lg-8 px-0 text-center text-sm text-lg-left">
                         <div v-if="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id))"
                           class="row m-0 h-100 align-items-center">
                           <div class="col-6 col-lg-5 px-0">
-                            Parcelas: {{ parcelas.length }}
-                            <span class="pl-2 text-xs h-100">Pagos: </span>
-                            {{ parcelasPagas }} | {{ parcelas.length-parcelasPagas }}
-                            <span class="text-xs h-100"> Abertos</span>
+                            <div class="row m-0 justify-content-center align-items-center">
+                              <div class="col-12 col-lg-5 px-0">
+                                <span>Parcelas: {{ parcelas.length }}</span>
+                              </div>
+                              <div class="col-12 col-lg-6 px-0">
+                                <div class="row m-0 justify-content-center align-items-center">
+                                  <span class="pr-2 text-xs h-100">Pagos: </span>
+                                  <span>{{ parcelasPagas }} | {{ parcelas.length-parcelasPagas }}</span>
+                                  <span class="pl-2 text-xs h-100"> Abertos</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-6 col-lg-7 px-0">
-                            Total:
-                            <span class="pl-2 text-xs h-100">Pagos: </span>
-                            {{ totalPago }} | {{ total }}
-                            <span class="text-xs h-100"> Abertos</span>
+                            <div class="row m-0 justify-content-center align-items-center">
+                              <div class="col-12 col-lg-5 px-0 text-lg-right">
+                                <span><strong>Total: {{ total }} </strong></span>
+                              </div>
+                              <div class="col-12 col-lg-7 px-0">
+                                <div class="row m-0 justify-content-center align-items-center">
+                                  <span class="px-2 text-xs text-green h-100">Pagos</span>
+                                  <span class="pl-3 text-xs text-red h-100">Abertos</span>
+                                </div>
+                                <div class="row m-0 justify-content-center align-items-center">
+                                  <span class="text-green">{{ totalPago }} </span>
+                                  <span class="px-1"> | </span>
+                                  <span class="text-red"> {{ totalAberto }}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <span v-else class="text-black-50">
@@ -53,7 +74,7 @@
               </div>
             </div>
             <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
-              <TodasParcelas v-bind="{loadingParcelas, contas, parcelas, functions}" />
+              <TodasParcelas v-bind="{loadingParcelas, parcelas, functions, conta, getParcelas}" />
             </b-collapse>
           </div>
         </div>
@@ -86,9 +107,11 @@
         loadingDel: false,
         loadingParcelas: false,
         contas: [],
+        conta: 0,
         parcelas: [],
         parcelasPagas: 0,
         totalPago: 0,
+        totalAberto: 0,
         total: 0,
         deletar: null,
       }
@@ -116,11 +139,12 @@
           });
         this.loading = false;
       },
-      async getParcelas(payload) {
+      async getParcelas(payload, type) {
+        this.conta = payload;
         let conta = 0;
         if (this.parcelas.length) conta = this.parcelas[0].fk_conta_id;
         this.parcelas = [];
-        if (conta == payload) return;
+        if ((conta == payload) && (type != 'deletar')) return;
 
         let auth = JSON.parse(localStorage.getItem("auth"));
         this.loadingParcelas = true;
@@ -145,15 +169,15 @@
       formatting() {
         this.parcelasPagas = 0;
         this.totalPago = 0;
+        this.totalAberto = 0;
         this.total = 0;
 
         if (this.parcelas.length)
           this.parcelas.map(e => {
             //Totalizando
             if (e.status) this.parcelasPagas++;
-            if (e.recebido) this.totalPago += e.recebido;
+            (e.recebido) ? this.totalPago += e.recebido: this.totalAberto += e.valor;
             this.total += e.valor;
-
             //Formatando
             e.valor = `R$ ${String((e.valor).toFixed(2)).replaceAll('.', ',')}`;
 
@@ -166,6 +190,7 @@
 
           });
         this.totalPago = `R$ ${String((this.totalPago).toFixed(2)).replaceAll('.', ',')}`;
+        this.totalAberto = `R$ ${String((this.totalAberto).toFixed(2)).replaceAll('.', ',')}`;
         this.total = `R$ ${String((this.total).toFixed(2)).replaceAll('.', ',')}`;
       },
       async showDeletar(payload) {
@@ -220,6 +245,14 @@ label {
 
 .text-xs {
   font-size: 0.65em;
+}
+
+.text-green {
+  color: seagreen;
+}
+
+.text-red {
+  color: #dc3545;
 }
 
 .contabord {

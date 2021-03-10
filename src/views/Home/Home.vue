@@ -1,30 +1,36 @@
 <template>
   <section class="py-5">
     <div v-if="usuario && !loading" class="container position-relative">
-      <!-- <div class="d-block text-right p-3 pb-2">
-      </div> -->
+      <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
       <hr class="mt-0" />
       <div class="row">
         <div class="col-12 col-md-11 offset-md-1 d-flex justify-content-between align-items-center">
           <h2 class="m-0">
-            <span class="smallText">Bem Vindo, </span> {{ usuario.nome }}
+            <span class="smallText">Bem Vindo, </span>
+            {{ usuario.nome }}
+            <span v-if="(usuario.permissao)" class="smallText">(Master) </span>
           </h2>
-          <div>
+          <div class="rounded border border-dark p-0 m-0">
+            <i @click="changeVisible('TodasContas')" :class="{'disabled': (visible=='TodasContas')}"
+              class="btn fa fa-home text-secundary px-1 mx-2"></i>
             <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')"
-              class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
-            <i v-if="(usuario.permissao)" @click="createUsuario()"
+              :class="{'disabled': (visible=='TodosUsuarios')}" class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
+            <i v-if="(usuario.permissao)" @click="createUsuario()" :class="{'disabled': (visible=='Usuario')}"
               class="btn fa fa-user-plus text-success px-1 mx-2"></i>
-            <i @click="setEditUsuario()" class="btn fa fa-edit text-warning px-1 mx-2"></i>
-            <i @click="createConta()" class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+            <i @click="setEditUsuario()" :class="{'disabled': (visible=='Usuario')}"
+              class="btn fa fa-edit text-warning px-1 mx-2"></i>
+            <i @click="createConta()" :class="{'disabled': (visible=='Conta')}"
+              class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
           </div>
           <span @click="sigOut()" class="btn">
             <i class="fas fa-sign-in-alt"></i> Sair
           </span>
         </div>
       </div>
-      <hr />
+      <hr class="my-2" />
       <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela}" :auth="usuario"
-        :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta}" class="position-relative" />
+        :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta}"
+        class="position-relative" />
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
   </section>
