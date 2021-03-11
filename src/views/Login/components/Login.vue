@@ -1,46 +1,49 @@
 <template>
-  <div class="col-12 col-md-6 col-lg-4 offset-lg-8 d-flex align-items-center justify-content-center">
-    <div class="py-5 px-4 bg-white w-100 text-left position-relative">
-      <div :class="{'not-allowed':(!servidor)}" class="bg-white position-absolute"></div>
-      <div v-if="loading" class="alert bg-warning alert-dismissible fade show" role="alert">
-        <div class="spinner-border spinner-border-sm mr-3" role="status"></div>
-        <strong>Aguarde!</strong>
-      </div>
-      <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
-        role="alert">
-        Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
-      </div>
-      <div v-if="(!servidor && (!loading))" :class="{'alert': (!loading)}" class="m-0 p-0 text-center">
-        <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
-      </div>
-      <div class="position-relative">
-        <label for="login">Usuário:</label>
-        <input @blur="valid('login')" @keypress="valid('login')" id="login" type="text" v-model="user"
-          class="form-control" placeholder="Digite seu usuário" />
-        <span class="position-absolute">
-          <i class="fa fa-user"></i>
-        </span>
-      </div>
-      <div class="position-relative">
-        <label for="password">Senha:</label>
-        <input @keypress.enter="sigIn()" @blur="valid('password')" @keypress="valid('password')" id="password"
-          type="password" v-model="password" class="form-control" placeholder="Digite sua senha" />
-        <span class="position-absolute">
-          <i class="fas fa-lock"></i>
-        </span>
-      </div>
-      <div class="mt-5 text-right">
-        <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
-          <i class="fas fa-sign-in-alt mr-5"></i>
-          <span class="text-white mr-5"> Entrar</span>
-        </button>
-      </div>
+  <div class="py-5 px-4 bg-white w-100 text-left position-relative">
+    <div :class="{'not-allowed':(!servidor)}" class="bg-white position-absolute"></div>
+    <div v-if="loading" class="alert bg-warning alert-dismissible fade show" role="alert">
+      <div class="spinner-border spinner-border-sm mr-3" role="status"></div>
+      <strong>Aguarde!</strong>
+    </div>
+    <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
+      role="alert">
+      Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
+    </div>
+    <div v-if="(!servidor && (!loading))" :class="{'alert': (!loading)}" class="m-0 p-0 text-center">
+      <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
+    </div>
+    <div class="position-relative">
+      <label for="login">Usuário:</label>
+      <input @blur="valid('login')" @keypress="valid('login')" id="login" type="text" v-model="user"
+        class="form-control" placeholder="Digite seu usuário" />
+      <span class="position-absolute">
+        <i class="fa fa-user"></i>
+      </span>
+    </div>
+    <div class="position-relative">
+      <label for="password">Senha:</label>
+      <input @keypress.enter="sigIn()" @blur="valid('password')" @keypress="valid('password')" id="password"
+        type="password" v-model="password" class="form-control" placeholder="Digite sua senha" />
+      <span class="position-absolute">
+        <i class="fas fa-lock"></i>
+      </span>
+    </div>
+    <div class="mt-3 text-right">
+      <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
+        <i class="fas fa-sign-in-alt mr-5"></i>
+        <span class="text-white mr-5"> Entrar</span>
+      </button>
+      <button @click="changeVisible('Usuario')" :disabled="loading" class="form-control btn btn-primary mt-3">
+        <i class="fas fa-user-circle mr-5"></i>
+        <span class="text-white mr-5"> Criar</span>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    props: ['changeVisible'],
     data() {
       return {
         loading: false,
@@ -147,10 +150,6 @@
 
 .alert {
   z-index: 11;
-}
-
-.col-12 {
-  height: 100vh;
 }
 
 .bg-white {

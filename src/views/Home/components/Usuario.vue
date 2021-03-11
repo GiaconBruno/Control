@@ -1,6 +1,7 @@
 <template>
   <div class="row mb-3">
-    <div class="col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4 card border-secondary p-3 shadow-lg">
+    <div :class="(auth) ? 'col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4' : 'col-12 px-0' "
+      class="card border-secondary p-3 shadow-lg">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
       <div class="row px-3">
@@ -30,13 +31,14 @@
           </div>
           <div class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
-              <span v-if="auth.permissao" @click="usuario.permissao = !usuario.permissao" class="btn d-flex p-0">
+              <span v-if="(auth && auth.permissao)" @click="usuario.permissao = !usuario.permissao"
+                class="btn d-flex p-0">
                 <span class="mr-2">Permissao: </span>
                 <b-form-checkbox v-model="usuario.permissao" switch>
                 </b-form-checkbox>
               </span>
             </div>
-            <div class="col-4 offset-1 px-0 text-left pt-3">
+            <div v-if="(auth && auth.id)" class="col-4 offset-1 px-0 text-left pt-3">
               <span @click="usuario.ativo = !usuario.ativo" class="btn d-flex p-0">
                 <span class="mr-2">Ativo:</span>
                 <b-form-checkbox v-model="usuario.ativo" switch></b-form-checkbox>
@@ -47,7 +49,8 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="functions.changeVisible(rota)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="(auth)? functions.changeVisible(rota):changeVisible('LogIn') "
+          class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="createUsuario()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
@@ -58,7 +61,7 @@
 
 <script>
   export default {
-    props: ['usuarioEdit', 'auth', 'functions'],
+    props: ['usuarioEdit', 'auth', 'functions', 'changeVisible'],
     data() {
       return {
         loading: false,
@@ -75,9 +78,8 @@
       }
     },
     beforeMount() {
-      this.usuario = this.usuarioEdit;
-
-      if (this.usuario.id) {
+      if (this.usuarioEdit && this.usuarioEdit.id) {
+        this.usuario = this.usuarioEdit;
         this.title = `Edição de Usuário`;
         this.url = `atualizar-usuario/${this.usuario.id}`;
         this.mensagem = `Usuário atualizado com exito!`;
@@ -102,9 +104,12 @@
         if (!this.valid()) return
 
         this.usuario.usuario = this.usuario.usuario.toLowerCase();
-
+        let auth = {
+          token: 'noToken'
+        };
         this.loading = true;
-        let auth = JSON.parse(localStorage.getItem("auth"));
+        if (this.auth)
+          auth = JSON.parse(localStorage.getItem("auth"));
         await this.axios
           .post(`${this.api}/api/${this.url}`, this.usuario, {
             headers: {
@@ -116,7 +121,8 @@
 
               if (this.usuario.id == auth.id) {
                 await this.renewToken();
-                await this.functions.tokenValido();
+                if (auth.id)
+                  await this.functions.tokenValido();
               }
 
               this.$toasted.show(`${this.mensagem}`, {
@@ -126,12 +132,15 @@
                 className: "bg-success",
                 theme: "bubble",
               });
-              this.usuario = {
-                permissao: false,
-                ativo: true,
-              };
-              this.functions.reset();
-              this.functions.changeVisible(this.rota);
+
+              if (this.auth) {
+                this.usuario = {
+                  permissao: false,
+                  ativo: true,
+                };
+                this.functions.reset();
+                this.functions.changeVisible(this.rota);
+              } else this.changeVisible('LogIn');
             } else {
               this.$toasted.show(`${response.data.mensagem}`, {
                 iconPack: "fontawesome",

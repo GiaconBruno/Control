@@ -18,9 +18,11 @@
             <i v-if="(usuario.permissao)" @click="createUsuario()" :class="{'disabled': (visible=='Usuario')}"
               class="btn fa fa-user-plus text-success px-1 mx-2"></i>
             <i @click="setEditUsuario()" :class="{'disabled': (visible=='Usuario')}"
-              class="btn fa fa-edit text-warning px-1 mx-2"></i>
+              class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
             <i @click="createConta()" :class="{'disabled': (visible=='Conta')}"
               class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+            <i v-if="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()"
+              class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
           </div>
           <span @click="sigOut()" class="btn">
             <i class="fas fa-sign-in-alt"></i> Sair
@@ -28,9 +30,9 @@
         </div>
       </div>
       <hr class="my-2" />
-      <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela}" :auth="usuario"
-        :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta}"
-        class="position-relative" />
+      <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}" :auth="usuario"
+        :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta, setEditParcela}"
+        ref="All" class="position-relative" />
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
   </section>
@@ -61,6 +63,7 @@
         },
         contaEdit: {},
         contaParcela: {},
+        parcelaEdit: {},
       }
     },
     beforeMount() {
@@ -123,7 +126,12 @@
         this.contaEdit = payload;
         this.changeVisible('Conta')
       },
+      setEditParcela(payload) {
+        this.parcelaEdit = payload;
+        this.changeVisible('Parcela')
+      },
       setConta(payload) {
+        this.reset();
         this.contaParcela = payload;
         this.changeVisible('Parcela');
       },
@@ -133,6 +141,11 @@
           ativo: true,
         };
         this.contaEdit = {};
+        this.parcelaEdit = {};
+      },
+      refresh() {
+        if (this.visible == "TodasContas") this.$refs.All.getContas();
+        else this.$refs.All.getUsuarios();
       },
       sigOut() {
         localStorage.clear();

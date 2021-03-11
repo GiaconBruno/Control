@@ -2,8 +2,11 @@
 
 > https://giaconbruno.github.io/ >>
 
-## ------ Requisito: NODE.JS ------ 
-
+## ------ Requisito: NODE.JS (necessário database) ------ 
+### Projeto BackEnd
+```sh
+https://github.com/GiaconBruno/Control-NodeJS
+```
 ### Acessar a pasta onde irá criar o projeto
 ```sh
 cd "caminho da pasta"

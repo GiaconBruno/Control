@@ -48,7 +48,10 @@
         </div>
       </div>
       <div class="col-1 px-0 px-lg-2 text-right">
-        <i @click="showDeletar(parcela)" class="btn fa fa-trash-alt text-danger px-1"></i>
+        <div class="row m-0 pr-1 pr-lg-0 justify-content-between">
+          <i @click="functions.setEditParcela(parcela)" class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
+          <i @click="showDeletar(parcela)" class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
+        </div>
       </div>
     </div>
     <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" hide-footer centered no-close-on-esc no-close-on-backdrop
@@ -73,7 +76,7 @@
 
 <script>
   export default {
-    props: ['loadingParcelas', 'parcelas', 'conta', 'getParcelas'],
+    props: ['functions', 'loadingParcelas', 'parcelas', 'conta', 'getParcelas'],
     data() {
       return {
         deletar: '',
@@ -133,7 +136,7 @@
 
 .pago::before {
   content: "Pago";
-  padding: 3px 45px;
+  padding: 0 30px;
   font-size: 10px;
   color: white;
   background-color: seagreen;
@@ -141,9 +144,9 @@
   /* border-radius: 50%; */
   display: block;
   position: absolute;
-  top: 5px;
-  left: -10px;
+  top: 8px;
+  left: -15px;
   z-index: 10;
-  transform: rotate(-25deg);
+  transform: rotate(-35deg);
 }
 </style>

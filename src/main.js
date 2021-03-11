@@ -12,6 +12,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import Toasted from 'vue-toasted';
 import service from './services/auth';
+import money from 'v-money';
 
 require('@/assets/css/all.min.css');
 require('@/assets/css/fontawesome.min.css');
@@ -24,6 +25,12 @@ Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Toasted);
+Vue.use(money, {
+  precision: 2,
+  prefix: 'R$ ',
+  decimal: ',',
+  thousands: '.',
+});
 
 // DEFINE VARIAVEIS GLOBAL
 Vue.prototype.axios = axios;

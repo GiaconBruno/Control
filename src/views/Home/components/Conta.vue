@@ -17,18 +17,18 @@
           <div class="position-relative">
             <i class="fa fa-user text-gray"></i>
             <div class="row m-0 mb-3">
-              <div class="col-11 px-0">
-                <select v-model="usuario" :class="{'text-sm': (usuario==null)}" name="usuarios" id="usuario"
-                  class="form-control py-0">
+              <div class="col-12 px-0">
+                <select v-model="usuario" @change="addUsuario(usuario)" :class="{'text-sm': (usuario==null)}"
+                  name="usuarios" id="usuario" class="form-control py-0">
                   <option :value="null" class="form-control">Selecione..</option>
                   <option v-for="user in (listaUsers)" :key="user.id" :value="user.id" class="form-control">
                     {{user.nome}} @{{user.usuario}}
                   </option>
                 </select>
               </div>
-              <div class="col-1 p-0">
+              <!-- <div class="col-1 p-0">
                 <i @click="addUsuario(usuario)" class="fa fa-plus btn btn-primary px-0 py-1 text-white w-100"></i>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

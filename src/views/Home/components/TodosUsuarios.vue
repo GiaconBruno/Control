@@ -48,7 +48,7 @@
       <hr>
       <div class="row m-0 justify-content-around">
         <button @click="$bvModal.hide('mConfirm')" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button @click="deletarUsuario()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
+        <button @click="removerUsers()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
       </div>
@@ -72,6 +72,7 @@
     methods: {
       async getUsuarios() {
         let auth = JSON.parse(localStorage.getItem("auth"));
+        this.usuarios = [];
         await this.axios
           .get(`${this.api}/api/usuarios`, {
             headers: {
@@ -102,14 +103,15 @@
               token: auth.token,
             }
           })
-          .then((response) => {
-            this.$toasted.show(`${response.data.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
+          .then(async (response) => {
+            this.$toasted
+              .show(`${response.data.mensagem}`, {
+                iconPack: "fontawesome",
+                icon: "check",
+                duration: 3000,
+                className: "bg-success",
+                theme: "bubble",
+              });
           })
           .catch((err) => {
             console.log("" + err);
@@ -120,6 +122,78 @@
         await this.getUsuarios();
         this.loading = false;
       },
+      async removerUsers() {
+        //DELETAR USUARIO DE CONTAS EXISTENTES
+        this.loadingDel = true;
+        let auth = JSON.parse(localStorage.getItem("auth"));
+        await this.axios
+          .get(`${this.api}/api/contas/${this.deletar.id}`, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then(async (response) => {
+            let allContas = response.data;
+            let users;
+            let attConta;
+            allContas.map(async contas => {
+              users = contas.fk_usuario_id.replace(/[['\]]/g, "").split(",").map(c => parseInt(c));
+              if (users.length > 1) {
+                // REMOVE USUARIO E SALVA CONTA
+                let pos = users.indexOf(this.deletar.id);
+                users.splice(pos, 1);
+                users = String(`[${users.map(user => `'${user}'`)}]`)
+                attConta = {
+                  descricao: contas.descricao,
+                  fk_usuario_id: users,
+                }
+                await this.attContas(attConta, contas);
+              } else if (users.length == 1) {
+                // DELETAR CONTA
+                await this.deletarConta(contas)
+              }
+            })
+            await this.deletarUsuario();
+            this.loadingDel = false;
+          })
+          .catch((err) => {
+            console.log("" + err);
+            localStorage.clear();
+            this.$router.push("/");
+          });
+      },
+      async attContas(payload, contas) {
+        this.loadingDel = true;
+        let auth = JSON.parse(localStorage.getItem("auth"));
+        await this.axios
+          .post(`${this.api}/api/atualizar-conta/${contas.id}`, payload, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then(() => {})
+          .catch((err) => {
+            console.log("" + err);
+            this.$router.push("/");
+          });
+        this.loadingDel = false;
+      },
+      async deletarConta(payload) {
+        this.loadingDel = true;
+        let auth = JSON.parse(localStorage.getItem("auth"));
+        await this.axios
+          .delete(`${this.api}/api/deletar-conta/${payload.id}`, {
+            headers: {
+              token: auth.token,
+            }
+          })
+          .then(() => {})
+          .catch((err) => {
+            console.log("" + err);
+            this.$router.push("/");
+            this.loadingDel = false;
+          });
+      }
     }
   }
 </script>

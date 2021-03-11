@@ -1,41 +1,33 @@
 <template>
   <div class="row m-0 justify-content-center">
-    <div class="col-12 col-lg-6 card border-secondary p-3">
+    <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-3">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
       <div class="row justify-content-between">
-        <!-- <div class="col-12 text-left">
-          <label for="parcela">Descrição:</label>
-          <div class="position-relative">
-            <i class="fa fa-folder text-gray"></i>
-            <input v-model="conta.descricao" type="text" name="parcela" id="parcela" class="form-control"
-              placeholder="Digite a descrição da conta" />
-          </div>
-        </div> -->
         <div class="col-4 pr-2 text-left text-red">
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
             <i id="iValor" class="fa fa-money-bill-alt text-gray"></i>
-            <input v-model="parcela.valor" type="number" name="valor" id="valor" class="form-control"
+            <money v-model="parcela.valor" type="text" name="valor" id="valor" class="form-control"
               placeholder="R$ 0,00" />
           </div>
         </div>
         <div class="position-relative" style="width: 14px;">
           <i class="fa fa-plus text-gray" style="top: auto; left: 0; bottom: 0;"></i>
         </div>
-        <div class="col-3 px-2 text-left">
+        <div class="col-4 px-2 text-left">
           <label for="outros">Outros:</label>
           <div class="position-relative">
             <i class="fa fa-money-bill-wave text-gray"></i>
-            <input v-model="parcela.outros" type="number" name="outros" id="outros" class="form-control"
+            <money v-model="parcela.outros" type="text" name="outros" id="outros" class="form-control"
               placeholder="R$ 0,00" />
           </div>
         </div>
-        <div class="col-4 pl-2 text-left">
+        <div class="col-3 px-0 text-left">
           <label for="total">Total:</label>
           <div class="position-relative">
             <i class="fa fa-equals text-gray"></i>
-            <span class="pl-4">{{parseFloat(parcela.valor || 0) + parseFloat(parcela.outros || 0) || 'R$ 0,00'}}</span>
+            <span class="pl-4">{{ total }}</span>
           </div>
         </div>
       </div>
@@ -44,13 +36,12 @@
           <label id="lbVencimento" for="vencimento">Vencimento:</label>
           <div class="position-relative">
             <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
-            <input v-model="parcela.vencimento" type="text" name="vencimento" id="vencimento" class="form-control"
-              placeholder="dd/MM/YY" />
+            <input v-model="parcela.vencimento" type="date" name="vencimento" id="vencimento" class="form-control" />
           </div>
         </div>
       </div>
       <div class="row">
-        <div :class="(formSelect.select)? 'pr-3':'pr-0' " class="col-5 text-left">
+        <div :class="(formSelect.select)? 'pr-3':'pr-0' " class="col-4 text-left">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
             <i id="iformaPagto" class="fa fa-dollar-sign text-gray"></i>
@@ -76,11 +67,11 @@
             <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
           </div>
         </div>
-        <div class="col-3 pl-0 pr-3 text-left">
+        <div class="col-4 pl-0 pr-3 text-left">
           <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
             <i id="iRecebido" class="fa fa-donate text-gray"></i>
-            <input v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control"
+            <money v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control pr-0"
               placeholder="R$ 0,00" />
           </div>
         </div>
@@ -88,8 +79,8 @@
           <label id="lbPagamento" for="pagamento">Pagamento:</label>
           <div class="position-relative">
             <i id="iPagamento" class="fa fa-calendar-check text-gray"></i>
-            <input v-model="parcela.data_pagto" type="text" name="pagamento" id="pagamento" class="form-control"
-              placeholder="dd/MM/yyyy" />
+            <input v-model="parcela.data_pagto" @keypress.delete="parcela.data_pagto=null; $forceUpdate()" type="date"
+              name="pagamento" id="pagamento" class="form-control" />
           </div>
         </div>
       </div>
@@ -101,18 +92,21 @@
         </button>
       </div>
     </div>
-    <!-- <div  class="spinner-border spinner-border-sm my-2" role="status"></div> -->
+    <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['contaParcela', 'functions'],
+    props: ['contaParcela', 'functions', 'parcelaEdit'],
     data() {
       return {
         loading: false,
+        loadingForm: false,
         title: 'Criar Parcela',
         action: 'Criar',
+        mensagem: 'Parcela criada com exito!',
+        url: `${this.contaParcela.id}/parcelas`,
         parcela: {
           forma_pagto: null,
         },
@@ -124,6 +118,7 @@
       }
     },
     async beforeMount() {
+      this.loadingForm = true;
       let auth = JSON.parse(localStorage.getItem("auth"));
       await this.axios
         .get(`${this.api}/api/formpagto`, {
@@ -138,6 +133,32 @@
           console.log("" + err);
           this.$router.push("/");
         });
+      this.loadingForm = false;
+    },
+    mounted() {
+      if (this.parcelaEdit.id) {
+        this.parcela = {
+          ...this.parcelaEdit
+        };
+        let data;
+        data = this.parcela.vencimento.split('/');
+        this.parcela.vencimento = `${data[2]}-${data[1]}-${data[0]}`;
+        data = this.parcela.data_pagto.split('/');
+        this.parcela.data_pagto = `${data[2]}-${data[1]}-${data[0]}`;
+
+        this.title = 'Parcela';
+        this.action = 'Salvar';
+        this.url = `atualizar-parcela/${this.parcela.id}`;
+        this.mensagem = 'Parcela atualizada!!';
+      } else
+        this.parcela.vencimento =
+        `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+    },
+    computed: {
+      total() {
+        return `R$ ${(parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0)).toFixed(2).replace('.',',')}` ||
+          'R$ 0,00';
+      }
     },
     methods: {
       createForma() {
@@ -169,8 +190,9 @@
             theme: "bubble",
           });
           return false
-        } else if (!this.parcela.recebido && !this.parcela.data_pagto && !this.parcela.forma_pagto) return true
-        else if (!this.parcela.recebido || !this.parcela.data_pagto ||
+        } else if (!this.parcela.recebido && !this.parcela.data_pagto && !this.parcela.forma_pagto) {
+          return true
+        } else if (!this.parcela.recebido || !this.parcela.data_pagto ||
           (!this.parcela.forma_pagto && !this.formaPagto.select)) {
           if (!this.parcela.recebido) {
             document.querySelector('#lbRecebido').style.color = "#dc3545";
@@ -219,6 +241,11 @@
             className: "bg-danger",
             theme: "bubble",
           });
+          document.querySelector('#lbRecebido').style.color = "#dc3545";
+          document.querySelector('#iRecebido').style.color = "#dc3545";
+          document.querySelector('#recebido').style.borderColor = "#dc3545";
+          this.loading = false;
+          return
         } else if (parcela.valor == parcela.recebido) {
           parcela.status = true;
         } else {
@@ -236,17 +263,17 @@
           if (formatting.length > 1)
             parcela.data_pagto = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
           else parcela.data_pagto = formatting[0];
-        }
+        } else parcela.data_pagto = null;
 
         let auth = JSON.parse(localStorage.getItem("auth"));
         await this.axios
-          .post(`${this.api}/api/${this.contaParcela.id}/parcelas`, parcela, {
+          .post(`${this.api}/api/${this.url}`, parcela, {
             headers: {
               token: auth.token,
             }
           })
           .then(() => {
-            this.$toasted.show(`Parcela criada com exito!`, {
+            this.$toasted.show(`${this.mensagem}`, {
               iconPack: "fontawesome",
               icon: "check",
               duration: 3000,
@@ -278,10 +305,15 @@ label {
   z-index: 9;
 }
 
+[class*="fa-money"] {
+  left: 2px;
+}
+
 input,
 select {
   height: 25px;
-  padding-left: 30px;
+  padding-left: 23px;
+  padding-right: 0;
   border: 0;
   border-radius: 0;
   border-bottom: 1px solid #333;
