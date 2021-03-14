@@ -1,6 +1,6 @@
 <template>
   <div class="row mb-3">
-    <div :class="(auth) ? 'col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4' : 'col-12 px-0' "
+    <div :class="(autorization) ? 'col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4' : 'col-12 px-0' "
       class="card border-secondary p-3 shadow-lg">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
@@ -31,14 +31,14 @@
           </div>
           <div class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
-              <span v-if="(auth && auth.permissao)" @click="usuario.permissao = !usuario.permissao"
+              <span v-if="(autorization && autorization.permissao)" @click="usuario.permissao = !usuario.permissao"
                 class="btn d-flex p-0">
                 <span class="mr-2">Permissao: </span>
                 <b-form-checkbox v-model="usuario.permissao" switch>
                 </b-form-checkbox>
               </span>
             </div>
-            <div v-if="(auth && auth.id)" class="col-4 offset-1 px-0 text-left pt-3">
+            <div v-if="(autorization && autorization.id)" class="col-4 offset-1 px-0 text-left pt-3">
               <span @click="usuario.ativo = !usuario.ativo" class="btn d-flex p-0">
                 <span class="mr-2">Ativo:</span>
                 <b-form-checkbox v-model="usuario.ativo" switch></b-form-checkbox>
@@ -49,7 +49,7 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="(auth)? functions.changeVisible(rota):changeVisible('LogIn') "
+        <button @click="(autorization)? functions.changeVisible(rota):changeVisible('LogIn') "
           class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="createUsuario()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
@@ -61,11 +61,12 @@
 
 <script>
   export default {
-    props: ['usuarioEdit', 'auth', 'functions', 'changeVisible'],
+    props: ['usuarioEdit', 'functions', 'changeVisible'],
     data() {
       return {
         loading: false,
         see: false,
+        autorization: {},
         usuario: {
           permissao: false,
           ativo: true,
@@ -78,12 +79,13 @@
       }
     },
     beforeMount() {
+      this.autorization = this.auth();
       if (this.usuarioEdit && this.usuarioEdit.id) {
         this.usuario = this.usuarioEdit;
         this.title = `Edição de Usuário`;
         this.url = `atualizar-usuario/${this.usuario.id}`;
         this.mensagem = `Usuário atualizado com exito!`;
-        if (this.auth.permissao) this.rota = `TodosUsuarios`;
+        if (this.autorization.permissao) this.rota = `TodosUsuarios`;
         this.action = `Alterar`;
       }
     },
@@ -102,89 +104,48 @@
       },
       async createUsuario() {
         if (!this.valid()) return
-
-        this.usuario.usuario = this.usuario.usuario.toLowerCase();
-        let auth = {
-          token: 'noToken'
-        };
         this.loading = true;
-        if (this.auth)
-          auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .post(`${this.api}/api/${this.url}`, this.usuario, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then(async (response) => {
-            if (response.status == 200) {
+        this.usuario.usuario = this.usuario.usuario.toLowerCase();
 
-              if (this.usuario.id == auth.id) {
-                await this.renewToken();
-                if (auth.id)
-                  await this.functions.tokenValido();
+        let response = await this.common.createUsuario(this.usuario, this.url);
+
+        if (response) {
+          if (response.status == 200) {
+            this.$toasted.show(`${this.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            });
+
+            if (this.autorization) {
+              if (this.usuarioEdit.id == this.autorization.id) {
+                await this.common.sigIn(this.usuario);
+                await this.functions.tokenValido();
               }
-
-              this.$toasted.show(`${this.mensagem}`, {
-                iconPack: "fontawesome",
-                icon: "check",
-                duration: 3000,
-                className: "bg-success",
-                theme: "bubble",
-              });
-
-              if (this.auth) {
-                this.usuario = {
-                  permissao: false,
-                  ativo: true,
-                };
-                this.functions.reset();
-                this.functions.changeVisible(this.rota);
-              } else this.changeVisible('LogIn');
+              this.usuario = {
+                permissao: false,
+                ativo: true,
+              };
+              this.functions.reset();
+              this.functions.changeVisible(this.rota);
             } else {
-              this.$toasted.show(`${response.data.mensagem}`, {
-                iconPack: "fontawesome",
-                icon: "times",
-                duration: 3000,
-                className: "bg-danger",
-                theme: "bubble",
-              });
+              await this.common.sigIn(this.usuario);
+              this.changeVisible('LogIn');
             }
-            this.loading = false;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$toasted.show("Dados não autorizados!", {
+          } else {
+            this.$toasted.show(`${response.data.mensagem}`, {
               iconPack: "fontawesome",
               icon: "times",
               duration: 3000,
               className: "bg-danger",
               theme: "bubble",
             });
-            this.loading = false;
-            this.$router.push("/");
-          });
+          }
+          this.loading = false;
+        }
       },
-      async renewToken() {
-        await this.axios
-          .post(`${this.api}/autenticar`, {
-            usuario: this.usuario.usuario,
-            senha: this.usuario.senha,
-          })
-          .then((response) => {
-            localStorage.setItem("auth", JSON.stringify(response.data));
-          })
-          .catch((err) => {
-            console.log("", err);
-            this.$toasted.show("Dados não autorizados!", {
-              iconPack: "fontawesome",
-              icon: "times",
-              duration: 3000,
-              className: "bg-danger",
-              theme: "bubble",
-            });
-          });
-      }
     }
   }
 </script>

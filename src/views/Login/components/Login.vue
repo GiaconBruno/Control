@@ -58,17 +58,14 @@
     methods: {
       async status() {
         this.loading = true;
-        await this.axios
-          .get(`${this.api}`)
-          .then((response) => {
-            console.log(response.data.start);
-            this.servidor = true;
-            this.redirect();
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.servidor = false;
-          });
+        let response = await this.common.status();
+        if (response) {
+          console.log(response.data.start);
+          this.servidor = true;
+          this.redirect();
+        } else {
+          this.servidor = false;
+        }
         this.loading = false;
       },
       redirect() {
@@ -111,27 +108,25 @@
 
         this.user = this.user.toLowerCase();
         this.loading = true;
-        await this.axios
-          .post(`${this.api}/autenticar`, {
-            usuario: this.user,
-            senha: this.password,
-          })
-          .then((response) => {
-            localStorage.setItem("auth", JSON.stringify(response.data));
-            this.$router.push("/home");
-            this.loading = false;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$toasted.show("Dados não autorizados!", {
-              iconPack: "fontawesome",
-              icon: "times",
-              duration: 3000,
-              className: "bg-danger",
-              theme: "bubble",
-            });
-            this.loading = false;
+
+        let sigIn = await this.common.sigIn({
+          usuario: this.user,
+          senha: this.password,
+        });
+
+        if (sigIn) {
+          this.$router.push("/home");
+          this.loading = false;
+        } else {
+          this.$toasted.show("Dados não autorizados!", {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 5000,
+            className: "bg-danger",
+            theme: "bubble",
           });
+          this.loading = false;
+        }
       },
     },
   };

@@ -72,12 +72,8 @@
       }
     },
     async beforeMount() {
-      await this.getUsuarios();
-
-      let auth = JSON.parse(localStorage.getItem("auth"));
-      this.usuarios.map(user => {
-        if (user.id == auth.id) this.fk_usuario_id.push(user.id);
-      });
+      this.usuarios = await this.common.getUsuarios('todos');
+      this.fk_usuario_id.push(this.auth().id);
 
       if (this.contaEdit.id) {
         this.conta.descricao = this.contaEdit.descricao;
@@ -100,22 +96,6 @@
       }
     },
     methods: {
-      async getUsuarios() {
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .get(`${this.api}/api/usuarios`, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then((response) => {
-            this.usuarios = response.data;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$router.push("/");
-          });
-      },
       addUsuario(payload) {
         if (payload) {
           this.fk_usuario_id.push(payload);
@@ -138,35 +118,25 @@
           });
           return
         }
-
+        this.loading = true;
         let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
         this.conta.fk_usuario_id = contas;
 
-        this.loading = true;
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .post(`${this.api}/api/${this.url}`, this.conta, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then(() => {
-            this.$toasted.show(`${this.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
-            this.loading = false;
-            this.functions.changeVisible('TodasContas')
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$router.push("/");
+        let response = this.common.createConta(this.conta, this.url)
+        if (response) {
+          this.$toasted.show(`${this.mensagem}`, {
+            iconPack: "fontawesome",
+            icon: "check",
+            duration: 3000,
+            className: "bg-success",
+            theme: "bubble",
           });
+          this.loading = false;
+          this.functions.changeVisible('TodasContas')
+        } else this.$router.push("/");
+
         this.loading = false;
-      }
+      },
     }
   }
 </script>

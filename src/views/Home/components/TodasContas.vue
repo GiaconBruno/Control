@@ -121,47 +121,36 @@
     },
     methods: {
       async getContas() {
-        let auth = JSON.parse(localStorage.getItem("auth"));
         this.loading = true;
-        await this.axios
-          .get(`${this.api}/api/contas/${auth.id}`, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then((response) => {
-            this.contas = response.data;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            localStorage.clear();
-            this.$router.push("/");
+        let response = await this.common.getContas();
+        if (response) this.contas = response;
+        else {
+          this.$toasted.show("Dados não autorizados!", {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 5000,
+            className: "bg-danger",
+            theme: "bubble",
           });
+          localStorage.clear();
+          this.$router.push("/");
+        }
         this.loading = false;
       },
       async getParcelas(payload, type) {
+        this.loadingParcelas = true;
         this.conta = payload;
         let conta = 0;
         if (this.parcelas.length) conta = this.parcelas[0].fk_conta_id;
         this.parcelas = [];
         if ((conta == payload) && (type != 'deletar')) return;
 
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        this.loadingParcelas = true;
-        await this.axios
-          .get(`${this.api}/api/${payload}/parcelas`, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then((response) => {
-            this.parcelas = response.data;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            localStorage.clear();
-            this.$router.push("/");
-          });
+        let response = await this.common.getParcelas(payload);
+        if (response) this.parcelas = response;
+        else {
+          localStorage.clear();
+          this.$router.push("/");
+        }
 
         this.formatting();
         this.loadingParcelas = false;
@@ -199,27 +188,20 @@
       },
       async deletarConta() {
         this.loadingDel = true;
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .delete(`${this.api}/api/deletar-conta/${this.deletar.id}`, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then((response) => {
-            this.$toasted.show(`${response.data.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$router.push("/");
-            this.loadingDel = false;
+
+        let response = await this.common.deletarConta(this.deletar.id);
+        if (response)
+          this.$toasted.show(`${response.mensagem}`, {
+            iconPack: "fontawesome",
+            icon: "check",
+            duration: 3000,
+            className: "bg-success",
+            theme: "bubble",
           });
+        else {
+          this.$router.push("/");
+          this.loadingDel = false;
+        }
         this.deletar = null;
         await this.getContas();
         this.loadingDel = false;

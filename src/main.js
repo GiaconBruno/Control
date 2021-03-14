@@ -11,8 +11,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import Toasted from 'vue-toasted';
-import service from './services/auth';
 import money from 'v-money';
+
+import service from './services/auth';
+import common from '@/services/common.js';
 
 require('@/assets/css/all.min.css');
 require('@/assets/css/fontawesome.min.css');
@@ -36,6 +38,7 @@ Vue.use(money, {
 Vue.prototype.axios = axios;
 Vue.prototype.api = process.env.VUE_APP_BASE_URL;
 Vue.prototype.auth = service.auth;
+Vue.prototype.common = common;
 
 Vue.config.productionTip = false;
 console.log(process.env.VUE_APP_BASE_URL);

@@ -90,27 +90,17 @@
       },
       async deletarParcela() {
         this.loadingDel = true;
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .delete(`${this.api}/api/deletar-parcela/${this.deletar.id}`, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then((response) => {
-            this.$toasted.show(`${response.data.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$router.push("/");
-            this.loadingDel = false;
+
+        let response = await this.common.deletarParcela(this.deletar.id);
+        if (response)
+          this.$toasted.show(`${response.mensagem}`, {
+            iconPack: "fontawesome",
+            icon: "check",
+            duration: 3000,
+            className: "bg-success",
+            theme: "bubble",
           });
+        else this.$router.push("/");
         this.getParcelas(this.conta.id, 'deletar');
         this.deletar = null;
         this.loadingDel = false;

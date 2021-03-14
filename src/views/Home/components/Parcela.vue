@@ -119,20 +119,9 @@
     },
     async beforeMount() {
       this.loadingForm = true;
-      let auth = JSON.parse(localStorage.getItem("auth"));
-      await this.axios
-        .get(`${this.api}/api/formpagto`, {
-          headers: {
-            token: auth.token,
-          }
-        })
-        .then((response) => {
-          this.formaPagto = response.data;
-        })
-        .catch((err) => {
-          console.log("" + err);
-          this.$router.push("/");
-        });
+      let response = await this.common.getFormasPagto();
+      if (response) this.formaPagto = response;
+      else this.$router.push("/");
       this.loadingForm = false;
     },
     mounted() {
@@ -141,10 +130,14 @@
           ...this.parcelaEdit
         };
         let data;
-        data = this.parcela.vencimento.split('/');
-        this.parcela.vencimento = `${data[2]}-${data[1]}-${data[0]}`;
-        data = this.parcela.data_pagto.split('/');
-        this.parcela.data_pagto = `${data[2]}-${data[1]}-${data[0]}`;
+        if (this.parcela.vencimento) {
+          data = this.parcela.vencimento.split('/');
+          this.parcela.vencimento = `${data[2]}-${data[1]}-${data[0]}`;
+        }
+        if (this.parcela.data_pagto) {
+          data = this.parcela.data_pagto.split('/');
+          this.parcela.data_pagto = `${data[2]}-${data[1]}-${data[0]}`;
+        }
 
         this.title = 'Parcela';
         this.action = 'Salvar';
@@ -225,6 +218,7 @@
       async createParcela() {
         if (!this.valid()) return
 
+        //Formating
         this.loading = true;
         let parcela = {
           ...this.parcela
@@ -265,27 +259,19 @@
           else parcela.data_pagto = formatting[0];
         } else parcela.data_pagto = null;
 
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .post(`${this.api}/api/${this.url}`, parcela, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then(() => {
-            this.$toasted.show(`${this.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
-            this.functions.changeVisible('TodasContas');
-          })
-          .catch((err) => {
-            console.log("" + err);
-            // this.$router.push("/");
+
+        //GRAVANDO
+        let response = await this.common.createParcela(parcela, this.url);
+        if (response) {
+          this.$toasted.show(`${this.mensagem}`, {
+            iconPack: "fontawesome",
+            icon: "check",
+            duration: 3000,
+            className: "bg-success",
+            theme: "bubble",
           });
+          this.functions.changeVisible('TodasContas');
+        } else this.$router.push("/");
         this.loading = false;
       },
     }

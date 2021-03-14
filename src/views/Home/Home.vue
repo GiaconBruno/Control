@@ -30,7 +30,8 @@
         </div>
       </div>
       <hr class="my-2" />
-      <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}" :auth="usuario"
+      <!-- :auth="usuario" -->
+      <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
         :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta, setEditParcela}"
         ref="All" class="position-relative" />
     </div>
@@ -71,40 +72,32 @@
     },
     methods: {
       async tokenValido() {
-        let auth = this.auth()
-        if (!auth) return
-
-        // let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .get(`${this.api}/api/usuario/${auth.id}`)
-          .then((response) => {
-            this.usuario = response.data;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$router.push("/");
+        if (!this.auth) return
+        let resolve = await this.common.token();
+        if (resolve) this.usuario = resolve
+        else if (this.$router.app._route.path != '/') {
+          this.$toasted.show("Token Inválido!", {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 5000,
+            className: "bg-danger",
+            theme: "bubble",
           });
+          localStorage.clear();
+          this.$router.push("/");
+        }
       },
       async getUsuarios() {
         this.loading = true;
-        let auth = JSON.parse(localStorage.getItem("auth"));
-        await this.axios
-          .get(`${this.api}/api/usuarios`, {
-            headers: {
-              token: auth.token,
-            }
-          })
-          .then((response) => {
-            response.data.map(user => {
-              if (auth.id == user.id) this.usuarioEdit = user;
-            })
-            this.loading = false;
-          })
-          .catch((err) => {
-            console.log("" + err);
-            this.$router.push("/");
-            this.loading = false;
-          });
+
+        let response = await this.common.getUsuarios();
+        if (response) {
+          this.usuarioEdit = response;
+          this.loading = false;
+        } else {
+          this.loading = false;
+          this.$router.push("/");
+        }
       },
       changeVisible(payload) {
         this.visible = payload;
