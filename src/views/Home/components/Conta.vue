@@ -51,7 +51,7 @@
         </button>
       </div>
     </div>
-    <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
+    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
   </div>
 </template>
 

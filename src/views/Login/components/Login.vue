@@ -1,5 +1,5 @@
 <template>
-  <div class="py-5 px-4 bg-white w-100 text-left position-relative">
+  <div class="py-4 py-lg-5 px-4 bg-white w-100 text-left position-relative">
     <div :class="{'not-allowed':(!servidor)}" class="bg-white position-absolute"></div>
     <div v-if="loading" class="alert bg-warning alert-dismissible fade show" role="alert">
       <div class="spinner-border spinner-border-sm mr-3" role="status"></div>
@@ -30,12 +30,12 @@
     </div>
     <div class="mt-3 text-right">
       <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
-        <i class="fas fa-sign-in-alt mr-5"></i>
-        <span class="text-white mr-5"> Entrar</span>
+        <i class="fas fa-sign-in-alt mr-2 mr-sm-5"></i>
+        <span class="text-white mr-2 mr-sm-5"> Entrar</span>
       </button>
       <button @click="changeVisible('Usuario')" :disabled="loading" class="form-control btn btn-primary mt-3">
-        <i class="fas fa-user-circle mr-5"></i>
-        <span class="text-white mr-5"> Criar</span>
+        <i class="fas fa-user-circle mr-2 mr-sm-5"></i>
+        <span class="text-white mr-2 mr-sm-5"> Criar</span>
       </button>
     </div>
   </div>

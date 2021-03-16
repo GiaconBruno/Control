@@ -1,41 +1,70 @@
 <template>
-  <section class="py-5">
-    <div v-if="usuario && !loading" class="container position-relative">
+  <section class="pt-3 pt-lg-5">
+    <div v-if="usuario " class="container position-relative">
       <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
       <hr class="mt-0" />
-      <div class="row">
-        <div class="col-12 col-md-11 offset-md-1 d-flex justify-content-between align-items-center">
-          <h2 class="m-0">
-            <span class="smallText">Bem Vindo, </span>
-            {{ usuario.nome }}
-            <span v-if="(usuario.permissao)" class="smallText">(Master) </span>
-          </h2>
-          <div class="rounded border border-dark p-0 m-0">
-            <i @click="changeVisible('TodasContas')" :class="{'disabled': (visible=='TodasContas')}"
-              class="btn fa fa-home text-secundary px-1 mx-2"></i>
-            <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')"
-              :class="{'disabled': (visible=='TodosUsuarios')}" class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
-            <i v-if="(usuario.permissao)" @click="createUsuario()" :class="{'disabled': (visible=='Usuario')}"
-              class="btn fa fa-user-plus text-success px-1 mx-2"></i>
-            <i @click="setEditUsuario()" :class="{'disabled': (visible=='Usuario')}"
-              class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
-            <i @click="createConta()" :class="{'disabled': (visible=='Conta')}"
-              class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
-            <i v-if="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()"
-              class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
+      <div class="row mx-0">
+        <div class="col-10 col-lg-9 offset-lg-1 px-0">
+          <div class="row mx-0 align-items-center">
+            <div class="col-12 col-md-6 px-0">
+              <h2 class="m-0">
+                <span class="smallText">Bem Vindo, </span>
+                {{ usuario.nome }}
+                <span v-if="(usuario.permissao)" class="largeText">(Master) </span>
+              </h2>
+            </div>
+            <div class="col-12 col-md-6 px-0">
+              <div class="rounded border border-dark p-0 m-0">
+                <i @click="changeVisible('TodasContas')" :class="{'disabled': (visible=='TodasContas')}"
+                  class="btn fa fa-home text-secundary px-1 mx-2"></i>
+                <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')"
+                  :class="{'disabled': (visible=='TodosUsuarios')}"
+                  class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
+                <i v-if="(usuario.permissao)" @click="createUsuario()" :class="{'disabled': (visible=='Usuario')}"
+                  class="btn fa fa-user-plus text-success px-1 mx-2"></i>
+                <i @click="setEditUsuario()" :class="{'disabled': (visible=='Usuario')}"
+                  class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
+                <i @click="createConta()" :class="{'disabled': (visible=='Conta')}"
+                  class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+                <i v-if="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()"
+                  class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
+              </div>
+            </div>
           </div>
-          <span @click="sigOut()" class="btn">
-            <i class="fas fa-sign-in-alt"></i> Sair
-          </span>
+        </div>
+        <div class="col-2 px-0">
+          <div class="row mx-0 align-items-center justify-content-end h-100">
+            <span @click="sigOut()" class="btn">
+              <i class="fas fa-sign-in-alt"></i> Sair
+            </span>
+          </div>
         </div>
       </div>
       <hr class="my-2" />
       <!-- :auth="usuario" -->
-      <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
-        :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta, setEditParcela}"
-        ref="All" class="position-relative" />
+      <transition name="anim">
+        <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
+          :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta, setEditParcela}"
+          ref="All" class="position-relative" />
+      </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
+     <div class="position-fixed p-0" style="top: auto; bottom: 5px; left: 0; right: 0;">
+      <div class="row m-0 justify-content-between align-items-center">
+        <div class="col-6 col-md-4 px-0">
+          <span class="text-white smallText">Desenvolvido por: Bruno Giacon</span>
+        </div>
+        <div class="col-6 col-md-4 px-0">
+          <span>
+            <a href="http://github.com/giaconbruno" target="_blank" class="text-white smallText text-underline">
+              github.com/giaconbruno/</a>
+          </span>
+        </div>
+        <div class="col-6 offset-3 col-md-4 offset-md-0 px-0">
+          <span class="text-white smallText">email: giacon_bruno@hotmail.com</span>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -45,6 +74,7 @@
   import TodasContas from './components/TodasContas';
   import Conta from './components/Conta';
   import Parcela from './components/Parcela';
+  import loading from './components/loading';
   export default {
     components: {
       TodosUsuarios,
@@ -52,6 +82,7 @@
       TodasContas,
       Conta,
       Parcela,
+      loading,
     },
     data() {
       return {
@@ -88,14 +119,14 @@
         }
       },
       async getUsuarios() {
-        this.loading = true;
-
+        // this.loading = true;
+        this.changeVisible('loading');
         let response = await this.common.getUsuarios();
         if (response) {
           this.usuarioEdit = response;
-          this.loading = false;
+          // this.loading = false;
         } else {
-          this.loading = false;
+          // this.loading = false;
           this.$router.push("/");
         }
       },
@@ -154,14 +185,53 @@ section {
 }
 
 .container {
-  min-height: calc(100vh - 6rem);
-  max-height: calc(100vh - 6rem);
+  min-height: calc(100vh - 5.5rem);
+  max-height: calc(100vh - 5.5rem);
   border-radius: 5px;
   background: ghostwhite;
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.largeText {
+  font-size: large;
 }
 
 .smallText {
-  font-size: large;
+  font-size: 10px;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.anim-enter-active {
+  animation: home 0.6s;
+}
+
+@keyframes home {
+  from {
+    transform: translateX(30vw);
+    opacity: 0.5;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .container {
+    min-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 3rem);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .container {
+    min-height: calc(100vh - 4rem);
+    max-height: calc(100vh - 4rem);
+  }
 }
 </style>

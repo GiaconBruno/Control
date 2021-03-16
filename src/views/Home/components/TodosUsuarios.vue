@@ -36,7 +36,7 @@
         <span>@ = usuario</span>
       </div>
     </div>
-    <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
+    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
     <div class="row text-center">
       <div class="col-12 mb-3">
         <button @click="functions.changeVisible('TodasContas')"

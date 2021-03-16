@@ -5,7 +5,25 @@
     </div>
     <div class="row mx-0 justify-content-center ">
       <div class="col-12 col-md-6 col-lg-4 offset-lg-8 d-flex align-items-center">
-        <component :is="visible" v-bind="{changeVisible}" />
+        <transition name="anim">
+          <component :is="visible" v-bind="{changeVisible}" />
+        </transition>
+      </div>
+    </div>
+    <div class="position-fixed p-0" style="top: auto; bottom: 5px; left: 0; right: 0;">
+      <div class="row m-0 justify-content-between align-items-center">
+        <div class="col-6 col-md-4 px-0">
+          <span class="text-white smallText">Desenvolvido por: Bruno Giacon</span>
+        </div>
+        <div class="col-6 col-md-4 px-0">
+          <span>
+            <a href="http://github.com/giaconbruno" target="_blank" class="text-white smallText text-underline">
+              github.com/giaconbruno/</a>
+          </span>
+        </div>
+        <div class="col-6 offset-3 col-md-4 offset-md-0 px-0">
+          <span class="text-white smallText">email: giacon_bruno@hotmail.com</span>
+        </div>
       </div>
     </div>
   </div>
@@ -40,6 +58,7 @@ section {
 
 .col-12 {
   height: 100vh;
+  overflow-x: hidden;
 }
 
 .position-absolute {
@@ -50,6 +69,37 @@ section {
 
 h1 {
   color: white;
+}
+
+.smallText {
+  font-size: 10px;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.anim-enter-active {
+  min-width: 100%;
+  animation: home 1.6s;
+}
+
+.anim-leave-active {
+  min-width: 100%;
+  animation: home 0.6s;
+  animation-direction: reverse;
+}
+
+@keyframes home {
+  from {
+    transform: translateX(30vw);
+    opacity: 0.5;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @media screen and (max-width: 768px) {

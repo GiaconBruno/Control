@@ -1,6 +1,7 @@
 <template>
-  <div class="row mb-3">
-    <div :class="(autorization) ? 'col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4' : 'col-12 px-0' "
+  <div class="row mx-0 mb-3">
+    <div v-if="(usuario)"
+      :class="(autorization) ? 'col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4' : 'col-12 px-0' "
       class="card border-secondary p-3 shadow-lg">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
@@ -29,19 +30,19 @@
               class="form-control" placeholder="Digite uma Senha" />
             <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray"></i>
           </div>
-          <div class="row m-0">
+          <div v-if="(autorization && autorization.id)" class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
-              <span v-if="(autorization && autorization.permissao)" @click="usuario.permissao = !usuario.permissao"
-                class="btn d-flex p-0">
-                <span class="mr-2">Permissao: </span>
+              <span class="d-flex p-0">
                 <b-form-checkbox v-model="usuario.permissao" switch>
+                  <span>Permissao </span>
                 </b-form-checkbox>
               </span>
             </div>
-            <div v-if="(autorization && autorization.id)" class="col-4 offset-1 px-0 text-left pt-3">
-              <span @click="usuario.ativo = !usuario.ativo" class="btn d-flex p-0">
-                <span class="mr-2">Ativo:</span>
-                <b-form-checkbox v-model="usuario.ativo" switch></b-form-checkbox>
+            <div class="col-4 offset-1 px-0 text-left pt-3">
+              <span class="d-flex p-0">
+                <b-form-checkbox v-model="usuario.ativo" switch>
+                  <span>Ativo</span>
+                </b-form-checkbox>
               </span>
             </div>
           </div>
@@ -56,6 +57,7 @@
         </button>
       </div>
     </div>
+    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
   </div>
 </template>
 

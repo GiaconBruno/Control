@@ -1,5 +1,5 @@
 <template>
-  <div v-if="(loadingParcelas)" class="spinner-border text-green spinner-border-sm mr-3" role="status">
+  <div v-if="(loadingParcelas)" class="spinner-border text-success spinner-border-sm my-2" role="status">
   </div>
   <div v-else-if="parcelas.length">
     <div class="row m-0" style="background-color: #ffc10790;">

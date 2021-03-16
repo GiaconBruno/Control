@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12 px-2">
-      <div v-if="loading" class="spinner-border text-green spinner-border-sm mr-3" role="status"></div>
+      <div v-if="loading" class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
       <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
       <div v-else>
         <h5 class="smallText">Contas: </h5>
