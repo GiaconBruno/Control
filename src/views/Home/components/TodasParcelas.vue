@@ -2,7 +2,7 @@
   <div v-if="(loadingParcelas)" class="spinner-border text-success spinner-border-sm my-2" role="status">
   </div>
   <div v-else-if="parcelas.length">
-    <div class="row m-0" style="background-color: #ffc10790;">
+    <div class="row m-0" style="background-color: #ffc10790">
       <div class="col-11 px-0">
         <div class="row m-0">
           <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0 text-sm">
@@ -26,7 +26,8 @@
     </div>
     <hr class="m-0">
     <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
-      class="row m-0 parcela align-items-center">
+      class="row m-0 parcela align-items-center"
+      :style="(new Date(parcela.oriVenc).setHours(23,59,59) < Date.now() && (!parcela.status)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
       <div class="col-11 px-0">
         <div class="row m-0">
           <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">

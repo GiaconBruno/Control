@@ -5,20 +5,27 @@
       <div v-for="usuario in usuarios" :key="usuario.id"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
         <div class="row align-items-center">
-          <div class="col-9 col-lg-11 py-lg-0">
-            <div class="row text-lg-left align-items-center">
-              <div class="col-12 col-lg-6">
-                <span class="text-sm">Usuário: </span>
-                <strong>{{usuario.nome}}</strong> - @{{ usuario.usuario }}
+          <div class="col-9 col-lg-11 pr-0 py-lg-0">
+            <div class="row text-left align-items-center">
+              <div class="col-12 col-lg-6 pr-0">
+                <div class="row mx-0 justify-content-between">
+                  <span>
+                    <span class="text-sm pl-lg-3">Usuário: </span>
+                    <strong>{{usuario.nome}}</strong> - @{{ usuario.usuario }}
+                  </span>
+                  <span>
+                    <span class="text-sm pr-lg-5"> {{ usuario.acesso || 'Nenhum' }}</span>
+                  </span>
+                </div>
               </div>
-              <div class="col-12 col-lg-4">
+              <div class="col-12 col-lg-4 pr-0">
                 <div class="row justify-content-around align-items-center text-sm">
-                  <div class="col-6">
+                  <div class="col-6 pr-0">
                     <span>Permissão: </span>
                     <i :class="(usuario.permissao) ? 'fa-check text-success': 'fa-times text-danger'"
                       class="fa mx-1"></i>
                   </div>
-                  <div class="col-6">
+                  <div class="col-6 pr-0">
                     <span>Ativo: </span>
                     <i :class="(usuario.ativo) ? 'fa-check text-success': 'fa-times text-danger'" class="fa mx-1"></i>
                   </div>
@@ -74,7 +81,19 @@
       async getUsuarios() {
         this.usuarios = [];
         let response = await this.common.getUsuarios('todos');
-        (response) ? this.usuarios = response: this.$router.push("/");
+        if (response) {
+          this.usuarios = response
+          this.usuarios.map((users, index) => {
+            if (users.acesso) {
+              let date = new Date(users.acesso);
+              date =
+                `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}` +
+                ` ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`;
+              this.usuarios[index].acesso = date;
+            }
+          })
+        } else this.$router.push("/");
+
       },
       editUsuario(payload) {
         this.functions.setEditUsuario(payload);

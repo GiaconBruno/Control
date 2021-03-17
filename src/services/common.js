@@ -21,7 +21,7 @@ export default {
       senha: payload.senha,
     }).then((response) => {
       localStorage.setItem("auth", JSON.stringify(response.data));
-      return true;
+      return response.data;
     }).catch((err) => {
       console.log("" + err);
       return false;

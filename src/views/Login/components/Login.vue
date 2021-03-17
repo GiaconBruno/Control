@@ -115,8 +115,15 @@
         });
 
         if (sigIn) {
-          this.$router.push("/home");
-          this.loading = false;
+          let now = Date.now();
+          let url = `atualizar-usuario/${sigIn.id}`
+          let response = await this.common.createUsuario({
+            acesso: now
+          }, url)
+          if (response) {
+            this.$router.push("/home");
+            this.loading = false;
+          }
         } else {
           this.$toasted.show("Dados não autorizados!", {
             iconPack: "fontawesome",

@@ -8,7 +8,7 @@
         <div class="accordion" role="tablist">
           <div v-for="conta in contas" :key="conta.id" class="mb-3">
             <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
-              :class="{'contabord': (parcelas.length)}"
+              :class="{'contabord': (parcelas.length), 'pago': (conta.status)}"
               class="btn text-left alert-success row m-0 d-flex justify-content-between align-items-center">
               <div class="col-auto px-0">
                 <i :class="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
@@ -170,6 +170,7 @@
             //Formatando
             e.valor = `R$ ${String((e.valor).toFixed(2)).replaceAll('.', ',')}`;
 
+            e.oriVenc = e.vencimento;
             e.vencimento = ((e.vencimento).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
 
             if (e.data_pagto)
@@ -245,6 +246,27 @@ label {
   border: 1px solid dimgray;
   border-top: 0;
   border-radius: 0 0 5px 5px;
+}
+
+.pago {
+  overflow: hidden;
+  position: relative;
+}
+
+.pago::before {
+  content: "Pago";
+  padding: 0 30px;
+  font-size: 10px;
+  color: white;
+  background-color: seagreen;
+  box-shadow: 0 -2px 5px 0.5px dimgray;
+  /* border-radius: 50%; */
+  display: block;
+  position: absolute;
+  top: 8px;
+  left: -15px;
+  z-index: 10;
+  transform: rotate(-35deg);
 }
 
 @media screen and (max-width: 768px) {

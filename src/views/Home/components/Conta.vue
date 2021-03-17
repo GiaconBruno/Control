@@ -121,6 +121,7 @@
         this.loading = true;
         let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
         this.conta.fk_usuario_id = contas;
+        this.conta.status = false;
 
         let response = this.common.createConta(this.conta, this.url)
         if (response) {
