@@ -3,6 +3,24 @@
     <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-3">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
+      <div class="row">
+        <div class="col-6 text-left">
+          <label id="lbDescricao" for="descricao">Descrição:</label>
+          <div class="position-relative">
+            <i id="iDescricao" class="fa fa-pen-alt text-gray"></i>
+            <input v-model="parcela.descricao" @blur="setRecebido()" type="text" name="descricao" id="descricao"
+              class="form-control" placeholder="Descrição" />
+          </div>
+        </div>
+        <div class="col-6 text-left">
+          <label id="lbVencimento" for="vencimento">Vencimento:</label>
+          <div class="position-relative">
+            <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
+            <input v-model="parcela.vencimento" @blur="setRecebido()" @keydown.delete="parcela.vencimento = null"
+              type="date" name="vencimento" id="vencimento" class="form-control" />
+          </div>
+        </div>
+      </div>
       <div class="row justify-content-between">
         <div class="col-4 pr-2 text-left text-red">
           <label id="lbValor" for="valor">Valor:</label>
@@ -32,15 +50,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6 offset-3 text-left">
-          <label id="lbVencimento" for="vencimento">Vencimento:</label>
-          <div class="position-relative">
-            <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
-            <input v-model="parcela.vencimento" type="date" name="vencimento" id="vencimento" class="form-control" />
-          </div>
-        </div>
-      </div>
-      <div class="row">
         <div :class="(formSelect.select)? 'pr-3':'pr-0' " class="col-4 text-left">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
@@ -48,8 +57,8 @@
             <div v-if="formaPagto">
               <select v-if="formSelect.select" v-model="parcela.forma_pagto"
                 @change="(parcela.forma_pagto == 'other')? (formSelect.select = false) : (formSelect.select = true)"
-                :class="{'text-sm': (parcela.forma_pagto==null)}" name="formaPagto" id="formaPagto"
-                class="form-control py-0 pl-3">
+                @blur="setRecebido()" :class="{'text-sm': (parcela.forma_pagto==null)}" name="formaPagto"
+                id="formaPagto" class="form-control py-0 pl-3">
                 <option :value="null" class="form-control">Selecione..</option>
                 <option value="other" class="form-control">Criar</option>
                 <option v-for="(forma, f) in formaPagto" :key="f" :value="forma" class="form-control">
@@ -58,8 +67,8 @@
               </select>
               <div v-else class="row m-0">
                 <div class="col-9 px-0">
-                  <input v-model="formSelect.descricao" id="ipformaPagto" class="form-control" type="text"
-                    placeholder="Digite.." />
+                  <input v-model="formSelect.descricao" @keypress.enter="createForma()" id="ipformaPagto"
+                    class="form-control" type="text" placeholder="Digite.." />
                 </div>
                 <button @click="createForma()" class="btn btn-primary py-0 px-1 text-sm">OK!</button>
               </div>
@@ -79,8 +88,8 @@
           <label id="lbPagamento" for="pagamento">Pagamento:</label>
           <div class="position-relative">
             <i id="iPagamento" class="fa fa-calendar-check text-gray"></i>
-            <input v-model="parcela.data_pagto" @keypress.delete="parcela.data_pagto=null; $forceUpdate()" type="date"
-              name="pagamento" id="pagamento" class="form-control" />
+            <input v-model="parcela.data_pagto" @keydown.delete="parcela.data_pagto = null" type="date" name="pagamento"
+              id="pagamento" class="form-control" />
           </div>
         </div>
       </div>
@@ -157,11 +166,24 @@
       createForma() {
         if (this.formSelect.descricao)
           this.formaPagto.push(this.formSelect.descricao.toUpperCase())
+        if (this.formSelect.descricao) this.parcela.forma_pagto = this.formaPagto[this.formaPagto.length - 1];
+        else this.parcela.forma_pagto = null;
         this.formSelect = {
           descricao: '',
           select: true
         };
-        this.parcela.forma_pagto = null;
+        this.setRecebido();
+      },
+      setRecebido() {
+        if ((this.parcela.forma_pagto) && this.parcela.forma_pagto != 'other') {
+          this.parcela.recebido = parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0);
+          this.parcela.data_pagto = new Date(Date.now());
+          this.parcela.data_pagto = (this.parcela.data_pagto).toLocaleString('pt-BR')
+            .replace(/(\d{2})\/(\d{2})\/(\d{4}) \d{2}:\d{2}:\d{2}/g, '$3-$2-$1');
+        } else {
+          this.parcela.recebido = 0;
+          this.parcela.data_pagto = null;
+        }
       },
       valid() {
         if (!this.parcela.vencimento || !this.parcela.valor) {

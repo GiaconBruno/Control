@@ -2,7 +2,7 @@
   <div>
     <h5 class="smallText text-center">Usuários: </h5>
     <div v-if="usuarios.length" class="row m-0">
-      <div v-for="usuario in usuarios" :key="usuario.id"
+      <div v-for="(usuario, i) in usuarios" :key="usuario.id"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
         <div class="row align-items-center">
           <div class="col-9 col-lg-11 pr-0 py-lg-0">
@@ -34,8 +34,11 @@
             </div>
           </div>
           <div class="col px-0">
-            <i @click="editUsuario(usuario)" class="btn fa fa-edit text-primary p-0 mx-2"></i>
-            <i @click="showDeletar(usuario)" class="btn fa fa-trash text-danger p-0 mx-2"></i>
+            <i @click="editUsuario(usuario)" :id="`usuarioEditar${i}`" class="btn fa fa-edit text-primary p-0 mx-2"></i>
+            <b-tooltip :target="`usuarioEditar${i}`" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
+            <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2"></i>
+            <b-tooltip :target="`usuarioRemove${i}`" triggers="hover" noninteractive> Deletar Usuário
+            </b-tooltip>
           </div>
         </div>
       </div>

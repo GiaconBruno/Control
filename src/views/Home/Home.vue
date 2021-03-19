@@ -15,19 +15,22 @@
             </div>
             <div class="col-12 col-md-6 px-0">
               <div class="rounded border border-dark p-0 m-0">
-                <i @click="changeVisible('TodasContas')" :class="{'disabled': (visible=='TodasContas')}"
+                <i @click="changeVisible('TodasContas')" id="todasContas"
                   class="btn fa fa-home text-secundary px-1 mx-2"></i>
-                <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')"
-                  :class="{'disabled': (visible=='TodosUsuarios')}"
+                <b-tooltip target="todasContas" triggers="hover" noninteractive> início </b-tooltip>
+                <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')" id="todosUsuarios"
                   class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
-                <i v-if="(usuario.permissao)" @click="createUsuario()" :class="{'disabled': (visible=='Usuario')}"
+                <b-tooltip target="todosUsuarios" triggers="hover" noninteractive> Usuários </b-tooltip>
+                <i v-if="(usuario.permissao)" @click="createUsuario()" id="criarUsuario"
                   class="btn fa fa-user-plus text-success px-1 mx-2"></i>
-                <i @click="setEditUsuario()" :class="{'disabled': (visible=='Usuario')}"
-                  class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
-                <i @click="createConta()" :class="{'disabled': (visible=='Conta')}"
-                  class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
-                <i v-if="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()"
+                <b-tooltip target="criarUsuario" triggers="hover" noninteractive> Criar Usuários </b-tooltip>
+                <i @click="setEditUsuario()" id="editarUsuario" class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
+                <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
+                <i @click="createConta()" id="criarConta" class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+                <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
+                <i v-show="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()" id="atualizar"
                   class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
+                <b-tooltip target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
               </div>
             </div>
           </div>
@@ -49,7 +52,7 @@
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
-     <div class="position-fixed p-0" style="top: auto; bottom: 5px; left: 0; right: 0;">
+    <div class="position-fixed p-0" style="top: auto; bottom: 5px; left: 0; right: 0;">
       <div class="row m-0 justify-content-between align-items-center">
         <div class="col-6 col-md-4 px-0">
           <span class="text-white smallText">Desenvolvido por: Bruno Giacon</span>
@@ -57,7 +60,7 @@
         <div class="col-6 col-md-4 px-0">
           <span>
             <a href="http://github.com/giaconbruno" target="_blank" class="text-white smallText text-underline">
-              github.com/giaconbruno/</a>
+              github.com/giaconbruno</a>
           </span>
         </div>
         <div class="col-6 offset-3 col-md-4 offset-md-0 px-0">

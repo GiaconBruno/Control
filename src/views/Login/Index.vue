@@ -18,7 +18,7 @@
         <div class="col-6 col-md-4 px-0">
           <span>
             <a href="http://github.com/giaconbruno" target="_blank" class="text-white smallText text-underline">
-              github.com/giaconbruno/</a>
+              github.com/giaconbruno</a>
           </span>
         </div>
         <div class="col-6 offset-3 col-md-4 offset-md-0 px-0">

@@ -6,7 +6,7 @@
       <div v-else>
         <h5 class="smallText">Contas: </h5>
         <div class="accordion" role="tablist">
-          <div v-for="conta in contas" :key="conta.id" class="mb-3">
+          <div v-for="(conta,i) in contas" :key="conta.id" class="mb-3">
             <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
               :class="{'contabord': (parcelas.length), 'pago': (conta.status)}"
               class="btn text-left alert-success row m-0 d-flex justify-content-between align-items-center">
@@ -67,9 +67,17 @@
               </div>
               <div class="col-auto px-0">
                 <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
-                  <i @click.stop="functions.setConta(conta)" class="fa fa-plus-circle text-success px-2 py-1"></i>
-                  <i @click.stop="functions.setEditConta(conta)" class="fa fa-edit text-primary px-2 py-1"></i>
-                  <i @click.stop="showDeletar(conta)" class="fa fa-trash text-danger px-2 py-1"></i>
+                  <i @click.stop="functions.setConta(conta)" :id="`iParela${i}`"
+                    class="fa fa-plus-circle text-success px-2 py-1"></i>
+                  <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
+                  <i @click.stop="functions.setEditConta(conta)" :id="`iEditConta${i}`"
+                    class="fa fa-edit text-primary px-2 py-1"></i>
+                  <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
+                  </b-tooltip>
+                  <i @click.stop="showDeletar(conta)" :id="`iRemoveConta${i}`"
+                    class="fa fa-trash text-danger px-2 py-1"></i>
+                  <b-tooltip :target="`iRemoveConta${i}`" triggers="hover" noninteractive> Deletar Conta
+                  </b-tooltip>
                 </div>
               </div>
             </div>
@@ -161,6 +169,12 @@
         this.totalAberto = 0;
         this.total = 0;
 
+        const formatMoney = (payload) => {
+          return (payload > 1000) ?
+            `R$ ${String((payload).toFixed(2)).replace(/(\d*)(\d{3}).(\d*)/g, '$1.$2,$3')}` :
+            `R$ ${String((payload).toFixed(2)).replace('.', ',')}`;
+        };
+
         if (this.parcelas.length)
           this.parcelas.map(e => {
             //Totalizando
@@ -168,7 +182,7 @@
             (e.recebido) ? this.totalPago += e.recebido: this.totalAberto += e.valor;
             this.total += e.valor;
             //Formatando
-            e.valor = `R$ ${String((e.valor).toFixed(2)).replaceAll('.', ',')}`;
+            e.valor = formatMoney(e.valor);
 
             e.oriVenc = e.vencimento;
             e.vencimento = ((e.vencimento).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
@@ -176,12 +190,13 @@
             if (e.data_pagto)
               e.data_pagto = ((e.data_pagto).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
 
-            e.recebido = `R$ ${String((e.recebido).toFixed(2)).replaceAll('.', ',')}`;
+            e.recebido = formatMoney(e.recebido);
 
           });
-        this.totalPago = `R$ ${String((this.totalPago).toFixed(2)).replaceAll('.', ',')}`;
-        this.totalAberto = `R$ ${String((this.totalAberto).toFixed(2)).replaceAll('.', ',')}`;
-        this.total = `R$ ${String((this.total).toFixed(2)).replaceAll('.', ',')}`;
+        this.totalPago = formatMoney(this.totalPago)
+        this.totalAberto = formatMoney(this.totalAberto);
+        this.total = formatMoney(this.total);
+
       },
       async showDeletar(payload) {
         await (this.deletar = payload);
@@ -192,7 +207,11 @@
 
         let response = await this.common.deletarConta(this.deletar.id);
         if (response)
-          this.$toasted.show(`${response.mensagem}`, {
+          this.$toasted.show(`
+        $ {
+          response.mensagem
+        }
+        `, {
             iconPack: "fontawesome",
             icon: "check",
             duration: 3000,
@@ -259,7 +278,7 @@ label {
   font-size: 10px;
   color: white;
   background-color: seagreen;
-  box-shadow: 0 -2px 5px 0.5px dimgray;
+  box-shadow: 0 0 5px 3px #eee;
   /* border-radius: 50%; */
   display: block;
   position: absolute;

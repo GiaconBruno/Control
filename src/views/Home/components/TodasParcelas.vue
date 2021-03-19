@@ -27,12 +27,13 @@
     <hr class="m-0">
     <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
       class="row m-0 parcela align-items-center"
-      :style="(new Date(parcela.oriVenc).setHours(23,59,59) < Date.now() && (!parcela.status)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
+      :style="(vencido(parcela)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
       <div class="col-11 px-0">
         <div class="row m-0">
           <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
             <div class="row m-0">
-              <div class="col-4 pl-0 pr-2 text-left">Parcela {{ i+1 }}/ {{ parcelas.length }}</div>
+              <div class="col-4 pl-0 pr-2 text-left">
+                {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
               <div class="col-3 pl-0 pr-2">{{ parcela.valor }}</div>
               <div class="col-3 pl-0 pr-2">{{ parcela.vencimento}}</div>
               <div class="col-2 px-0">
@@ -40,7 +41,7 @@
             </div>
           </div>
           <div class="col-12 col-lg-5 pl-2 pr-1 px-lg-0">
-            <div class="row m-0">
+            <div :class="{'vencido': (vencido(parcela))}" class="row m-0">
               <div class="col-4 px-2 pl-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
               <div class="col-4 pl-0 pr-2">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
               <div class="col-3 px-0">{{ parcela.recebido }}</div>
@@ -50,8 +51,14 @@
       </div>
       <div class="col-1 px-0 px-lg-2 text-right">
         <div class="row m-0 pr-1 pr-lg-0 justify-content-between">
-          <i @click="functions.setEditParcela(parcela)" class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
-          <i @click="showDeletar(parcela)" class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
+          <i @click="functions.setEditParcela(parcela)" :id="`iPagarEditar${i}-${conta.id}`"
+            class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
+          <b-tooltip :target="`iPagarEditar${i}-${conta.id}`" triggers="hover" noninteractive> Pagar/Editar
+            Parcela </b-tooltip>
+          <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${conta.id}`"
+            class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
+          <b-tooltip :target="`iRemoveParcela${i}-${conta.id}`" triggers="hover" noninteractive> Deletar Parcela
+          </b-tooltip>
         </div>
       </div>
     </div>
@@ -85,6 +92,9 @@
       }
     },
     methods: {
+      vencido(payload) {
+        return (new Date(payload.oriVenc).setHours(23, 59, 59) + 75.6 * 1000000 < Date.now() && (!payload.status))
+      },
       async showDeletar(payload) {
         await (this.deletar = payload);
         this.$refs['mDelParcela'].show()
@@ -131,13 +141,34 @@
   font-size: 10px;
   color: white;
   background-color: seagreen;
-  box-shadow: 0 -2px 5px 0.5px dimgray;
+  box-shadow: 0 0 5px 3px #eee;
   /* border-radius: 50%; */
   display: block;
   position: absolute;
-  top: 8px;
-  left: -15px;
+  top: 25%;
+  left: 0;
   z-index: 10;
   transform: rotate(-35deg);
+}
+
+.vencido {
+  overflow: hidden;
+  position: relative;
+}
+
+.vencido::before {
+  content: "vencido";
+  padding: 0 30px;
+  font-size: 10px;
+  color: #fff;
+  background-color: #dc3545;
+  box-shadow: 0 0 5px 0.5px #eee;
+  border-radius: 5px;
+  display: block;
+  position: absolute;
+  top: 20%;
+  left: 10px;
+  z-index: 10;
+  /* transform: rotate(-0deg); */
 }
 </style>
