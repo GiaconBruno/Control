@@ -4,10 +4,33 @@
       <div v-if="loading" class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
       <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
       <div v-else>
-        <h5 class="smallText">Contas: </h5>
+        <div class="row m-0">
+          <div class="col-12 px-0">
+            <h5 class="smallText">Contas: </h5>
+          </div>
+        </div>
+        <div class="row m-0 pb-3 justify-content-start">
+          <div class="col-12 px-0 text-left px-2">
+            <span>Contas: </span>
+            <select v-model="contasStatus" @change="getContas(); parcelas=''; parcelasStatus=false">
+              <option value="all">Todas</option>
+              <option :value="true">Pagas</option>
+              <option :value="false">Abertas</option>
+            </select>
+            <span v-if="parcelas.length" class="px-2">
+              <span>Parcelas: </span>
+              <select v-model="parcelasStatus">
+                <option value="all" class="px-2">Todas</option>
+                <option :value="true" class="px-2">Pagas</option>
+                <option :value="false" class="px-2">Abertas</option>
+              </select>
+            </span>
+          </div>
+        </div>
         <div class="accordion" role="tablist">
           <div v-for="(conta,i) in contas" :key="conta.id" class="mb-3">
-            <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
+            <div v-if="((contasStatus != 'all') ?  contasStatus == conta.status : contasStatus)"
+              @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
               :class="{'contabord': (parcelas.length), 'pago': (conta.status)}"
               class="btn text-left alert-success row m-0 d-flex justify-content-between align-items-center">
               <div class="col-auto px-0">
@@ -82,7 +105,7 @@
               </div>
             </div>
             <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
-              <TodasParcelas v-bind="{loadingParcelas, parcelas, functions, conta, getParcelas}" />
+              <TodasParcelas v-bind="{loadingParcelas, parcelas, functions, conta, getParcelas, parcelasStatus}" />
             </b-collapse>
           </div>
         </div>
@@ -122,6 +145,8 @@
         totalAberto: 0,
         total: 0,
         deletar: null,
+        contasStatus: false,
+        parcelasStatus: 'all',
       }
     },
     beforeMount() {

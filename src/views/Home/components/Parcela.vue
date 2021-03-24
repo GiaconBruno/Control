@@ -177,9 +177,11 @@
       setRecebido() {
         if ((this.parcela.forma_pagto) && this.parcela.forma_pagto != 'other') {
           this.parcela.recebido = parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0);
-          this.parcela.data_pagto = new Date(Date.now());
-          this.parcela.data_pagto = (this.parcela.data_pagto).toLocaleString('pt-BR')
-            .replace(/(\d{2})\/(\d{2})\/(\d{4}) \d{2}:\d{2}:\d{2}/g, '$3-$2-$1');
+          if (!this.parcela.data_pagto) {
+            this.parcela.data_pagto = new Date(Date.now());
+            this.parcela.data_pagto = (this.parcela.data_pagto).toLocaleString('pt-BR')
+              .replace(/(\d{2})\/(\d{2})\/(\d{4}) \d{2}:\d{2}:\d{2}/g, '$3-$2-$1');
+          }
         } else {
           this.parcela.recebido = 0;
           this.parcela.data_pagto = null;

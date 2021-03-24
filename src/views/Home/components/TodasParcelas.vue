@@ -1,11 +1,11 @@
 <template>
   <div v-if="(loadingParcelas)" class="spinner-border text-success spinner-border-sm my-2" role="status">
   </div>
-  <div v-else-if="parcelas.length">
+  <div v-else-if="(parcelas.length) && (hasParcelasStatus)" class="text-sm">
     <div class="row m-0" style="background-color: #ffc10790">
       <div class="col-11 px-0">
         <div class="row m-0">
-          <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0 text-sm">
+          <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
             <div class="row m-0">
               <div class="col-4 pl-0 pr-2 text-left"> DESCRIÇÃO </div>
               <div class="col-3 pl-0 pr-2"> VALOR </div>
@@ -22,45 +22,49 @@
           </div>
         </div>
       </div>
-      <div class="col-1 px-0"></div>
+      <div class="col-1 px-0">
+        {{  }}
+      </div>
     </div>
     <hr class="m-0">
-    <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
-      class="row m-0 parcela align-items-center"
+    <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status && (parcelasStatus)),
+     'parcela':((parcela.status==parcelasStatus) || parcelasStatus=='all')}" class="row m-0 align-items-center"
       :style="(vencido(parcela)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
-      <div class="col-11 px-0">
-        <div class="row m-0">
-          <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
-            <div class="row m-0">
-              <div class="col-4 pl-0 pr-2 text-left">
-                {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
-              <div class="col-3 pl-0 pr-2">{{ parcela.valor }}</div>
-              <div class="col-3 pl-0 pr-2">{{ parcela.vencimento}}</div>
-              <div class="col-2 px-0">
-                {{ (parcela.status) ? 'Pago' : 'Aberto' }}</div>
+      <template v-if="((parcelasStatus != 'all') ? parcelasStatus==parcela.status : parcelasStatus)">
+        <div class="col-11 px-0">
+          <div class="row m-0">
+            <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
+              <div class="row m-0">
+                <div class="col-4 pl-3 pr-2 text-left text-sm">
+                  {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
+                <div class="col-3 pl-0 pr-2">{{ parcela.valor }}</div>
+                <div class="col-3 pl-0 pr-2">{{ parcela.vencimento}}</div>
+                <div class="col-2 px-0">
+                  {{ (parcela.status) ? 'Pago' : 'Aberto' }}</div>
+              </div>
             </div>
-          </div>
-          <div class="col-12 col-lg-5 pl-2 pr-1 px-lg-0">
-            <div :class="{'vencido': (vencido(parcela))}" class="row m-0">
-              <div class="col-4 px-2 pl-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
-              <div class="col-4 pl-0 pr-2">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
-              <div class="col-3 px-0">{{ parcela.recebido }}</div>
+            <div class="col-12 col-lg-5 pl-2 pr-1 px-lg-0">
+              <div :class="{'vencido': (vencido(parcela))}" class="row m-0">
+                <div class="col-4 px-2 pl-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
+                <div class="col-4 pl-0 pr-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
+                <div class="col-3 px-0">{{ parcela.recebido }}</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-1 px-0 px-lg-2 text-right">
-        <div class="row m-0 pr-1 pr-lg-0 justify-content-between">
-          <i @click="functions.setEditParcela(parcela)" :id="`iPagarEditar${i}-${conta.id}`"
-            class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
-          <b-tooltip :target="`iPagarEditar${i}-${conta.id}`" triggers="hover" noninteractive> Pagar/Editar
-            Parcela </b-tooltip>
-          <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${conta.id}`"
-            class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
-          <b-tooltip :target="`iRemoveParcela${i}-${conta.id}`" triggers="hover" noninteractive> Deletar Parcela
-          </b-tooltip>
+        <div class="col-1 px-0 px-lg-2 text-right">
+          <div class="row m-0 pr-1 pr-lg-0 justify-content-between">
+            <i @click="functions.setEditParcela(parcela)" :id="`iPagarEditar${i}-${conta.id}`"
+              class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
+            <b-tooltip :target="`iPagarEditar${i}-${conta.id}`" triggers="hover" noninteractive> Pagar/Editar
+              Parcela </b-tooltip>
+            <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${conta.id}`"
+              class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
+            <b-tooltip :target="`iRemoveParcela${i}-${conta.id}`" triggers="hover" noninteractive> Deletar Parcela
+            </b-tooltip>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
     <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" hide-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Parcela">
@@ -84,11 +88,17 @@
 
 <script>
   export default {
-    props: ['functions', 'loadingParcelas', 'parcelas', 'conta', 'getParcelas'],
+    props: ['functions', 'loadingParcelas', 'parcelas', 'conta', 'getParcelas', 'parcelasStatus'],
     data() {
       return {
         deletar: '',
         loadingDel: false,
+      }
+    },
+    computed: {
+      hasParcelasStatus() {
+        return this.parcelas.some(parcela => ((this.parcelasStatus == 'all') ||
+          (parcela.status == this.parcelasStatus)))
       }
     },
     methods: {
@@ -123,6 +133,12 @@
 <style scoped>
 .text-sm {
   font-size: 0.8em;
+  align-self: center;
+}
+
+.text-xs {
+  font-size: 0.7em;
+  align-self: center;
 }
 
 .parcela {
@@ -137,18 +153,20 @@
 
 .pago::before {
   content: "Pago";
-  padding: 0 30px;
-  font-size: 10px;
+  padding: 0 10px;
+  font-size: 8px;
   color: white;
   background-color: seagreen;
   box-shadow: 0 0 5px 3px #eee;
   /* border-radius: 50%; */
   display: block;
   position: absolute;
-  top: 25%;
-  left: 0;
+  top: 8px;
+  left: -13px;
+  bottom: 8px;
   z-index: 10;
-  transform: rotate(-35deg);
+  z-index: 10;
+  transform: rotate(-90deg);
 }
 
 .vencido {
@@ -170,5 +188,12 @@
   left: 10px;
   z-index: 10;
   /* transform: rotate(-0deg); */
+}
+
+@media screen and (max-width: 992px) {
+  .vencido::before {
+    top: 0;
+    font-size: 8px;
+  }
 }
 </style>
