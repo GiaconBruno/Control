@@ -5,7 +5,7 @@
 ## ------ Requisito: NODE.JS (necessário database) ------ 
 ### Projeto BackEnd
 ```sh
-https://github.com/GiaconBruno/Control-NodeJS
+https://github.com/GiaconBruno/Control-BackEnd
 ```
 ### Acessar a pasta onde irá criar o projeto
 ```sh
