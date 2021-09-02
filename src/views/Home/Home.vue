@@ -24,7 +24,8 @@
                 <i v-if="(usuario.permissao)" @click="createUsuario()" id="criarUsuario"
                   class="btn fa fa-user-plus text-success px-1 mx-2"></i>
                 <b-tooltip target="criarUsuario" triggers="hover" noninteractive> Criar Usuários </b-tooltip>
-                <i @click="setEditUsuario()" id="editarUsuario" class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
+                <i @click="setEditUsuario(usuario.id)" id="editarUsuario"
+                  class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
                 <i @click="createConta()" id="criarConta" class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
@@ -141,9 +142,15 @@
         this.changeVisible('Usuario');
       },
       async setEditUsuario(payload) {
-        this.usuarioEdit = payload;
-        if (!payload) await this.getUsuarios();
-        this.changeVisible('Usuario');
+        let response = await this.common.getUsuarioId(payload);
+        if (response) {
+          this.usuarioEdit = response;
+          // this.loading = false;
+          this.changeVisible('Usuario');
+        } else {
+          // this.loading = false;
+          this.$router.push("/");
+        }
       },
       createConta() {
         this.reset();

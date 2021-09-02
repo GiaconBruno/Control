@@ -39,21 +39,35 @@ export default {
       });
   },
   //USUARIOS
-  getUsuarios(payload) {
+  getUsuarios() {
     auth = services.auth();
     return axios.get(`${api}/api/usuarios`, {
       headers: {
         token: auth.token,
       }
     }).then((response) => {
-      if (payload == 'todos') return response.data;
-      else {
-        let usuario;
-        response.data.forEach(user => {
-          if (auth.id == user.id) usuario = user;
-        });
-        return usuario;
+      return response.data;
+      // if (payload == 'todos') return response.data;
+      // else {
+      //   let usuario;
+      //   response.data.forEach(user => {
+      //     if (auth.id == user.id) usuario = user;
+      //   });
+      //   return usuario;
+      // }
+    }).catch((err) => {
+      console.log("" + err);
+      return false
+    });
+  },
+  getUsuarioId(payload) {
+    auth = services.auth();
+    return axios.get(`${api}/api/usuarios/${payload}`, {
+      headers: {
+        token: auth.token,
       }
+    }).then((response) => {
+      return response.data;
     }).catch((err) => {
       console.log("" + err);
       return false

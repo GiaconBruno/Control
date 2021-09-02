@@ -5,20 +5,21 @@
       <div v-for="(usuario, i) in usuarios" :key="usuario.id"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
         <div class="row align-items-center">
-          <div class="col-9 col-lg-11 pr-0 py-lg-0">
-            <div class="row text-left align-items-center">
-              <div class="col-12 col-lg-6 pr-0">
+          <div class="col-10 col-lg-11 pr-0 py-lg-0">
+            <div class="row mx-0 text-left align-items-center">
+              <div class="col col-lg px-0">
                 <div class="row mx-0 justify-content-between">
                   <span>
-                    <span class="text-sm pl-lg-3">Usuário: </span>
-                    <strong>{{usuario.nome}}</strong> - @{{ usuario.usuario }}
+                    <span class="text-sm">Usuário: </span>
+                    <strong>{{ [usuario.nome.split(' ')[0],usuario.nome.split(' ')[1]].join(' ')}}</strong> -
+                    @{{ usuario.usuario }}
                   </span>
                   <span>
-                    <span class="text-sm pr-lg-5"> {{ usuario.acesso || 'Nenhum' }}</span>
+                    <span class="text-sm"> {{ usuario.acesso || 'Nenhum' }}</span>
                   </span>
                 </div>
               </div>
-              <div class="col-12 col-lg-4 pr-0">
+              <div class="col-12 col-lg-3 px-0 px-lg-3">
                 <div class="row justify-content-around align-items-center text-sm">
                   <div class="col-6 pr-0">
                     <span>Permissão: </span>
@@ -34,7 +35,8 @@
             </div>
           </div>
           <div class="col px-0">
-            <i @click="editUsuario(usuario)" :id="`usuarioEditar${i}`" class="btn fa fa-edit text-primary p-0 mx-2"></i>
+            <i @click="editUsuario(usuario.id)" :id="`usuarioEditar${i}`"
+              class="btn fa fa-edit text-primary p-0 mx-1 mx-lg-2"></i>
             <b-tooltip :target="`usuarioEditar${i}`" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
             <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2"></i>
             <b-tooltip :target="`usuarioRemove${i}`" triggers="hover" noninteractive> Deletar Usuário
@@ -92,7 +94,7 @@
               date =
                 `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}` +
                 ` ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`;
-              this.usuarios[index].acesso = date;
+              this.usuarios[index].acesso = date.slice(0, -3);
             }
           })
         } else this.$router.push("/");
