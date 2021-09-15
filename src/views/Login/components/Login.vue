@@ -12,18 +12,18 @@
     <div v-if="(!servidor && (!loading))" :class="{'alert': (!loading)}" class="m-0 p-0 text-center">
       <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
     </div>
-    <div class="position-relative">
+    <div :class="{'hasError': errors.includes('login')}" class="position-relative">
       <label for="login">Usuário:</label>
-      <input @blur="valid('login')" @keypress="valid('login')" id="login" type="text" v-model="user"
+      <input v-model="user" @blur="valid('login')" @keypress="valid('login')" id="login" type="text"
         class="form-control" placeholder="Digite seu usuário" />
       <span class="position-absolute">
         <i class="fa fa-user"></i>
       </span>
     </div>
-    <div class="position-relative">
+    <div :class="{'hasError': errors.includes('password')}" class="position-relative">
       <label for="password">Senha:</label>
-      <input @keypress.enter="sigIn()" @blur="valid('password')" @keypress="valid('password')" id="password"
-        type="password" v-model="password" class="form-control" placeholder="Digite sua senha" />
+      <input v-model="password" @keypress.enter="sigIn()" @blur="valid('password')" @keypress="valid('password')"
+        id="password" type="password" class="form-control" placeholder="Digite sua senha" />
       <span class="position-absolute">
         <i class="fas fa-lock"></i>
       </span>
@@ -48,51 +48,37 @@
       return {
         loading: false,
         servidor: false,
-        user: "",
-        password: "",
+        user: "admin",
+        password: "n3x4n5",
+        errors: [],
       };
     },
     beforeMount() {
       this.status();
     },
     methods: {
-      async status() {
+      status() {
         this.loading = true;
-        let response = await this.common.status();
-        if (response) {
-          console.log(response.data.start);
-          this.servidor = true;
-          this.redirect();
-        } else {
-          this.servidor = false;
-        }
-        this.loading = false;
+        this.$store.dispatch('status')
+          .then(response => {
+            if (response.status == 200) {
+              console.log(response.data.start);
+              this.servidor = true;
+              if (!this.auth()) return
+              this.$router.push("/home");
+            }
+          })
+          .catch(() => this.servidor = false)
+          .finally(() => this.loading = false)
       },
-      redirect() {
-        let auth = this.auth()
-        if (!auth) return
-        this.$router.push("/home");
+      valid() {
+        this.errors = [];
+        if (!this.user) this.errors.push('login')
+        else this.errors.splice(this.errors.findIndex(e => e == 'login'), 1)
+        if (!this.password) this.errors.push('password')
+        else this.errors.splice(this.errors.findIndex(e => e == 'password'), 1)
       },
-      valid(payload) {
-        if (payload == "login" || !payload) {
-          let styleUser = document.querySelector("#login").style;
-          let spanUser = document.querySelectorAll("span.position-absolute")[0]
-            .style;
-
-          styleUser.borderColor = !this.user ? "#dd1818aa" : "#333";
-          spanUser.color = !this.user ? "#dd1818aa" : "dimgray";
-        }
-
-        if (payload == "password" || !payload) {
-          let stylePass = document.querySelector("#password").style;
-          let spanPass = document.querySelectorAll("span.position-absolute")[1]
-            .style;
-
-          stylePass.borderColor = !this.password ? "#dd1818aa" : "#333";
-          spanPass.color = !this.password ? "#dd1818aa" : "dimgray";
-        }
-      },
-      async sigIn() {
+      sigIn() {
         this.valid();
         if (!this.user || !this.password) {
           this.$toasted.show("Preencha os dados", {
@@ -104,36 +90,26 @@
           });
           return;
         }
-        await this.status();
+        this.status();
 
         this.user = this.user.toLowerCase();
         this.loading = true;
 
-        let sigIn = await this.common.sigIn({
+        let payload = {
           usuario: this.user,
           senha: this.password,
-        });
-
-        if (sigIn) {
-          let now = Date.now();
-          let url = `atualizar-usuario/${sigIn.id}`
-          let response = await this.common.createUsuario({
-            acesso: now
-          }, url)
-          if (response) {
-            this.$router.push("/home");
-            this.loading = false;
-          }
-        } else {
-          this.$toasted.show("Dados não autorizados!", {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 5000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
-          this.loading = false;
         }
+        this.$store.dispatch('sigIn', payload)
+          .then(() => this.$router.push("/home"))
+          .catch(() =>
+            this.$toasted.show("Dados não autorizados!", {
+              iconPack: "fontawesome",
+              icon: "times",
+              duration: 5000,
+              className: "bg-danger",
+              theme: "bubble",
+            }))
+          .finally(() => this.loading = false)
       },
     },
   };
@@ -185,5 +161,14 @@ span {
 
 span {
   color: dimgray;
+}
+
+.hasError label,
+.hasError span {
+  color: #dc3545;
+}
+
+.hasError input {
+  border-color: #dc3545;
 }
 </style>

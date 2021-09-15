@@ -10,7 +10,7 @@
         </transition>
       </div>
     </div>
-    <div class="position-fixed p-0" style="top: auto; bottom: 5px; left: 0; right: 0;">
+    <div class="position-absolute p-0" style="top:auto;bottom:5px;left:0;right:0;">
       <div class="row m-0 justify-content-between align-items-center">
         <div class="col-6 col-md-4 px-0">
           <span class="text-white smallText">Desenvolvido por: Bruno Giacon</span>
@@ -72,7 +72,7 @@ h1 {
 }
 
 .smallText {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .text-underline {

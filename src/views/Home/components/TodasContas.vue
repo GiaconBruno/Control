@@ -153,22 +153,22 @@
       this.getContas();
     },
     methods: {
-      async getContas() {
+      getContas() {
         this.loading = true;
-        let response = await this.common.getContas();
-        if (response) this.contas = response;
-        else {
-          this.$toasted.show("Dados não autorizados!", {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 5000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
-          localStorage.clear();
-          this.$router.push("/");
-        }
-        this.loading = false;
+        this.$store.dispatch('getContas')
+          .then(response => this.contas = response)
+          .catch(() => {
+            this.$toasted.show("Dados não autorizados!", {
+              iconPack: "fontawesome",
+              icon: "times",
+              duration: 5000,
+              className: "bg-danger",
+              theme: "bubble",
+            })
+            localStorage.clear();
+            this.$router.push("/")
+          })
+          .finally(() => this.loading = false)
       },
       async getParcelas(payload, type) {
         this.loadingParcelas = true;

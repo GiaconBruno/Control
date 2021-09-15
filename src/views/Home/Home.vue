@@ -48,8 +48,8 @@
       <!-- :auth="usuario" -->
       <transition name="anim">
         <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
-          :functions="{changeVisible, setEditUsuario, reset, tokenValido, setEditConta, setConta, setEditParcela}"
-          ref="All" class="position-relative" />
+          :functions="{changeVisible, setEditUsuario, reset, setEditConta, setConta, setEditParcela}" ref="All"
+          class="position-relative" />
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
@@ -91,7 +91,7 @@
     data() {
       return {
         loading: false,
-        usuario: null,
+        // usuario: null,
         visible: 'TodasContas',
         usuarioEdit: {
           permissao: false,
@@ -103,25 +103,15 @@
       }
     },
     beforeMount() {
-      this.tokenValido();
+      if (!this.$store.state.default.auth)
+        this.$store.commit('SET_AUTH', JSON.parse(localStorage.getItem("auth")));
+    },
+    computed: {
+      usuario() {
+        return this.$store.state.default.auth;
+      }
     },
     methods: {
-      async tokenValido() {
-        if (!this.auth) return
-        let resolve = await this.common.token();
-        if (resolve) this.usuario = resolve
-        else if (this.$router.app._route.path != '/') {
-          this.$toasted.show("Token Inválido!", {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 5000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
-          localStorage.clear();
-          this.$router.push("/");
-        }
-      },
       async getUsuarios() {
         // this.loading = true;
         this.changeVisible('loading');

@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Vuex from 'vuex'
 import routes from './routes';
 import axios from 'axios';
 import App from './App.vue';
+import store from './store/store'
 import {
   BootstrapVue,
   IconsPlugin
@@ -24,6 +26,7 @@ const router = new VueRouter({
   mode: 'history',
 });
 Vue.use(VueRouter);
+Vue.use(Vuex)
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Toasted);
@@ -35,6 +38,7 @@ Vue.use(money, {
 });
 
 // DEFINE VARIAVEIS GLOBAL
+axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 Vue.prototype.axios = axios;
 Vue.prototype.api = process.env.VUE_APP_BASE_URL;
 Vue.prototype.auth = service.auth;
@@ -42,7 +46,9 @@ Vue.prototype.common = common;
 
 Vue.config.productionTip = false;
 console.log(process.env.VUE_APP_BASE_URL);
+
 new Vue({
+  store,
+  router,
   render: h => h(App),
-  router
 }).$mount('#app');
