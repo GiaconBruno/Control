@@ -15,19 +15,20 @@
             </div>
             <div class="col-12 col-md-6 px-0">
               <div class="rounded border border-dark p-0 m-0">
-                <i @click="changeVisible('TodasContas')" id="todasContas"
+                <i @click="changeVisible('contas');" id="todasContas"
                   class="btn fa fa-home text-secundary px-1 mx-2"></i>
                 <b-tooltip target="todasContas" triggers="hover" noninteractive> início </b-tooltip>
-                <i v-if="(usuario.permissao)" @click="changeVisible('TodosUsuarios')" id="todosUsuarios"
+                <i v-if="(usuario.permissao)" @click="changeVisible('usuarios');" id="todosUsuarios"
                   class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
                 <b-tooltip target="todosUsuarios" triggers="hover" noninteractive> Usuários </b-tooltip>
-                <i v-if="(usuario.permissao)" @click="createUsuario()" id="criarUsuario"
+                <i v-if="(usuario.permissao)" @click="changeVisible('usuario')" id="criarUsuario"
                   class="btn fa fa-user-plus text-success px-1 mx-2"></i>
                 <b-tooltip target="criarUsuario" triggers="hover" noninteractive> Criar Usuários </b-tooltip>
                 <i @click="setEditUsuario(usuario.id)" id="editarUsuario"
                   class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
-                <i @click="createConta()" id="criarConta" class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+                <i @click="changeVisible('conta')" id="criarConta"
+                  class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
                 <i v-show="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()" id="atualizar"
                   class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
@@ -46,10 +47,12 @@
       </div>
       <hr class="my-2" />
       <!-- :auth="usuario" -->
-      <transition name="anim">
-        <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
+      <transition name="anim" mode="out-in">
+        <router-view v-if="!loading" v-bind="{setEditUsuario}" />
+        <!-- <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
           :functions="{changeVisible, setEditUsuario, reset, setEditConta, setConta, setEditParcela}" ref="All"
-          class="position-relative" />
+          class="position-relative" /> -->
+        <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
@@ -73,17 +76,17 @@
 </template>
 
 <script>
-  import TodosUsuarios from './components/TodosUsuarios';
+  // import TodosUsuarios from './components/TodosUsuarios';
   import Usuario from './components/Usuario';
-  import TodasContas from './components/TodasContas';
+  // import TodasContas from './components/TodasContas';
   import Conta from './components/Conta';
   import Parcela from './components/Parcela';
   import loading from './components/loading';
   export default {
     components: {
-      TodosUsuarios,
+      // TodosUsuarios,
       Usuario,
-      TodasContas,
+      // TodasContas,
       Conta,
       Parcela,
       loading,
@@ -102,53 +105,30 @@
         parcelaEdit: {},
       }
     },
+    watch: {
+      $route(to, from) {
+        if (from.path == '/usuario') this.$store.commit('SET_EDIT_USER');
+        if (from.path == '/conta') this.$store.commit('SET_EDIT_CONTA');
+      }
+    },
     beforeMount() {
-      if (!this.$store.state.default.auth)
-        this.$store.commit('SET_AUTH', JSON.parse(localStorage.getItem("auth")));
+      this.$store.commit('GET_ACCESS');
     },
     computed: {
       usuario() {
-        return this.$store.state.default.auth;
+        return this.$store.state.default.access.auth;
       }
     },
     methods: {
-      async getUsuarios() {
-        // this.loading = true;
-        this.changeVisible('loading');
-        let response = await this.common.getUsuarios();
-        if (response) {
-          this.usuarioEdit = response;
-          // this.loading = false;
-        } else {
-          // this.loading = false;
-          this.$router.push("/");
-        }
-      },
       changeVisible(payload) {
-        this.visible = payload;
+        if (this.$route.path != `/${payload}`) this.$router.push(payload)
       },
-      createUsuario() {
-        this.reset();
-        this.changeVisible('Usuario');
-      },
-      async setEditUsuario(payload) {
-        let response = await this.common.getUsuarioId(payload);
-        if (response) {
-          this.usuarioEdit = response;
-          // this.loading = false;
-          this.changeVisible('Usuario');
-        } else {
-          // this.loading = false;
-          this.$router.push("/");
-        }
-      },
-      createConta() {
-        this.reset();
-        this.changeVisible('Conta');
-      },
-      setEditConta(payload) {
-        this.contaEdit = payload;
-        this.changeVisible('Conta')
+      setEditUsuario(payload) {
+        this.loading = true;
+        this.$store.dispatch('getUserId', payload)
+          .then(() => this.changeVisible('usuario'))
+          .catch(() => this.$router.push("/contas"))
+          .finally(() => this.loading = false)
       },
       setEditParcela(payload) {
         this.parcelaEdit = payload;
@@ -173,6 +153,7 @@
       },
       sigOut() {
         localStorage.clear();
+        this.$store.commit('LOGOUT');
         this.$router.push("/");
       },
     },

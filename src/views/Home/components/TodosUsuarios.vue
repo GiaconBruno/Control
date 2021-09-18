@@ -35,7 +35,7 @@
             </div>
           </div>
           <div class="col px-0">
-            <i @click="editUsuario(usuario.id)" :id="`usuarioEditar${i}`"
+            <i @click="setEditUsuario(usuario.id)" :id="`usuarioEditar${i}`"
               class="btn fa fa-edit text-primary p-0 mx-1 mx-lg-2"></i>
             <b-tooltip :target="`usuarioEditar${i}`" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
             <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2"></i>
@@ -48,11 +48,10 @@
         <span>@ = usuario</span>
       </div>
     </div>
-    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
+    <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
     <div class="row text-center">
       <div class="col-12 mb-3">
-        <button @click="functions.changeVisible('TodasContas')"
-          class="btn btn-sm btn-light border border-secondary">Voltar</button>
+        <button @click="$router.go(-1)" class="btn btn-sm btn-light border border-secondary">Voltar</button>
       </div>
     </div>
     <b-modal v-if="deletar" ref="mConfirm" id="mConfirm" hide-footer centered no-close-on-esc no-close-on-backdrop
@@ -61,7 +60,7 @@
       <hr>
       <div class="row m-0 justify-content-around">
         <button @click="$bvModal.hide('mConfirm')" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button @click="removerUsers()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
+        <button @click="deletarUsuario()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
       </div>
@@ -71,7 +70,7 @@
 
 <script>
   export default {
-    props: ['functions'],
+    props: ['setEditUsuario'],
     data() {
       return {
         loading: false,
@@ -83,84 +82,73 @@
       this.getUsuarios();
     },
     methods: {
-      async getUsuarios() {
+      getUsuarios() {
         this.usuarios = [];
-        let response = await this.common.getUsuarios('todos');
-        if (response) {
-          this.usuarios = response
-          this.usuarios.map((users, index) => {
-            if (users.acesso) {
-              let date = new Date(users.acesso);
-              date =
-                `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}` +
-                ` ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`;
-              this.usuarios[index].acesso = date.slice(0, -3);
-            }
+        this.loading = true;
+        this.$store.dispatch('getUsers')
+          .then(response => {
+            this.usuarios = response
+            this.usuarios.map(user => {
+              if (user.acesso) {
+                user.acesso = user.acesso.split('T')
+                user.acesso[0] = user.acesso[0].split('-').reverse().join('/')
+                user.acesso[1] = user.acesso[1].slice(0, -5)
+                user.acesso = user.acesso.join(' ')
+              }
+            })
           })
-        } else this.$router.push("/");
-
-      },
-      editUsuario(payload) {
-        this.functions.setEditUsuario(payload);
+          .catch(() => this.$router.push("/"))
+          .finally(() => this.loading = false)
       },
       showDeletar(payload) {
         this.deletar = payload;
         this.$refs['mConfirm'].show()
       },
-      async deletarUsuario() {
+      deletarUsuario() {
         this.loading = true;
-
-        let response = await this.common.deletarUsuario(this.deletar.id);
-        if (response)
-          this.$toasted.show(`${response.mensagem}`, {
-            iconPack: "fontawesome",
-            icon: "check",
-            duration: 3000,
-            className: "bg-success",
-            theme: "bubble",
-          });
-        else this.$router.push("/");
-
-        this.deletar = null;
-        await this.getUsuarios();
-        this.loading = false;
-      },
-      async removerUsers() {
         //DELETAR USUARIO DE CONTAS EXISTENTES
-        this.loading = true;
-        let response = await this.common.getContas(this.deletar.id);
-
-        if (response) {
-          let allContas = response;
-          let usersConta;
-          let attConta;
-
-          let promise = await this.removeContas(allContas, usersConta, attConta);
-          if (promise) await this.deletarUsuario();
-        } else this.$router.push("/");
-
-        this.loading = false;
-      },
-      async removeContas(allContas, usersConta, attConta) {
-        let promise = new Promise((resolve) => {
-          allContas.map((contas) => {
-            usersConta = contas.fk_usuario_id.replace(/[['\]]/g, "").split(",").map(c => parseInt(c));
-            if (usersConta.length > 1) { // REMOVE USUARIO E SALVA CONTA
-              let pos = usersConta.indexOf(this.deletar.id);
-              usersConta.splice(pos, 1);
-              usersConta = String(`[${usersConta.map(user => `'${user}'`)}]`)
-              attConta = {
-                descricao: contas.descricao,
-                fk_usuario_id: usersConta,
+        this.$store.dispatch('getContasId', this.deletar.id)
+          .then(response => {
+            response.map((contas) => {
+              let usersConta = contas.fk_usuario_id.replace(/[['\]]/g, "").split(",").map(c => parseInt(c));
+              if (usersConta.length > 1) { // REMOVE USUARIO E SALVA CONTA
+                let pos = usersConta.indexOf(this.deletar.id);
+                usersConta.splice(pos, 1);
+                usersConta = String(`[${usersConta.map(user => `'${user}'`)}]`)
+                let attConta = {
+                  descricao: contas.descricao,
+                  fk_usuario_id: usersConta,
+                }
+                this.$store.commit('SET_EDIT_CONTA', contas)
+                this.$store.dispatch('updateConta', attConta)
+                  .catch((error) => console.log(error))
+              } else if (usersConta.length == 1) { // DELETAR CONTA
+                this.$store.dispatch('deletarConta', contas.id)
+                  .catch((error) => console.log(error))
               }
-              this.common.createConta(attConta, `atualizar-conta/${contas.id}`);
-            } else if (usersConta.length == 1) { // DELETAR CONTA
-              this.common.deletarConta(contas.id)
-            }
+            })
           })
-          resolve(true);
-        });
-        return promise;
+          .catch(() => this.$router.push("/"))
+          .finally(() => {
+            //DELETAR USUARIO PERMANENTEMENTE
+            this.$store.dispatch('deletarUser', this.deletar.id)
+              .then(response => {
+                this.$toasted.show(`${response.mensagem}`, {
+                  iconPack: "fontawesome",
+                  icon: "check",
+                  duration: 3000,
+                  className: "bg-success",
+                  theme: "bubble",
+                });
+              })
+              .catch(() => this.$router.push("/"))
+              .finally(() => {
+                this.loading = false
+                this.deletar = null;
+                this.$refs['mConfirm'].hide()
+                this.getUsuarios();
+              })
+          })
       },
     }
   }

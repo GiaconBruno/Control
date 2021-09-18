@@ -6,7 +6,8 @@
     <div class="row mx-0 justify-content-center ">
       <div class="col-12 col-md-6 col-lg-4 offset-lg-8 d-flex align-items-center">
         <transition name="anim">
-          <component :is="visible" v-bind="{changeVisible}" />
+          <!-- <component :is="visible" v-bind="{changeVisible}" /> -->
+          <router-view />
         </transition>
       </div>
     </div>
@@ -42,11 +43,6 @@
         visible: 'LogIn',
       }
     },
-    methods: {
-      changeVisible(payload) {
-        this.visible = payload;
-      }
-    }
   };
 </script>
 

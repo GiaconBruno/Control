@@ -1,8 +1,7 @@
 <template>
   <div class="row mx-0 mb-3">
-    <div v-if="(usuario)"
-      :class="(autorization) ? 'col-10 offset-1 col-md-6 offset-md-3 col-lg-4 offset-lg-4' : 'col-12 px-0' "
-      class="card border-secondary p-3 shadow-lg">
+    <div v-if="(usuario)" :class="($route.path=='/usuario') ? 'col-10 col-md-6 col-lg-4' : 'col-12 px-0'"
+      class="card mx-auto border-secondary p-3 shadow-lg">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
       <div class="row px-3">
@@ -50,14 +49,14 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="(autorization)? functions.changeVisible(rota):changeVisible('LogIn') "
-          class="btn btn-sm btn-danger">Cancelar</button>
-        <button @click="createUsuario()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
+        <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="(action=='Criar')?createUsuario():updateUsuario()" :disabled="loading"
+          class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
       </div>
     </div>
-    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
+    <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
   </div>
 </template>
 
@@ -74,20 +73,14 @@
           ativo: true,
         },
         title: 'Cadastro de Usuário',
-        url: 'usuario',
-        rota: 'TodasContas',
-        mensagem: 'Usuário cadastrado com exito!',
         action: 'Criar'
       }
     },
     beforeMount() {
-      this.autorization = this.auth();
-      if (this.usuarioEdit && this.usuarioEdit.id) {
-        this.usuario = this.usuarioEdit;
+      this.autorization = this.$store.state.default.access.auth;
+      if (this.$store.state.default.access.userEdit && this.$store.state.default.access.userEdit.id) {
+        this.usuario = this.$store.state.default.access.userEdit;
         this.title = `Edição de Usuário`;
-        this.url = `atualizar-usuario/${this.usuario.id}`;
-        this.mensagem = `Usuário atualizado com exito!`;
-        if (this.autorization.permissao) this.rota = `TodosUsuarios`;
         this.action = `Alterar`;
       }
     },
@@ -104,50 +97,59 @@
           return false;
         } else return true;
       },
-      async createUsuario() {
+      createUsuario() {
         if (!this.valid()) return
         this.loading = true;
         this.usuario.usuario = this.usuario.usuario.toLowerCase();
 
-        let response = await this.common.createUsuario(this.usuario, this.url);
-
-        if (response) {
-          if (response.status == 200) {
-            this.$toasted.show(`${this.mensagem}`, {
+        this.$store.dispatch('createUser', this.usuario)
+          .then((response) => {
+            this.$toasted.show(response.mensagem, {
               iconPack: "fontawesome",
               icon: "check",
               duration: 3000,
               className: "bg-success",
               theme: "bubble",
             });
+            this.$router.push('/contas')
+          })
+          .catch((error) => this.$toasted.show(error.data.mensagem, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          }))
+          .finally(() => this.loading = false)
+      },
+      updateUsuario() {
+        if (!this.valid()) return
+        this.loading = true;
+        this.usuario.usuario = this.usuario.usuario.toLowerCase();
 
+        this.$store.dispatch('updateUser', this.usuario)
+          .then(response => {
+            this.$toasted.show(`${response.data.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            });
             if (this.autorization) {
-              if (this.usuarioEdit.id == this.autorization.id) {
-                await this.common.sigIn(this.usuario);
-                await this.functions.tokenValido();
+              if (this.$store.state.default.access.userEdit.id == this.autorization.id) {
+                this.$store.dispatch('sigIn', this.usuario)
               }
               this.usuario = {
                 permissao: false,
                 ativo: true,
               };
-              this.functions.reset();
-              this.functions.changeVisible(this.rota);
-            } else {
-              await this.common.sigIn(this.usuario);
-              this.changeVisible('LogIn');
+              this.$router.push('/contas')
             }
-          } else {
-            this.$toasted.show(`${response.data.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "times",
-              duration: 3000,
-              className: "bg-danger",
-              theme: "bubble",
-            });
-          }
-          this.loading = false;
-        }
-      },
+          })
+          .catch(() => this.$router.push("/"))
+          .finally(() => this.loading = false)
+      }
     }
   }
 </script>

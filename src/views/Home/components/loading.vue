@@ -1,5 +1,5 @@
 <template>
-  <div class="spinner-border text-success spinner-border-sm my-3" role="status"></div>
+  <div class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
 </template>
 
 <script>

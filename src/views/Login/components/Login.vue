@@ -33,7 +33,7 @@
         <i class="fas fa-sign-in-alt mr-2 mr-sm-5"></i>
         <span class="text-white mr-2 mr-sm-5"> Entrar</span>
       </button>
-      <button @click="changeVisible('Usuario')" :disabled="loading" class="form-control btn btn-primary mt-3">
+      <button @click="$router.push('/cadastro')" :disabled="loading" class="form-control btn btn-primary mt-3">
         <i class="fas fa-user-circle mr-2 mr-sm-5"></i>
         <span class="text-white mr-2 mr-sm-5"> Criar</span>
       </button>
@@ -61,14 +61,12 @@
         this.loading = true;
         this.$store.dispatch('status')
           .then(response => {
-            if (response.status == 200) {
-              console.log(response.data.start);
-              this.servidor = true;
-              if (!this.auth()) return
-              this.$router.push("/home");
-            }
+            console.log(response.data.start);
+            this.servidor = true;
+            if (!this.$store.state.default.access.auth.id) return
+            this.$router.push("/contas");
           })
-          .catch(() => this.servidor = false)
+          // .catch(() => this.servidor = false)
           .finally(() => this.loading = false)
       },
       valid() {
@@ -100,7 +98,7 @@
           senha: this.password,
         }
         this.$store.dispatch('sigIn', payload)
-          .then(() => this.$router.push("/home"))
+          .then(() => this.$router.push("/contas"))
           .catch(() =>
             this.$toasted.show("Dados não autorizados!", {
               iconPack: "fontawesome",

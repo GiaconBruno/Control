@@ -101,7 +101,7 @@
         </button>
       </div>
     </div>
-    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
+    <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
   </div>
 </template>
 

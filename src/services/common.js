@@ -62,7 +62,7 @@ export default {
   },
   getUsuarioId(payload) {
     auth = services.auth();
-    return axios.get(`${api}/api/usuarios/${payload}`, {
+    return axios.get(`${api}/api/usuario/${payload}`, {
       headers: {
         token: auth.token,
       }

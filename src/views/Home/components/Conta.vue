@@ -45,13 +45,14 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="functions.changeVisible('TodasContas')" class="btn btn-sm btn-danger">Cancelar</button>
-        <button @click="createConta()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
+        <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="(action=='Criar')?createConta():updateConta()" :disabled="loading"
+          class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
       </div>
     </div>
-    <div v-else class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
+    <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
   </div>
 </template>
 
@@ -66,23 +67,26 @@
         usuario: null,
         usuarios: [],
         title: 'Criar Conta',
-        url: 'contas',
-        mensagem: 'Conta criada com exito!',
         action: 'Criar',
       }
     },
     async beforeMount() {
-      this.usuarios = await this.common.getUsuarios('todos');
-      this.fk_usuario_id.push(this.auth().id);
+      this.loading = true
+      this.$store.dispatch('getUserContas')
+        .then(response => {
+          this.usuarios = response
+        })
+        .catch(() => this.$router.push("/"))
+        .finally(() => this.loading = false)
 
-      if (this.contaEdit.id) {
-        this.conta.descricao = this.contaEdit.descricao;
+      this.fk_usuario_id.push(this.$store.state.default.access.auth.id);
+      if (this.$store.state.default.access.contaEdit && this.$store.state.default.access.contaEdit.id) {
+        this.conta.descricao = this.$store.state.default.access.contaEdit.descricao;
         this.title = 'Editar Conta';
         this.action = 'Alterar';
-        this.url = `atualizar-conta/${this.contaEdit.id}`;
-        this.mensagem = 'Conta Atualizada com exito!';
-
-        this.fk_usuario_id = (this.contaEdit.fk_usuario_id.replace(/[['\]]/g, "").split(",")).map(c => parseInt(c));
+        this.fk_usuario_id =
+          (this.$store.state.default.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
+            .split(",")).map(c => parseInt(c));
       }
     },
     computed: {
@@ -107,7 +111,7 @@
           this.fk_usuario_id.splice(payload, 1);
         }
       },
-      async createConta() {
+      createConta() {
         if (!this.conta.descricao) {
           this.$toasted.show(`Preencha a Descrição`, {
             iconPack: "fontawesome",
@@ -123,20 +127,61 @@
         this.conta.fk_usuario_id = contas;
         this.conta.status = false;
 
-        let response = this.common.createConta(this.conta, this.url)
-        if (response) {
-          this.$toasted.show(`${this.mensagem}`, {
+        this.$store.dispatch('createConta', this.conta)
+          .then(response => {
+            this.$toasted.show(`${response.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            })
+            this.$router.go(-1)
+          })
+          .catch(error => this.$toasted.show(error.data.mensagem, {
             iconPack: "fontawesome",
-            icon: "check",
+            icon: "times",
             duration: 3000,
-            className: "bg-success",
+            className: "bg-danger",
+            theme: "bubble",
+          }))
+          .finally(() => this.loading = false)
+      },
+      updateConta() {
+        if (!this.conta.descricao) {
+          this.$toasted.show(`Preencha a Descrição`, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
             theme: "bubble",
           });
-          this.loading = false;
-          this.functions.changeVisible('TodasContas')
-        } else this.$router.push("/");
+          return
+        }
+        this.loading = true;
+        let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
+        this.conta.fk_usuario_id = contas;
+        this.conta.status = false;
 
-        this.loading = false;
+        this.$store.dispatch('updateConta', this.conta)
+          .then(response => {
+            this.$toasted.show(`${response.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            })
+            this.$router.go(-1)
+          })
+          .catch(error => this.$toasted.show(error.data.mensagem, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          }))
+          .finally(() => this.loading = false)
       },
     }
   }

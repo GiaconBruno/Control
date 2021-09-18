@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12 px-2">
-      <div v-if="loading" class="spinner-border text-success spinner-border-sm my-2" role="status"></div>
+      <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
       <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
       <div v-else>
         <div class="row m-0">
@@ -93,7 +93,7 @@
                   <i @click.stop="functions.setConta(conta)" :id="`iParela${i}`"
                     class="fa fa-plus-circle text-success px-2 py-1"></i>
                   <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
-                  <i @click.stop="functions.setEditConta(conta)" :id="`iEditConta${i}`"
+                  <i @click.stop="editConta(conta)" :id="`iEditConta${i}`"
                     class="fa fa-edit text-primary px-2 py-1"></i>
                   <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
                   </b-tooltip>
@@ -145,7 +145,7 @@
         totalAberto: 0,
         total: 0,
         deletar: null,
-        contasStatus: false,
+        contasStatus: 'all',
         parcelasStatus: 'all',
       }
     },
@@ -170,6 +170,10 @@
           })
           .finally(() => this.loading = false)
       },
+      editConta(payload) {
+        this.$store.commit('SET_EDIT_CONTA', payload)
+        this.$router.push('/conta')
+      },
       async getParcelas(payload, type) {
         this.loadingParcelas = true;
         this.conta = payload;
@@ -178,15 +182,16 @@
         this.parcelas = [];
         if ((conta == payload) && (type != 'deletar')) return;
 
-        let response = await this.common.getParcelas(payload);
-        if (response) this.parcelas = response;
-        else {
-          localStorage.clear();
-          this.$router.push("/");
-        }
-
-        this.formatting();
-        this.loadingParcelas = false;
+        this.$store.dispatch('getParcelas', payload)
+          .then(response => this.parcelas = response)
+          .catch(() => {
+            localStorage.clear();
+            this.$router.push("/");
+          })
+          .finally(() => {
+            this.formatting();
+            this.loadingParcelas = false;
+          })
       },
       formatting() {
         this.parcelasPagas = 0;
@@ -230,26 +235,23 @@
       async deletarConta() {
         this.loadingDel = true;
 
-        let response = await this.common.deletarConta(this.deletar.id);
-        if (response)
-          this.$toasted.show(`
-        $ {
-          response.mensagem
-        }
-        `, {
-            iconPack: "fontawesome",
-            icon: "check",
-            duration: 3000,
-            className: "bg-success",
-            theme: "bubble",
-          });
-        else {
-          this.$router.push("/");
-          this.loadingDel = false;
-        }
-        this.deletar = null;
-        await this.getContas();
-        this.loadingDel = false;
+        this.$store.dispatch('deletarConta', this.deletar.id)
+          .then(response => {
+            this.$toasted.show(`${response.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            })
+            this.$refs['mDelConta'].hide()
+            this.getContas();
+          })
+          .catch(() => this.$router.push('/'))
+          .finally(() => {
+            this.loadingDel = false
+            this.$refs['mDelConta'].hide()
+          })
       },
     }
   }
