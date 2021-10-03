@@ -95,7 +95,7 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="functions.changeVisible('TodasContas')" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="$router.push('/contas')" class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="createParcela()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
@@ -115,7 +115,7 @@
         title: 'Criar Parcela',
         action: 'Criar',
         mensagem: 'Parcela criada com exito!',
-        url: `${this.contaParcela.id}/parcelas`,
+        url: `${this.contaParcela}/parcelas`,
         parcela: {
           forma_pagto: null,
         },
@@ -128,33 +128,33 @@
     },
     async beforeMount() {
       this.loadingForm = true;
-      let response = await this.common.getFormasPagto();
-      if (response) this.formaPagto = response;
-      else this.$router.push("/");
-      this.loadingForm = false;
+      this.$store.dispatch('getFormasPagto')
+        .then((response) => this.formaPagto = response)
+        .catch(() => this.$router.push("/contas"))
+        .finally(() => this.loadingForm = false)
     },
     mounted() {
-      if (this.parcelaEdit.id) {
-        this.parcela = {
-          ...this.parcelaEdit
-        };
-        let data;
-        if (this.parcela.vencimento) {
-          data = this.parcela.vencimento.split('/');
-          this.parcela.vencimento = `${data[2]}-${data[1]}-${data[0]}`;
-        }
-        if (this.parcela.data_pagto) {
-          data = this.parcela.data_pagto.split('/');
-          this.parcela.data_pagto = `${data[2]}-${data[1]}-${data[0]}`;
-        }
+      // if (this.parcelaEdit.id) {
+      //   this.parcela = {
+      //     ...this.parcelaEdit
+      //   };
+      //   let data;
+      //   if (this.parcela.vencimento) {
+      //     data = this.parcela.vencimento.split('/');
+      //     this.parcela.vencimento = `${data[2]}-${data[1]}-${data[0]}`;
+      //   }
+      //   if (this.parcela.data_pagto) {
+      //     data = this.parcela.data_pagto.split('/');
+      //     this.parcela.data_pagto = `${data[2]}-${data[1]}-${data[0]}`;
+      //   }
 
-        this.title = 'Parcela';
-        this.action = 'Salvar';
-        this.url = `atualizar-parcela/${this.parcela.id}`;
-        this.mensagem = 'Parcela atualizada!!';
-      } else
-        this.parcela.vencimento =
-        `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+      //   this.title = 'Parcela';
+      //   this.action = 'Salvar';
+      //   this.url = `atualizar-parcela/${this.parcela.id}`;
+      //   this.mensagem = 'Parcela atualizada!!';
+      // } else
+      //   this.parcela.vencimento =
+      //   `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
     },
     computed: {
       total() {
@@ -273,13 +273,15 @@
 
         let formatting = (this.parcela.vencimento.split("/"));
         if (formatting.length > 1)
-          parcela.vencimento = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
+          // parcela.vencimento = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
+          parcela.vencimento = `${formatting.reverse().join('-')}`;
         else parcela.vencimento = formatting[0];
 
         if (this.parcela.data_pagto) {
           formatting = (this.parcela.data_pagto.split("/"));
           if (formatting.length > 1)
-            parcela.data_pagto = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
+            // parcela.data_pagto = `${formatting[2]}-${formatting[1]}-${formatting[0]}`;
+            parcela.data_pagto = `${formatting.reverse().join('-')}`;
           else parcela.data_pagto = formatting[0];
         } else parcela.data_pagto = null;
 

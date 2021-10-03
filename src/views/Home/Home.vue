@@ -77,19 +77,19 @@
 
 <script>
   // import TodosUsuarios from './components/TodosUsuarios';
-  import Usuario from './components/Usuario';
+  // import Usuario from './components/Usuario';
   // import TodasContas from './components/TodasContas';
-  import Conta from './components/Conta';
-  import Parcela from './components/Parcela';
-  import loading from './components/loading';
+  // import Conta from './components/Conta';
+  // import Parcela from './components/Parcela';
+  // import loading from './components/loading';
   export default {
     components: {
       // TodosUsuarios,
-      Usuario,
+      // Usuario,
       // TodasContas,
-      Conta,
-      Parcela,
-      loading,
+      // Conta,
+      // Parcela,
+      // loading,
     },
     data() {
       return {

@@ -32,49 +32,43 @@
             <div v-if="((contasStatus != 'all') ?  contasStatus == conta.status : contasStatus)"
               @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
               :class="{'contabord': (parcelas.length), 'pago': (conta.status)}"
-              class="btn text-left alert-success row m-0 d-flex justify-content-between align-items-center">
-              <div class="col-auto px-0">
+              class="btn text-left alert-success row m-0 px-1 px-lg-3 d-flex justify-content-between align-items-center">
+              <div class="col-1 col-lg-auto px-0">
                 <i :class="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
                   class="fa text-warning px-2 py-1"></i>
               </div>
-              <div class="col-9 col-lg-10 px-0">
+              <div class="col col-lg-10 px-0">
                 <div class="row m-0">
                   <div class="col-12 px-0">
                     <div class="row m-0 align-items-center">
-                      <div class="col-12 col-lg-4 px-0 text-center text-lg-left">
+                      <div class="col-12 col-lg-5 px-0 text-center text-lg-left">
                         <span>{{conta.descricao}}</span>
                       </div>
-                      <div class="col-12 col-lg-8 px-0 text-center text-sm text-lg-left">
+                      <div class="col-12 col-lg-6 px-0 text-center text-sm">
                         <div v-if="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id))"
                           class="row m-0 h-100 align-items-center">
-                          <div class="col-6 col-lg-5 px-0">
+                          <div class="col-12 px-0">
                             <div class="row m-0 justify-content-center align-items-center">
-                              <div class="col-12 col-lg-5 px-0">
+                              <div class="col-3 col-lg-3 px-0">
                                 <span>Parcelas: {{ parcelas.length }}</span>
                               </div>
-                              <div class="col-12 col-lg-6 px-0">
+                              <div class="col col-lg-5 px-0">
                                 <div class="row m-0 justify-content-center align-items-center">
-                                  <span class="pr-2 text-xs h-100">Pagos: </span>
-                                  <span>{{ parcelasPagas }} | {{ parcelas.length-parcelasPagas }}</span>
-                                  <span class="pl-2 text-xs h-100"> Abertos</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-6 col-lg-7 px-0">
-                            <div class="row m-0 justify-content-center align-items-center">
-                              <div class="col-12 col-lg-5 px-0 text-lg-right">
-                                <span><strong>Total: {{ total }} </strong></span>
-                              </div>
-                              <div class="col-12 col-lg-7 px-0">
-                                <div class="row m-0 justify-content-center align-items-center">
-                                  <span class="px-2 text-xs text-green h-100">Pagos</span>
-                                  <span class="pl-3 text-xs text-red h-100">Abertos</span>
+                                  <span class="px-2 text-xs text-green h-100">{{ parcelasPagas }} Pagos</span>
+                                  <span class="pl-3 text-xs text-red h-100">{{ parcelas.length-parcelasPagas }}
+                                    Abertos</span>
                                 </div>
                                 <div class="row m-0 justify-content-center align-items-center">
                                   <span class="text-green">{{ totalPago }} </span>
                                   <span class="px-1"> | </span>
                                   <span class="text-red"> {{ totalAberto }}</span>
+                                </div>
+                              </div>
+                              <div class="col-3 col-lg-4 px-0">
+                                <div class="row m-0 justify-content-center align-items-center">
+                                  <div class="col-12 col-lg-auto px-0 text-lg-right">
+                                    <span><strong>Total: {{ total }} </strong></span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -88,9 +82,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-auto px-0">
+              <div class="col-1 col-lg-auto px-0">
                 <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
-                  <i @click.stop="functions.setConta(conta)" :id="`iParela${i}`"
+                  <i @click.stop="$router.push('/parcela')" :id="`iParela${i}`"
                     class="fa fa-plus-circle text-success px-2 py-1"></i>
                   <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
                   <i @click.stop="editConta(conta)" :id="`iEditConta${i}`"

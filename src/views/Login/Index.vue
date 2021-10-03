@@ -31,12 +31,12 @@
 </template>
 
 <script>
-  import LogIn from "./components/Login";
-  import Usuario from "../Home/components/Usuario";
+  // import LogIn from "./components/Login";
+  // import Usuario from "../Home/components/Usuario";
   export default {
     components: {
-      LogIn,
-      Usuario,
+      // LogIn,
+      // Usuario,
     },
     data() {
       return {

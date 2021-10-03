@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios';
 
 const state = {
@@ -5,6 +6,7 @@ const state = {
     auth: {},
     userEdit: {},
     contaEdit: {},
+    formPagtos: {}
   }
 }
 
@@ -226,6 +228,30 @@ const actions = {
     })
     return promise
   },
+  getFormasPagto(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/formpagto`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log("" + error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  createParcelas(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.post(`/api/`, payload, context)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log("" + error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
 }
 
 export default {
@@ -250,8 +276,8 @@ exemple(context, payload) {
 
 
 this.$store.dispatch('getset')
-  .then(response => {})
-  .catch(() => {
-  })
-  .finally(() => this.loading = false)
-  */
+.then(response => {})
+.catch(() => {
+})
+.finally(() => this.loading = false)
+*/
