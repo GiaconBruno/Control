@@ -6,7 +6,6 @@
     <div class="row mx-0 justify-content-center ">
       <div class="col-12 col-md-6 col-lg-4 offset-lg-8 d-flex align-items-center">
         <transition name="anim">
-          <!-- <component :is="visible" v-bind="{changeVisible}" /> -->
           <router-view />
         </transition>
       </div>
@@ -31,18 +30,7 @@
 </template>
 
 <script>
-  // import LogIn from "./components/Login";
-  // import Usuario from "../Home/components/Usuario";
   export default {
-    components: {
-      // LogIn,
-      // Usuario,
-    },
-    data() {
-      return {
-        visible: 'LogIn',
-      }
-    },
   };
 </script>
 

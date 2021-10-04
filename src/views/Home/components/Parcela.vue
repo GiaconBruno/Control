@@ -4,7 +4,7 @@
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
       <div class="row">
-        <div class="col-6 text-left">
+        <div :class="{'has_errors': errors.includes('descricao')}" class="col-7 col-lg-6 px-1 px-lg-3 text-left">
           <label id="lbDescricao" for="descricao">Descrição:</label>
           <div class="position-relative">
             <i id="iDescricao" class="fa fa-pen-alt text-gray"></i>
@@ -12,7 +12,7 @@
               class="form-control" placeholder="Descrição" />
           </div>
         </div>
-        <div class="col-6 text-left">
+        <div :class="{'has_errors': errors.includes('vencimento')}" class="col-5 col-lg-6 px-1 px-lg-3 text-left">
           <label id="lbVencimento" for="vencimento">Vencimento:</label>
           <div class="position-relative">
             <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="row justify-content-between">
-        <div class="col-4 pr-2 text-left text-red">
+        <div :class="{'has_errors': errors.includes('valor')}" class="col-4 px-1 px-lg-3 text-left text-red">
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
             <i id="iValor" class="fa fa-money-bill-alt text-gray"></i>
@@ -33,7 +33,7 @@
         <div class="position-relative" style="width: 14px;">
           <i class="fa fa-plus text-gray" style="top: auto; left: 0; bottom: 0;"></i>
         </div>
-        <div class="col-4 px-2 text-left">
+        <div class="col-4 px-1 px-lg-3 text-left">
           <label for="outros">Outros:</label>
           <div class="position-relative">
             <i class="fa fa-money-bill-wave text-gray"></i>
@@ -43,14 +43,14 @@
         </div>
         <div class="col-3 px-0 text-left">
           <label for="total">Total:</label>
-          <div class="position-relative">
-            <i class="fa fa-equals text-gray"></i>
-            <span class="pl-4">{{ total }}</span>
+          <div class="position-relative pt-2">
+            <i class="fa fa-equals text-gray" style="top: auto; left: 0; bottom: 0;"></i>
+            <span class="pl-3 pl-lg-4">{{ total }}</span>
           </div>
         </div>
       </div>
       <div class="row">
-        <div :class="(formSelect.select)? 'pr-3':'pr-0' " class="col-4 text-left">
+        <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3 text-left">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
             <i id="iformaPagto" class="fa fa-dollar-sign text-gray"></i>
@@ -76,7 +76,7 @@
             <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
           </div>
         </div>
-        <div class="col-4 pl-0 pr-3 text-left">
+        <div :class="{'has_errors': errors.includes('recebido')}" class="col-3 pl-0 px-1 px-lg-3 text-left">
           <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
             <i id="iRecebido" class="fa fa-donate text-gray"></i>
@@ -84,7 +84,7 @@
               placeholder="R$ 0,00" />
           </div>
         </div>
-        <div class="col-4 pl-0 text-left">
+        <div :class="{'has_errors': errors.includes('data_pagto')}" class="col-5 px-1 px-lg-3 text-left">
           <label id="lbPagamento" for="pagamento">Pagamento:</label>
           <div class="position-relative">
             <i id="iPagamento" class="fa fa-calendar-check text-gray"></i>
@@ -96,7 +96,8 @@
       <hr />
       <div class="row mt-4 justify-content-around">
         <button @click="$router.push('/contas')" class="btn btn-sm btn-danger">Cancelar</button>
-        <button @click="createParcela()" :disabled="loading" class="btn btn-sm btn-success">{{action}}
+        <button @click="(action=='Criar')?createParcela():updateParcela()" :disabled="loading"
+          class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
         </button>
       </div>
@@ -107,54 +108,48 @@
 
 <script>
   export default {
-    props: ['contaParcela', 'functions', 'parcelaEdit'],
     data() {
       return {
         loading: false,
         loadingForm: false,
         title: 'Criar Parcela',
         action: 'Criar',
-        mensagem: 'Parcela criada com exito!',
-        url: `${this.contaParcela}/parcelas`,
+        conta: null,
         parcela: {
           forma_pagto: null,
+          vencimento: new Date(new Date()).toLocaleString('pt-BR').slice(0, 10).split('/').reverse().join('-')
         },
         formaPagto: [],
         formSelect: {
           descricao: '',
           select: true,
         },
+        errors: [],
       }
     },
-    async beforeMount() {
+    beforeMount() {
       this.loadingForm = true;
+      this.conta = Buffer.from(`${this.access.contaParcela}`, 'base64').toString('utf-8') / 100000
       this.$store.dispatch('getFormasPagto')
         .then((response) => this.formaPagto = response)
-        .catch(() => this.$router.push("/contas"))
+        .catch((er) => console.log(er))
         .finally(() => this.loadingForm = false)
     },
     mounted() {
-      // if (this.parcelaEdit.id) {
-      //   this.parcela = {
-      //     ...this.parcelaEdit
-      //   };
-      //   let data;
-      //   if (this.parcela.vencimento) {
-      //     data = this.parcela.vencimento.split('/');
-      //     this.parcela.vencimento = `${data[2]}-${data[1]}-${data[0]}`;
-      //   }
-      //   if (this.parcela.data_pagto) {
-      //     data = this.parcela.data_pagto.split('/');
-      //     this.parcela.data_pagto = `${data[2]}-${data[1]}-${data[0]}`;
-      //   }
-
-      //   this.title = 'Parcela';
-      //   this.action = 'Salvar';
-      //   this.url = `atualizar-parcela/${this.parcela.id}`;
-      //   this.mensagem = 'Parcela atualizada!!';
-      // } else
-      //   this.parcela.vencimento =
-      //   `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
+      if (this.access.parcelaEdit && this.access.parcelaEdit.id) {
+        this.parcela = this.access.parcelaEdit;
+        if (this.parcela.vencimento)
+          this.parcela.vencimento = this.parcela.vencimento.split('/').reverse().join('-')
+        if (this.parcela.data_pagto)
+          this.parcela.data_pagto = this.parcela.data_pagto.split('/').reverse().join('-')
+        this.title = 'Editar Parcela'
+        this.action = 'Salvar';
+      }
+    },
+    watch: {
+      parcela(next, last) {
+        this.errors = []
+      }
     },
     computed: {
       total() {
@@ -164,10 +159,10 @@
     },
     methods: {
       createForma() {
-        if (this.formSelect.descricao)
+        if (this.formSelect.descricao) {
           this.formaPagto.push(this.formSelect.descricao.toUpperCase())
-        if (this.formSelect.descricao) this.parcela.forma_pagto = this.formaPagto[this.formaPagto.length - 1];
-        else this.parcela.forma_pagto = null;
+          this.parcela.forma_pagto = this.formaPagto[this.formaPagto.length - 1];
+        } else this.parcela.forma_pagto = null;
         this.formSelect = {
           descricao: '',
           select: true
@@ -175,12 +170,13 @@
         this.setRecebido();
       },
       setRecebido() {
-        if ((this.parcela.forma_pagto) && this.parcela.forma_pagto != 'other') {
+        if (this.parcela.forma_pagto && (this.parcela.forma_pagto != 'other')) {
           this.parcela.recebido = parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0);
           if (!this.parcela.data_pagto) {
             this.parcela.data_pagto = new Date(Date.now());
             this.parcela.data_pagto = (this.parcela.data_pagto).toLocaleString('pt-BR')
-              .replace(/(\d{2})\/(\d{2})\/(\d{4}) \d{2}:\d{2}:\d{2}/g, '$3-$2-$1');
+              .slice(0, 10).split('/').reverse().join('-')
+            // .replace(/(\d{2})\/(\d{2})\/(\d{4}) \d{2}:\d{2}:\d{2}/g, '$3-$2-$1');
           }
         } else {
           this.parcela.recebido = 0;
@@ -188,62 +184,19 @@
         }
       },
       valid() {
-        if (!this.parcela.vencimento || !this.parcela.valor) {
-          if (!this.parcela.valor) {
-            document.querySelector('#lbValor').style.color = "#dc3545";
-            document.querySelector('#iValor').style.color = "#dc3545";
-            document.querySelector('#valor').style.borderColor = "#dc3545";
-          }
-          if (!this.parcela.vencimento) {
-            document.querySelector('#lbVencimento').style.color = "#dc3545";
-            document.querySelector('#iVencimento').style.color = "#dc3545";
-            document.querySelector('#vencimento').style.borderColor = "#dc3545";
-          }
-          this.$toasted.show(`Prenche os compos corretamente`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
-          return false
-        } else if (!this.parcela.recebido && !this.parcela.data_pagto && !this.parcela.forma_pagto) {
-          return true
-        } else if (!this.parcela.recebido || !this.parcela.data_pagto ||
-          (!this.parcela.forma_pagto && !this.formaPagto.select)) {
-          if (!this.parcela.recebido) {
-            document.querySelector('#lbRecebido').style.color = "#dc3545";
-            document.querySelector('#iRecebido').style.color = "#dc3545";
-            document.querySelector('#recebido').style.borderColor = "#dc3545";
-          }
-          if (!this.parcela.data_pagto) {
-            document.querySelector('#lbPagamento').style.color = "#dc3545";
-            document.querySelector('#iPagamento').style.color = "#dc3545";
-            document.querySelector('#pagamento').style.borderColor = "#dc3545";
-          }
-          if (!this.parcela.forma_pagto && !this.formaPagto.select) {
-            document.querySelector('#lbformaPagto').style.color = "#dc3545";
-            document.querySelector('#iformaPagto').style.color = "#dc3545";
-            document.querySelector('#formaPagto').style.borderColor = "#dc3545";
-          }
-
-          this.$toasted.show(`Prencha os campos para parcelas pagas`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 5000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
-          return false
-        } else {
-          return true;
+        this.errors = [];
+        if (!this.parcela.descricao) this.errors.push('descricao')
+        if (!this.parcela.vencimento) this.errors.push('vencimento')
+        if (!this.parcela.valor) this.errors.push('valor')
+        if (this.parcela.recebido || this.parcela.data_pagto || ![null, 'other'].includes(this.parcela.forma_pagto)) {
+          if (!this.parcela.recebido) this.errors.push('recebido')
+          if (!this.parcela.data_pagto) this.errors.push('data_pagto')
+          if (!this.parcela.forma_pagto) this.errors.push('forma_pagto')
         }
+        if (this.errors.length) return false
+        return true
       },
-      async createParcela() {
-        if (!this.valid()) return
-
-        //Formating
-        this.loading = true;
+      formatting() {
         let parcela = {
           ...this.parcela
         };
@@ -259,9 +212,7 @@
             className: "bg-danger",
             theme: "bubble",
           });
-          document.querySelector('#lbRecebido').style.color = "#dc3545";
-          document.querySelector('#iRecebido').style.color = "#dc3545";
-          document.querySelector('#recebido').style.borderColor = "#dc3545";
+          this.errors.push('recebido')
           this.loading = false;
           return
         } else if (parcela.valor == parcela.recebido) {
@@ -285,21 +236,71 @@
           else parcela.data_pagto = formatting[0];
         } else parcela.data_pagto = null;
 
-
-        //GRAVANDO
-        let response = await this.common.createParcela(parcela, this.url);
-        if (response) {
-          this.$toasted.show(`${this.mensagem}`, {
+        return {
+          conta: this.conta,
+          parcela
+        }
+      },
+      createParcela() {
+        if (!this.valid()) {
+          this.$toasted.show(`Prenche os compos corretamente`, {
             iconPack: "fontawesome",
-            icon: "check",
+            icon: "times",
             duration: 3000,
-            className: "bg-success",
+            className: "bg-danger",
             theme: "bubble",
           });
-          this.functions.changeVisible('TodasContas');
-        } else this.$router.push("/");
-        this.loading = false;
+          return
+        }
+        //Formating
+        this.loading = true;
+        let payload = this.formatting()
+
+        //GRAVANDO
+        this.$store.dispatch('createParcela', payload)
+          .then(response => {
+            this.$toasted.show(`${response.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            })
+            this.$router.push("/contas")
+          })
+          .catch((er) => console.log(er))
+          .finally(() => this.loading = false)
       },
+      updateParcela() {
+        if (!this.valid()) {
+          this.$toasted.show(`Prenche os compos corretamente`, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          });
+          return
+        }
+        //Formating
+        this.loading = true;
+        let payload = this.formatting()
+
+        //GRAVANDO
+        this.$store.dispatch('updateParcela', payload.parcela)
+          .then(response => {
+            this.$toasted.show(`${response.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            })
+            this.$router.push("/contas")
+          })
+          .catch((er) => console.log(er))
+          .finally(() => this.loading = false)
+      }
     }
   }
 </script>
@@ -356,7 +357,21 @@ hr {
   border-color: #888888aa;
 }
 
+.has_errors input,
+.has_errors label,
+.has_errors i,
+.has_errors select {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
 .btn:not(.btn-primary) {
   min-width: 100px;
+}
+
+@media screen and (max-width: 992px) {
+  * {
+    font-size: 0.7rem;
+  }
 }
 </style>

@@ -5,22 +5,19 @@
       <div v-for="(usuario, i) in usuarios" :key="usuario.id"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
         <div class="row align-items-center">
-          <div class="col-10 col-lg-11 pr-0 py-lg-0">
+          <div class="col-10 col-lg-11 pl-1 pl-lg-3 pr-0 py-lg-0">
             <div class="row mx-0 text-left align-items-center">
               <div class="col col-lg px-0">
-                <div class="row mx-0 justify-content-between">
-                  <span>
-                    <span class="text-sm">Usuário: </span>
+                <div class="row mx-0 justify-content-between align-items-center">
+                  <span class="text-sm text-lg-sm">
                     <strong>{{ [usuario.nome.split(' ')[0],usuario.nome.split(' ')[1]].join(' ')}}</strong> -
                     @{{ usuario.usuario }}
                   </span>
-                  <span>
-                    <span class="text-sm"> {{ usuario.acesso || 'Nenhum' }}</span>
-                  </span>
+                  <span class="text-xs text-sm"> {{ usuario.acesso || 'Nenhum' }}</span>
                 </div>
               </div>
               <div class="col-12 col-lg-3 px-0 px-lg-3">
-                <div class="row justify-content-around align-items-center text-sm">
+                <div class="row justify-content-around align-items-center text-center text-sm">
                   <div class="col-6 pr-0">
                     <span>Permissão: </span>
                     <i :class="(usuario.permissao) ? 'fa-check text-success': 'fa-times text-danger'"
@@ -97,7 +94,7 @@
               }
             })
           })
-          .catch(() => this.$router.push("/"))
+          .catch((er) => console.log(er))
           .finally(() => this.loading = false)
       },
       showDeletar(payload) {
@@ -121,17 +118,17 @@
                 }
                 this.$store.commit('SET_EDIT_CONTA', contas)
                 this.$store.dispatch('updateConta', attConta)
-                  .catch((error) => console.log(error))
+                  .catch((er) => console.log(er))
               } else if (usersConta.length == 1) { // DELETAR CONTA
-                this.$store.dispatch('deletarConta', contas.id)
-                  .catch((error) => console.log(error))
+                this.$store.dispatch('deleteConta', contas.id)
+                  .catch((er) => console.log(er))
               }
             })
           })
-          .catch(() => this.$router.push("/"))
+          .catch((er) => console.log(er))
           .finally(() => {
             //DELETAR USUARIO PERMANENTEMENTE
-            this.$store.dispatch('deletarUser', this.deletar.id)
+            this.$store.dispatch('deleteUser', this.deletar.id)
               .then(response => {
                 this.$toasted.show(`${response.mensagem}`, {
                   iconPack: "fontawesome",
@@ -141,7 +138,13 @@
                   theme: "bubble",
                 });
               })
-              .catch(() => this.$router.push("/"))
+              .catch(error => this.$toasted.show(error.data.mensagem, {
+                iconPack: "fontawesome",
+                icon: "times",
+                duration: 3000,
+                className: "bg-danger",
+                theme: "bubble",
+              }))
               .finally(() => {
                 this.loading = false
                 this.deletar = null;
@@ -157,5 +160,19 @@
 <style scoped>
 .text-sm {
   font-size: 0.8em;
+}
+
+.text-xs {
+  font-size: x-small;
+}
+
+@media screen and (min-width: 1200px) {
+  .text-sm {
+    font-size: 0.8em;
+  }
+
+  .text-lg-sm {
+    font-size: medium;
+  }
 }
 </style>

@@ -62,7 +62,6 @@
 
 <script>
   export default {
-    props: ['usuarioEdit', 'functions', 'changeVisible'],
     data() {
       return {
         loading: false,
@@ -77,9 +76,9 @@
       }
     },
     beforeMount() {
-      this.autorization = this.$store.state.default.access.auth;
-      if (this.$store.state.default.access.userEdit && this.$store.state.default.access.userEdit.id) {
-        this.usuario = this.$store.state.default.access.userEdit;
+      this.autorization = this.access.auth;
+      if (this.access.userEdit && this.access.userEdit.id) {
+        this.usuario = this.access.userEdit;
         this.title = `Edição de Usuário`;
         this.action = `Alterar`;
       }
@@ -137,17 +136,30 @@
               theme: "bubble",
             });
             if (this.autorization) {
-              if (this.$store.state.default.access.userEdit.id == this.autorization.id) {
+              if (this.access.userEdit.id == this.autorization.id) {
                 this.$store.dispatch('sigIn', this.usuario)
-              }
-              this.usuario = {
-                permissao: false,
-                ativo: true,
-              };
-              this.$router.push('/contas')
+                  .then(() => this.usuario = {
+                    permissao: false,
+                    ativo: true,
+                  })
+                  .catch(error => this.$toasted.show(error.data.mensagem, {
+                    iconPack: "fontawesome",
+                    icon: "times",
+                    duration: 3000,
+                    className: "bg-danger",
+                    theme: "bubble",
+                  }))
+                  .finally(() => this.$router.push('/contas'))
+              } else this.$router.push('/contas')
             }
           })
-          .catch(() => this.$router.push("/"))
+          .catch(error => this.$toasted.show(error.data.mensagem, {
+            iconPack: "fontawesome",
+            icon: "times",
+            duration: 3000,
+            className: "bg-danger",
+            theme: "bubble",
+          }))
           .finally(() => this.loading = false)
       }
     }

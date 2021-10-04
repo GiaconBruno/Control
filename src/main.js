@@ -16,7 +16,8 @@ import Toasted from 'vue-toasted';
 import money from 'v-money';
 
 import service from './services/auth';
-import common from '@/services/common.js';
+// import common from '@/services/common.js';
+import access from '@/store/access.js';
 
 require('@/assets/css/all.min.css');
 require('@/assets/css/fontawesome.min.css');
@@ -42,7 +43,8 @@ axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 Vue.prototype.axios = axios;
 Vue.prototype.api = process.env.VUE_APP_BASE_URL;
 Vue.prototype.auth = service.auth;
-Vue.prototype.common = common;
+// Vue.prototype.common = common;
+Vue.mixin(access);
 
 Vue.config.productionTip = false;
 console.log(process.env.VUE_APP_BASE_URL);

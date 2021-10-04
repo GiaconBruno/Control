@@ -84,7 +84,7 @@
               </div>
               <div class="col-1 col-lg-auto px-0">
                 <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
-                  <i @click.stop="$router.push('/parcela')" :id="`iParela${i}`"
+                  <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
                     class="fa fa-plus-circle text-success px-2 py-1"></i>
                   <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
                   <i @click.stop="editConta(conta)" :id="`iEditConta${i}`"
@@ -99,7 +99,7 @@
               </div>
             </div>
             <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
-              <TodasParcelas v-bind="{loadingParcelas, parcelas, functions, conta, getParcelas, parcelasStatus}" />
+              <TodasParcelas v-bind="{parcelas, crypto, getParcelas, parcelasStatus, loadingParcelas}" />
             </b-collapse>
           </div>
         </div>
@@ -122,7 +122,6 @@
 <script>
   import TodasParcelas from './TodasParcelas'
   export default {
-    props: ['functions'],
     components: {
       TodasParcelas
     },
@@ -151,24 +150,21 @@
         this.loading = true;
         this.$store.dispatch('getContas')
           .then(response => this.contas = response)
-          .catch(() => {
-            this.$toasted.show("Dados não autorizados!", {
-              iconPack: "fontawesome",
-              icon: "times",
-              duration: 5000,
-              className: "bg-danger",
-              theme: "bubble",
-            })
-            localStorage.clear();
-            this.$router.push("/")
-          })
+          .catch((er) => console.log(er))
           .finally(() => this.loading = false)
+      },
+      createParcela(payload) {
+        this.$store.commit('SET_CONTA_PARCELA', payload)
+        this.$router.push('/parcela')
       },
       editConta(payload) {
         this.$store.commit('SET_EDIT_CONTA', payload)
         this.$router.push('/conta')
       },
-      async getParcelas(payload, type) {
+      crypto(payload) {
+        return Buffer.from(`${payload*100000}`, 'utf-8').toString('base64')
+      },
+      getParcelas(payload, type) {
         this.loadingParcelas = true;
         this.conta = payload;
         let conta = 0;
@@ -178,10 +174,7 @@
 
         this.$store.dispatch('getParcelas', payload)
           .then(response => this.parcelas = response)
-          .catch(() => {
-            localStorage.clear();
-            this.$router.push("/");
-          })
+          .catch((er) => console.log(er))
           .finally(() => {
             this.formatting();
             this.loadingParcelas = false;
@@ -226,10 +219,10 @@
         await (this.deletar = payload);
         this.$refs['mDelConta'].show()
       },
-      async deletarConta() {
+      deletarConta() {
         this.loadingDel = true;
 
-        this.$store.dispatch('deletarConta', this.deletar.id)
+        this.$store.dispatch('deleteConta', this.deletar.id)
           .then(response => {
             this.$toasted.show(`${response.mensagem}`, {
               iconPack: "fontawesome",
@@ -241,7 +234,7 @@
             this.$refs['mDelConta'].hide()
             this.getContas();
           })
-          .catch(() => this.$router.push('/'))
+          .catch((er) => console.log(er.statusText || er))
           .finally(() => {
             this.loadingDel = false
             this.$refs['mDelConta'].hide()

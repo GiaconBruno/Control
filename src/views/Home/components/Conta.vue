@@ -58,7 +58,6 @@
 
 <script>
   export default {
-    props: ['functions', 'contaEdit'],
     data() {
       return {
         loading: false,
@@ -70,22 +69,22 @@
         action: 'Criar',
       }
     },
-    async beforeMount() {
+    beforeMount() {
       this.loading = true
       this.$store.dispatch('getUserContas')
         .then(response => {
           this.usuarios = response
         })
-        .catch(() => this.$router.push("/"))
+        .catch((er) => console.log(er))
         .finally(() => this.loading = false)
 
-      this.fk_usuario_id.push(this.$store.state.default.access.auth.id);
-      if (this.$store.state.default.access.contaEdit && this.$store.state.default.access.contaEdit.id) {
-        this.conta.descricao = this.$store.state.default.access.contaEdit.descricao;
+      this.fk_usuario_id.push(this.access.auth.id);
+      if (this.access.contaEdit && this.access.contaEdit.id) {
+        this.conta.descricao = this.access.contaEdit.descricao;
         this.title = 'Editar Conta';
         this.action = 'Alterar';
         this.fk_usuario_id =
-          (this.$store.state.default.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
+          (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
             .split(",")).map(c => parseInt(c));
       }
     },
@@ -138,13 +137,7 @@
             })
             this.$router.go(-1)
           })
-          .catch(error => this.$toasted.show(error.data.mensagem, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          }))
+          .catch((er) => console.log(er))
           .finally(() => this.loading = false)
       },
       updateConta() {
@@ -174,13 +167,7 @@
             })
             this.$router.go(-1)
           })
-          .catch(error => this.$toasted.show(error.data.mensagem, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          }))
+          .catch((er) => console.log(er))
           .finally(() => this.loading = false)
       },
     }

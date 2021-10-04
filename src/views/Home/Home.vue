@@ -30,7 +30,7 @@
                 <i @click="changeVisible('conta')" id="criarConta"
                   class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
-                <i v-show="(['TodasContas','TodosUsuarios'].includes(visible))" @click="refresh()" id="atualizar"
+                <i v-show="(['/contas','/usuarios'].includes($route.path))" @click="refresh()" id="atualizar"
                   class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
                 <b-tooltip target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
               </div>
@@ -48,10 +48,7 @@
       <hr class="my-2" />
       <!-- :auth="usuario" -->
       <transition name="anim" mode="out-in">
-        <router-view v-if="!loading" v-bind="{setEditUsuario}" />
-        <!-- <component :is="visible" v-bind="{usuarioEdit, contaEdit, contaParcela, parcelaEdit}"
-          :functions="{changeVisible, setEditUsuario, reset, setEditConta, setConta, setEditParcela}" ref="All"
-          class="position-relative" /> -->
+        <router-view v-if="!loading" v-bind="{setEditUsuario}" ref="All" />
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
       </transition>
     </div>
@@ -76,26 +73,10 @@
 </template>
 
 <script>
-  // import TodosUsuarios from './components/TodosUsuarios';
-  // import Usuario from './components/Usuario';
-  // import TodasContas from './components/TodasContas';
-  // import Conta from './components/Conta';
-  // import Parcela from './components/Parcela';
-  // import loading from './components/loading';
   export default {
-    components: {
-      // TodosUsuarios,
-      // Usuario,
-      // TodasContas,
-      // Conta,
-      // Parcela,
-      // loading,
-    },
     data() {
       return {
         loading: false,
-        // usuario: null,
-        visible: 'TodasContas',
         usuarioEdit: {
           permissao: false,
           ativo: true,
@@ -109,6 +90,10 @@
       $route(to, from) {
         if (from.path == '/usuario') this.$store.commit('SET_EDIT_USER');
         if (from.path == '/conta') this.$store.commit('SET_EDIT_CONTA');
+        if (from.path == '/parcela') {
+          this.$store.commit('SET_CONTA_PARCELA');
+          this.$store.commit('SET_EDIT_PARCELA');
+        }
       }
     },
     beforeMount() {
@@ -116,18 +101,18 @@
     },
     computed: {
       usuario() {
-        return this.$store.state.default.access.auth;
+        return this.access.auth;
       }
     },
     methods: {
       changeVisible(payload) {
-        if (this.$route.path != `/${payload}`) this.$router.push(payload)
+        if (this.$route.path != `/${payload}`) this.$router.push(`/${payload}`)
       },
       setEditUsuario(payload) {
         this.loading = true;
         this.$store.dispatch('getUserId', payload)
           .then(() => this.changeVisible('usuario'))
-          .catch(() => this.$router.push("/contas"))
+          .catch((er) => console.log(er))
           .finally(() => this.loading = false)
       },
       setEditParcela(payload) {
@@ -148,12 +133,12 @@
         this.parcelaEdit = {};
       },
       refresh() {
-        if (this.visible == "TodasContas") this.$refs.All.getContas();
-        else this.$refs.All.getUsuarios();
+        (this.$route.path == "/contas") ? this.$refs.All.getContas():
+          this.$refs.All.getUsuarios();
       },
       sigOut() {
-        localStorage.clear();
         this.$store.commit('LOGOUT');
+        localStorage.clear();
         this.$router.push("/");
       },
     },

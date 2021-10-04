@@ -32,7 +32,7 @@ const routes = [{
     path: '/conta',
     component: () => import('./views/Home/components/Conta.vue'),
   }, {
-    path: '/parcela',
+    path: '/parcela/',
     component: () => import('./views/Home/components/Parcela.vue'),
   }, {
     path: '/usuario',

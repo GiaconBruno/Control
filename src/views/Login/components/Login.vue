@@ -63,10 +63,14 @@
           .then(response => {
             console.log(response.data.start);
             this.servidor = true;
-            if (!this.$store.state.default.access.auth.id) return
-            this.$router.push("/contas");
+            this.$store.commit('GET_ACCESS');
+            if (this.access.auth && this.access.auth.id) this.$router.push("/contas");
           })
-          // .catch(() => this.servidor = false)
+          .catch(er => {
+            console.log(er);
+            localStorage.clear();
+            this.servidor = false
+          })
           .finally(() => this.loading = false)
       },
       valid() {
@@ -99,14 +103,7 @@
         }
         this.$store.dispatch('sigIn', payload)
           .then(() => this.$router.push("/contas"))
-          .catch(() =>
-            this.$toasted.show("Dados não autorizados!", {
-              iconPack: "fontawesome",
-              icon: "times",
-              duration: 5000,
-              className: "bg-danger",
-              theme: "bubble",
-            }))
+          .catch((er) => console.log(er))
           .finally(() => this.loading = false)
       },
     },

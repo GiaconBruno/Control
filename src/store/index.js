@@ -6,7 +6,9 @@ const state = {
     auth: {},
     userEdit: {},
     contaEdit: {},
-    formPagtos: {}
+    formPagtos: {},
+    contaParcela: null,
+    parcelaEdit: {},
   }
 }
 
@@ -32,6 +34,14 @@ const mutations = {
     state.access.contaEdit = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
+  SET_CONTA_PARCELA: (state, payload) => {
+    state.access.contaParcela = payload;
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
+  SET_EDIT_PARCELA: (state, payload) => {
+    state.access.parcelaEdit = payload;
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
 }
 
 const actions = {
@@ -40,7 +50,7 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.get()
         .then(response => resolve(response))
-        .catch(error => reject(error.response.statusText))
+        .catch(error => reject(error.response))
     })
     return promise
   },
@@ -140,7 +150,7 @@ const actions = {
     })
     return promise
   },
-  deletarUser(context, payload) {
+  deleteUser(context, payload) {
     let promise = new Promise((resolve, reject) => {
       axios.delete(`/api/deletar-usuario/${payload}`)
         .then((response) => {
@@ -202,7 +212,7 @@ const actions = {
     })
     return promise
   },
-  deletarConta(context, payload) {
+  deleteConta(context, payload) {
     let promise = new Promise((resolve, reject) => {
       axios.delete(`/api/deletar-conta/${payload}`)
         .then((response) => {
@@ -240,9 +250,33 @@ const actions = {
     })
     return promise
   },
-  createParcelas(context, payload) {
+  createParcela(context, payload) {
     let promise = new Promise((resolve, reject) => {
-      axios.post(`/api/`, payload, context)
+      axios.post(`/api/${payload.conta}/parcelas`, payload.parcela)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log("" + error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  updateParcela(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.post(`/api/atualizar-parcela/${payload.id}`, payload)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log("" + error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  deleteParcela(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.delete(`/api/deletar-parcela/${payload}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {

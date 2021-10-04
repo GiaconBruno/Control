@@ -5,7 +5,7 @@
     <div class="row m-0" style="background-color: #ffc10790">
       <div class="col-11 px-0">
         <div class="row m-0">
-          <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
+          <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0 text-sm">
             <div class="row m-0">
               <div class="col-4 pl-0 pr-2 text-left"> DESCRIÇÃO </div>
               <div class="col-3 pl-0 pr-2"> VALOR </div>
@@ -21,9 +21,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-1 px-0">
-        {{  }}
       </div>
     </div>
     <hr class="m-0">
@@ -54,13 +51,14 @@
         </div>
         <div class="col-1 px-0 px-lg-2 text-right">
           <div class="row m-0 pr-1 pr-lg-0 justify-content-between">
-            <i @click="functions.setEditParcela(parcela)" :id="`iPagarEditar${i}-${conta.id}`"
+            <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
               class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
-            <b-tooltip :target="`iPagarEditar${i}-${conta.id}`" triggers="hover" noninteractive> Pagar/Editar
+            <b-tooltip :target="`iPagarEditar${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Pagar/Editar
               Parcela </b-tooltip>
-            <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${conta.id}`"
+            <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${crypto(parcela.id)}`"
               class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
-            <b-tooltip :target="`iRemoveParcela${i}-${conta.id}`" triggers="hover" noninteractive> Deletar Parcela
+            <b-tooltip :target="`iRemoveParcela${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Deletar
+              Parcela
             </b-tooltip>
           </div>
         </div>
@@ -88,7 +86,7 @@
 
 <script>
   export default {
-    props: ['functions', 'loadingParcelas', 'parcelas', 'conta', 'getParcelas', 'parcelasStatus'],
+    props: ['parcelas', 'crypto', 'getParcelas', 'parcelasStatus', 'loadingParcelas'],
     data() {
       return {
         deletar: '',
@@ -103,7 +101,11 @@
     },
     methods: {
       vencido(payload) {
-        return (new Date(payload.oriVenc).setHours(23, 59, 59) + 75.6 * 1000000 < Date.now() && (!payload.status))
+        return (Date.parse(new Date(payload.oriVenc.slice(0, 10) + 'T23:59:59')) < Date.now() && (!payload.status))
+      },
+      editParcela(payload) {
+        this.$store.commit('SET_EDIT_PARCELA', payload)
+        this.$router.push('/parcela')
       },
       async showDeletar(payload) {
         await (this.deletar = payload);
@@ -111,20 +113,21 @@
       },
       async deletarParcela() {
         this.loadingDel = true;
-
-        let response = await this.common.deletarParcela(this.deletar.id);
-        if (response)
-          this.$toasted.show(`${response.mensagem}`, {
-            iconPack: "fontawesome",
-            icon: "check",
-            duration: 3000,
-            className: "bg-success",
-            theme: "bubble",
-          });
-        else this.$router.push("/");
-        this.getParcelas(this.conta.id, 'deletar');
-        this.deletar = null;
-        this.loadingDel = false;
+        this.$store.dispatch('deleteParcela', this.deletar.id)
+          .then(response => {
+            this.$toasted.show(`${response.mensagem}`, {
+              iconPack: "fontawesome",
+              icon: "check",
+              duration: 3000,
+              className: "bg-success",
+              theme: "bubble",
+            })
+            this.getParcelas(this.deletar.fk_conta_id, 'deletar');
+            this.deletar = null;
+            this.$refs['mDelParcela'].hide()
+          })
+          .catch((er) => console.log(er))
+          .finally(() => this.loadingDel = false)
       },
     }
   }
