@@ -86,13 +86,7 @@
     methods: {
       valid() {
         if ((!this.usuario.nome) || (!this.usuario.usuario) || (!this.usuario.senha)) {
-          this.$toasted.show("Preencha os dados", {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
+          this.toast('Preencha os dados', 'times')
           return false;
         } else return true;
       },
@@ -103,22 +97,10 @@
 
         this.$store.dispatch('createUser', this.usuario)
           .then((response) => {
-            this.$toasted.show(response.mensagem, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
+            this.toast(response.mensagem, 'check')
             this.$router.push('/contas')
           })
-          .catch((error) => this.$toasted.show(error.data.mensagem, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          }))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
       updateUsuario() {
@@ -128,13 +110,7 @@
 
         this.$store.dispatch('updateUser', this.usuario)
           .then(response => {
-            this.$toasted.show(`${response.data.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            });
+            this.toast(response.mensagem, 'check')
             if (this.autorization) {
               if (this.access.userEdit.id == this.autorization.id) {
                 this.$store.dispatch('sigIn', this.usuario)
@@ -142,24 +118,12 @@
                     permissao: false,
                     ativo: true,
                   })
-                  .catch(error => this.$toasted.show(error.data.mensagem, {
-                    iconPack: "fontawesome",
-                    icon: "times",
-                    duration: 3000,
-                    className: "bg-danger",
-                    theme: "bubble",
-                  }))
+                  .catch(er => this.toast(er.data.mensagem, 'times'))
                   .finally(() => this.$router.push('/contas'))
               } else this.$router.push('/contas')
             }
           })
-          .catch(error => this.$toasted.show(error.data.mensagem, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          }))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       }
     }

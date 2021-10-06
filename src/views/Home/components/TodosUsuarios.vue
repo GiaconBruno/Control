@@ -86,15 +86,10 @@
           .then(response => {
             this.usuarios = response
             this.usuarios.map(user => {
-              if (user.acesso) {
-                user.acesso = user.acesso.split('T')
-                user.acesso[0] = user.acesso[0].split('-').reverse().join('/')
-                user.acesso[1] = user.acesso[1].slice(0, -5)
-                user.acesso = user.acesso.join(' ')
-              }
+              if (user.acesso) user.acesso = this.formatDate(user.acesso)
             })
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
       showDeletar(payload) {
@@ -118,33 +113,19 @@
                 }
                 this.$store.commit('SET_EDIT_CONTA', contas)
                 this.$store.dispatch('updateConta', attConta)
-                  .catch((er) => console.log(er))
+                  .catch(er => this.toast(er.data.mensagem, 'times'))
               } else if (usersConta.length == 1) { // DELETAR CONTA
                 this.$store.dispatch('deleteConta', contas.id)
-                  .catch((er) => console.log(er))
+                  .catch(er => this.toast(er.data.mensagem, 'times'))
               }
             })
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => {
             //DELETAR USUARIO PERMANENTEMENTE
             this.$store.dispatch('deleteUser', this.deletar.id)
-              .then(response => {
-                this.$toasted.show(`${response.mensagem}`, {
-                  iconPack: "fontawesome",
-                  icon: "check",
-                  duration: 3000,
-                  className: "bg-success",
-                  theme: "bubble",
-                });
-              })
-              .catch(error => this.$toasted.show(error.data.mensagem, {
-                iconPack: "fontawesome",
-                icon: "times",
-                duration: 3000,
-                className: "bg-danger",
-                theme: "bubble",
-              }))
+              .then(response => this.toast(response.mensagem, 'check'))
+              .catch(er => this.toast(er.data.mensagem, 'times'))
               .finally(() => {
                 this.loading = false
                 this.deletar = null;

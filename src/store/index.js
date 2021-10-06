@@ -125,10 +125,10 @@ const actions = {
   },
   updateAcessUser(context) {
     const payload = {
-      acesso: Date.now()
+      acesso: formatDate(new Date())
     }
     let promise = new Promise((resolve, reject) => {
-      axios.post(`/api/atualizar-usuario/${context.state.access.auth.id}`, payload)
+      axios.post(`/api/atualizar-acesso/${context.state.access.auth.id}`, payload)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {

@@ -67,7 +67,7 @@
             if (this.access.auth && this.access.auth.id) this.$router.push("/contas");
           })
           .catch(er => {
-            console.log(er);
+            this.toast(er.data.mensagem, 'times')
             localStorage.clear();
             this.servidor = false
           })
@@ -83,13 +83,7 @@
       sigIn() {
         this.valid();
         if (!this.user || !this.password) {
-          this.$toasted.show("Preencha os dados", {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
+          this.toast('Preencha os dados', 'times')
           return;
         }
         this.status();
@@ -103,7 +97,7 @@
         }
         this.$store.dispatch('sigIn', payload)
           .then(() => this.$router.push("/contas"))
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
     },

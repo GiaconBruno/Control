@@ -132,7 +132,7 @@
       this.conta = Buffer.from(`${this.access.contaParcela}`, 'base64').toString('utf-8') / 100000
       this.$store.dispatch('getFormasPagto')
         .then((response) => this.formaPagto = response)
-        .catch((er) => console.log(er))
+        .catch(er => this.toast(er.data.mensagem, 'times'))
         .finally(() => this.loadingForm = false)
     },
     mounted() {
@@ -205,13 +205,6 @@
         parcela.recebido = parseFloat(this.parcela.recebido);
 
         if ((parcela.recebido) && (parcela.valor != parcela.recebido)) {
-          this.$toasted.show(`Valor Recebido dever ser igual ao Valor Total`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
           this.errors.push('recebido')
           this.loading = false;
           return
@@ -243,13 +236,7 @@
       },
       createParcela() {
         if (!this.valid()) {
-          this.$toasted.show(`Prenche os compos corretamente`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
+          this.toast('Prenche os compos corretamente', 'times')
           return
         }
         //Formating
@@ -259,27 +246,15 @@
         //GRAVANDO
         this.$store.dispatch('createParcela', payload)
           .then(response => {
-            this.$toasted.show(`${response.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            })
+            this.toast(response.mensagem, 'check')
             this.$router.push("/contas")
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
       updateParcela() {
         if (!this.valid()) {
-          this.$toasted.show(`Prenche os compos corretamente`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
+          this.toast('Prenche os compos corretamente', 'times')
           return
         }
         //Formating
@@ -289,16 +264,10 @@
         //GRAVANDO
         this.$store.dispatch('updateParcela', payload.parcela)
           .then(response => {
-            this.$toasted.show(`${response.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            })
+            this.toast(response.mensagem, 'check')
             this.$router.push("/contas")
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       }
     }

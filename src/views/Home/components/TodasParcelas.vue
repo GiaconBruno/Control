@@ -115,18 +115,12 @@
         this.loadingDel = true;
         this.$store.dispatch('deleteParcela', this.deletar.id)
           .then(response => {
-            this.$toasted.show(`${response.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            })
+            this.toast(response.mensagem, 'check')
             this.getParcelas(this.deletar.fk_conta_id, 'deletar');
             this.deletar = null;
             this.$refs['mDelParcela'].hide()
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loadingDel = false)
       },
     }

@@ -75,7 +75,7 @@
         .then(response => {
           this.usuarios = response
         })
-        .catch((er) => console.log(er))
+        .catch(er => this.toast(er.data.mensagem, 'times'))
         .finally(() => this.loading = false)
 
       this.fk_usuario_id.push(this.access.auth.id);
@@ -112,13 +112,7 @@
       },
       createConta() {
         if (!this.conta.descricao) {
-          this.$toasted.show(`Preencha a Descrição`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
+          this.toast('Preencha a Descrição', 'times')
           return
         }
         this.loading = true;
@@ -128,27 +122,15 @@
 
         this.$store.dispatch('createConta', this.conta)
           .then(response => {
-            this.$toasted.show(`${response.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            })
+            this.toast(response.mensagem, 'check')
             this.$router.go(-1)
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
       updateConta() {
         if (!this.conta.descricao) {
-          this.$toasted.show(`Preencha a Descrição`, {
-            iconPack: "fontawesome",
-            icon: "times",
-            duration: 3000,
-            className: "bg-danger",
-            theme: "bubble",
-          });
+          this.toast('Preencha a Descrição', 'times')
           return
         }
         this.loading = true;
@@ -158,16 +140,10 @@
 
         this.$store.dispatch('updateConta', this.conta)
           .then(response => {
-            this.$toasted.show(`${response.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            })
+            this.toast(response.mensagem, 'check')
             this.$router.go(-1)
           })
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
     }

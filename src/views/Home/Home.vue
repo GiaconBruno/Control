@@ -112,7 +112,7 @@
         this.loading = true;
         this.$store.dispatch('getUserId', payload)
           .then(() => this.changeVisible('usuario'))
-          .catch((er) => console.log(er))
+          .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },
       setEditParcela(payload) {

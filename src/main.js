@@ -15,7 +15,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Toasted from 'vue-toasted';
 import money from 'v-money';
 
-import service from './services/auth';
+// import service from './services/auth';
 // import common from '@/services/common.js';
 import access from '@/store/access.js';
 
@@ -42,7 +42,7 @@ Vue.use(money, {
 axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 Vue.prototype.axios = axios;
 Vue.prototype.api = process.env.VUE_APP_BASE_URL;
-Vue.prototype.auth = service.auth;
+// Vue.prototype.auth = service.auth;
 // Vue.prototype.common = common;
 Vue.mixin(access);
 

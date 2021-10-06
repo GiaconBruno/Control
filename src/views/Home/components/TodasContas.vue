@@ -150,7 +150,7 @@
         this.loading = true;
         this.$store.dispatch('getContas')
           .then(response => this.contas = response)
-          .catch((er) => console.log(er))
+          .catch(er => console.log(er))
           .finally(() => this.loading = false)
       },
       createParcela(payload) {
@@ -174,7 +174,7 @@
 
         this.$store.dispatch('getParcelas', payload)
           .then(response => this.parcelas = response)
-          .catch((er) => console.log(er))
+          .catch(er => console.log(er))
           .finally(() => {
             this.formatting();
             this.loadingParcelas = false;
@@ -224,17 +224,11 @@
 
         this.$store.dispatch('deleteConta', this.deletar.id)
           .then(response => {
-            this.$toasted.show(`${response.mensagem}`, {
-              iconPack: "fontawesome",
-              icon: "check",
-              duration: 3000,
-              className: "bg-success",
-              theme: "bubble",
-            })
+            this.toast(response.mensagem, 'check')
             this.$refs['mDelConta'].hide()
             this.getContas();
           })
-          .catch((er) => console.log(er.statusText || er))
+          .catch(er => console.log(er.statusText || er))
           .finally(() => {
             this.loadingDel = false
             this.$refs['mDelConta'].hide()
