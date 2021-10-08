@@ -5,6 +5,8 @@
 </template>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -13,6 +15,7 @@
 
   width: 100vw;
   min-height: 100vh;
+  font-family: "Poppins", sans-serif;
   background: #093028;
   background: -webkit-linear-gradient(to bottom, #237a57, #093028);
   background: linear-gradient(to bottom, #237a57, #093028);

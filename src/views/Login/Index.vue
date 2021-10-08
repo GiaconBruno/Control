@@ -48,7 +48,7 @@ section {
 .position-absolute {
   top: 20vh;
   left: auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; */
 }
 
 h1 {

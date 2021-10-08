@@ -98,40 +98,15 @@
       },
       deletarUsuario() {
         this.loading = true;
-        //DELETAR USUARIO DE CONTAS EXISTENTES
-        this.$store.dispatch('getContasId', this.deletar.id)
-          .then(response => {
-            response.map((contas) => {
-              let usersConta = contas.fk_usuario_id.replace(/[['\]]/g, "").split(",").map(c => parseInt(c));
-              if (usersConta.length > 1) { // REMOVE USUARIO E SALVA CONTA
-                let pos = usersConta.indexOf(this.deletar.id);
-                usersConta.splice(pos, 1);
-                usersConta = String(`[${usersConta.map(user => `'${user}'`)}]`)
-                let attConta = {
-                  descricao: contas.descricao,
-                  fk_usuario_id: usersConta,
-                }
-                this.$store.commit('SET_EDIT_CONTA', contas)
-                this.$store.dispatch('updateConta', attConta)
-                  .catch(er => this.toast(er.data.mensagem, 'times'))
-              } else if (usersConta.length == 1) { // DELETAR CONTA
-                this.$store.dispatch('deleteConta', contas.id)
-                  .catch(er => this.toast(er.data.mensagem, 'times'))
-              }
-            })
-          })
+        //DELETAR USUARIO PERMANENTEMENTE
+        this.$store.dispatch('deleteUser', this.deletar.id)
+          .then(response => this.toast(response.mensagem, 'check'))
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => {
-            //DELETAR USUARIO PERMANENTEMENTE
-            this.$store.dispatch('deleteUser', this.deletar.id)
-              .then(response => this.toast(response.mensagem, 'check'))
-              .catch(er => this.toast(er.data.mensagem, 'times'))
-              .finally(() => {
-                this.loading = false
-                this.deletar = null;
-                this.$refs['mConfirm'].hide()
-                this.getUsuarios();
-              })
+            this.loading = false
+            this.deletar = null;
+            this.$refs['mConfirm'].hide()
+            this.getUsuarios();
           })
       },
     }

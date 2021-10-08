@@ -1,5 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
+import access from '@/store/access.js';
+const { methods: { formatDate } } = access
 
 const state = {
   access: {
@@ -66,6 +68,7 @@ const actions = {
           context.dispatch('updateAcessUser');
           resolve(response.data);
         }).catch((error) => {
+          localStorage.clear();
           console.log("" + error);
           reject(error.response);
         })
@@ -132,8 +135,9 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
-          reject(error.response);
+          localStorage.clear();
+          console.log(error);
+          reject(error);
         })
     })
     return promise

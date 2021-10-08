@@ -12,7 +12,7 @@ const routes = [{
     component: () => import('./views/Login/components/Login.vue'),
   }, {
     path: '/cadastro',
-    component: () => import('./views/Home/components/Usuario.vue'),
+    component: () => import('./views/Usuarios/Usuario.vue'),
   },]
 },
 {
@@ -21,22 +21,22 @@ const routes = [{
   name: 'home',
   children: [{
     path: '/contas',
-    component: () => import('./views/Home/components/TodasContas.vue'),
+    component: () => import('./views/Contas/TodasContas.vue'),
   }, {
     path: '/parcelas',
-    component: () => import('./views/Home/components/TodasParcelas.vue'),
+    component: () => import('./views/Parcelas/TodasParcelas.vue'),
   }, {
     path: '/usuarios',
-    component: () => import('./views/Home/components/TodosUsuarios.vue'),
+    component: () => import('./views/Usuarios/TodosUsuarios.vue'),
   }, {
     path: '/conta',
-    component: () => import('./views/Home/components/Conta.vue'),
+    component: () => import('./views/Contas/Conta.vue'),
   }, {
     path: '/parcela/',
-    component: () => import('./views/Home/components/Parcela.vue'),
+    component: () => import('./views/Parcelas/Parcela.vue'),
   }, {
     path: '/usuario',
-    component: () => import('./views/Home/components/Usuario.vue'),
+    component: () => import('./views/Usuarios/Usuario.vue'),
   },]
 },
 ];

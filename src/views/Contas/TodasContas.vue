@@ -54,8 +54,8 @@
                               </div>
                               <div class="col col-lg-5 px-0">
                                 <div class="row m-0 justify-content-center align-items-center">
-                                  <span class="px-2 text-xs text-green h-100">{{ parcelasPagas }} Pagos</span>
-                                  <span class="pl-3 text-xs text-red h-100">{{ parcelas.length-parcelasPagas }}
+                                  <span class="px-2 text-sm text-green h-100">{{ parcelasPagas }} Pagos</span>
+                                  <span class="pl-3 text-sm text-red h-100">{{ parcelas.length-parcelasPagas }}
                                     Abertos</span>
                                 </div>
                                 <div class="row m-0 justify-content-center align-items-center">
@@ -120,7 +120,7 @@
 </template>
 
 <script>
-  import TodasParcelas from './TodasParcelas'
+  import TodasParcelas from '../Parcelas/TodasParcelas'
   export default {
     components: {
       TodasParcelas
@@ -148,9 +148,14 @@
     methods: {
       getContas() {
         this.loading = true;
+        this.parcelas = [];
         this.$store.dispatch('getContas')
           .then(response => this.contas = response)
-          .catch(er => console.log(er))
+          .catch(er => {
+            localStorage.clear();
+            this.$router.push('/');
+            console.log(er)
+          })
           .finally(() => this.loading = false)
       },
       createParcela(payload) {
@@ -173,7 +178,9 @@
         if ((conta == payload) && (type != 'deletar')) return;
 
         this.$store.dispatch('getParcelas', payload)
-          .then(response => this.parcelas = response)
+          .then(response => {
+            this.parcelas = response
+          })
           .catch(er => console.log(er))
           .finally(() => {
             this.formatting();
