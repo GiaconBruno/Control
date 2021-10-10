@@ -1,6 +1,9 @@
-# HomePage
+# Contro - VueJS
+#### Sistema de controle Financeiro, desenvolvido em VueJS
+Crie, Edite, Pague e Exclua as parcelas das suas Contas
+Crie seu usuário e experiente
 
-> https://giaconbruno.github.io/ >>
+> https://control-vue-js.vercel.app/ >>
 
 ## ------ Requisito: NODE.JS (necessário database) ------ 
 ### Projeto BackEnd
