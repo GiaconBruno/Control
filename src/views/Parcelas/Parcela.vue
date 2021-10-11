@@ -147,7 +147,7 @@
       }
     },
     watch: {
-      parcela(next, last) {
+      parcela() {
         this.errors = []
       }
     },
@@ -185,7 +185,7 @@
       },
       valid() {
         this.errors = [];
-        if (!this.parcela.descricao) this.errors.push('descricao')
+        // if (!this.parcela.descricao) this.errors.push('descricao')
         if (!this.parcela.vencimento) this.errors.push('vencimento')
         if (!this.parcela.valor) this.errors.push('valor')
         if (this.parcela.recebido || this.parcela.data_pagto || ![null, 'other'].includes(this.parcela.forma_pagto)) {
@@ -193,8 +193,7 @@
           if (!this.parcela.data_pagto) this.errors.push('data_pagto')
           if (!this.parcela.forma_pagto) this.errors.push('forma_pagto')
         }
-        if (this.errors.length) return false
-        return true
+        return this.errors.length
       },
       formatting() {
         let parcela = {
@@ -235,7 +234,7 @@
         }
       },
       createParcela() {
-        if (!this.valid()) {
+        if (this.valid()) {
           this.toast('Prenche os compos corretamente', 'times')
           return
         }

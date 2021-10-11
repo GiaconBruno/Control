@@ -1,6 +1,6 @@
 <template>
   <section class="pt-3 pt-lg-5">
-    <div v-if="usuario " class="container position-relative">
+    <div v-if="usuario" class="container position-relative">
       <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
       <hr class="mt-0" />
       <div class="row mx-0">
@@ -20,10 +20,12 @@
                 <b-tooltip target="todasContas" triggers="hover" noninteractive> início </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('usuarios');" id="todosUsuarios"
                   class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
-                <b-tooltip target="todosUsuarios" triggers="hover" noninteractive> Usuários </b-tooltip>
+                <b-tooltip v-if="(usuario.permissao)" target="todosUsuarios" triggers="hover" noninteractive>
+                  Usuários </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('usuario')" id="criarUsuario"
                   class="btn fa fa-user-plus text-success px-1 mx-2"></i>
-                <b-tooltip target="criarUsuario" triggers="hover" noninteractive> Criar Usuários </b-tooltip>
+                <b-tooltip v-if="(usuario.permissao)" target="criarUsuario" triggers="hover" noninteractive>
+                  Criar Usuários </b-tooltip>
                 <i @click="setEditUsuario(usuario.id)" id="editarUsuario"
                   class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
@@ -53,22 +55,6 @@
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
-    <div class="position-fixed p-0" style="top: auto; bottom: 5px; left: 0; right: 0;">
-      <div class="row m-0 justify-content-between align-items-center">
-        <div class="col-6 col-md-4 px-0">
-          <span class="text-white smallText">Desenvolvido por: Bruno Giacon</span>
-        </div>
-        <div class="col-6 col-md-4 px-0">
-          <span>
-            <a href="http://github.com/giaconbruno" target="_blank" class="text-white smallText text-underline">
-              github.com/giaconbruno</a>
-          </span>
-        </div>
-        <div class="col-6 offset-3 col-md-4 offset-md-0 px-0">
-          <span class="text-white smallText">email: giacon_bruno@hotmail.com</span>
-        </div>
-      </div>
-    </div>
   </section>
 </template>
 

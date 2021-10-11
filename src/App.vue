@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="position-absolute">
+  <div id="app">
     <router-view />
   </div>
 </template>

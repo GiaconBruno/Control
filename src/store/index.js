@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import access from '@/store/access.js';
+import access from './access.js';
 const { methods: { formatDate } } = access
 
 const state = {
@@ -50,9 +50,9 @@ const actions = {
   //CONFIG
   status: () => {
     let promise = new Promise((resolve, reject) => {
-      axios.get()
+      axios.get('/')
         .then(response => resolve(response))
-        .catch(error => reject(error.response))
+        .catch(error => reject(error))
     })
     return promise
   },
@@ -63,13 +63,12 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/autenticar`, secret)
         .then((response) => {
-          context.commit('SET_AUTH', response.data);
+          resolve(context.commit('SET_AUTH', response.data));
           axios.defaults.headers.common['token'] = context.state.access.auth.token;
-          context.dispatch('updateAcessUser');
+          resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
-          localStorage.clear();
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -83,7 +82,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -96,7 +95,7 @@ const actions = {
           context.commit('SET_EDIT_USER', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -108,7 +107,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -120,7 +119,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -135,7 +134,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          localStorage.clear();
+          reject(localStorage.clear());
           console.log(error);
           reject(error);
         })
@@ -146,9 +145,11 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/api/atualizar-usuario/${payload.id}`, payload)
         .then((response) => {
-          resolve(response);
+          if (context.state.access.auth.id == payload.id)
+            resolve(context.dispatch('sigIn', payload))
+          resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -160,7 +161,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -174,7 +175,9 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          reject(localStorage.clear());
+          reject(context.commit('LOGOUT'));
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -186,7 +189,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -198,7 +201,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -210,7 +213,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -222,7 +225,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -236,7 +239,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -248,7 +251,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -260,7 +263,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -272,7 +275,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -284,7 +287,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log("" + error);
+          console.log(error.response.data);
           reject(error.response);
         })
     })
@@ -297,25 +300,3 @@ export default {
   mutations,
   actions
 }
-
-/*
-exemple(context, payload) {
-  let promise = new Promise((resolve, reject) => {
-    axios.post(`/api/`, payload, context)
-      .then((response) => {
-        resolve(response.data);
-      }).catch((error) => {
-        console.log("" + error);
-        reject(error.response);
-      })
-  })
-  return promise
-},
-
-
-this.$store.dispatch('getset')
-.then(response => {})
-.catch(() => {
-})
-.finally(() => this.loading = false)
-*/

@@ -19,8 +19,8 @@ const access = {
       this.$toasted.show(title || 'Erro interno', {
         iconPack: "fontawesome",
         icon,
-        duration: 3000,
-        className: `${(icon == 'times') ? 'bg-danger' : 'bg-success'}`,
+        duration: 5000,
+        className: `${(icon == 'times' || !title) ? 'bg-danger' : 'bg-success'}`,
         theme: "bubble",
       });
     }

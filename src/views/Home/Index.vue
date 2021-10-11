@@ -1,36 +1,27 @@
 <template>
   <div class="container position-relative">
-    <div class="position-absolute">
-      <h1>Control-First</h1>
-    </div>
-    <div class="row mx-0 justify-content-center ">
-      <div class="col-12 col-md-6 col-lg-4 offset-lg-8 d-flex align-items-center">
-        <transition name="anim">
+    <div id="login" class="row mx-0 justify-content-between align-items-center">
+      <div class="col-12 col-md-12 text-center text-lg-left align-self-end">
+        <h1 class="my-3">Control-First</h1>
+      </div>
+      <div id="signIn" class="col-12 col-md-6 col-lg-4 ml-auto">
+        <transition name="anim" mode="out-in">
           <router-view />
         </transition>
       </div>
-    </div>
-    <div class="position-absolute p-0" style="top:auto;bottom:5px;left:0;right:0;">
-      <div class="row m-0 justify-content-between align-items-center">
-        <div class="col-6 col-md-4 px-0">
-          <span class="text-white smallText">Desenvolvido por: Bruno Giacon</span>
-        </div>
-        <div class="col-6 col-md-4 px-0">
-          <span>
-            <a href="http://github.com/giaconbruno" target="_blank" class="text-white smallText text-underline">
-              github.com/giaconbruno</a>
-          </span>
-        </div>
-        <div class="col-6 offset-3 col-md-4 offset-md-0 px-0">
-          <span class="text-white smallText">email: giacon_bruno@hotmail.com</span>
-        </div>
+      <div class="col-12 px-0">
+        <Footer />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Footer from './Footer.vue'
   export default {
+    components: {
+      Footer
+    },
   };
 </script>
 
@@ -40,7 +31,7 @@ section {
   height: 100vh;
 }
 
-.col-12 {
+#login {
   height: 100vh;
   overflow-x: hidden;
 }
@@ -61,6 +52,10 @@ h1 {
 
 .text-underline {
   text-decoration: underline;
+}
+
+#signIn {
+  height: 442px;
 }
 
 .anim-enter-active {
@@ -94,8 +89,9 @@ h1 {
     padding: 1em 0;
   }
 
-  .col-12 {
-    height: auto;
+  #login {
+    height: 90vh !important;
+    min-height: 580px;
   }
 }
 </style>

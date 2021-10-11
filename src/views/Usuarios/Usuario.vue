@@ -110,20 +110,18 @@
 
         this.$store.dispatch('updateUser', this.usuario)
           .then(response => {
-            this.toast(response.mensagem, 'check')
-            if (this.autorization) {
-              if (this.access.userEdit.id == this.autorization.id) {
-                this.$store.dispatch('sigIn', this.usuario)
-                  .then(() => this.usuario = {
-                    permissao: false,
-                    ativo: true,
-                  })
-                  .catch(er => this.toast(er.data.mensagem, 'times'))
-                  .finally(() => this.$router.push('/contas'))
-              } else this.$router.push('/contas')
+            let msg = (response) ? response.mensagem : 'Usuário Atualizado! com exito!'
+            this.toast(msg, 'check')
+            this.usuario = {
+              permissao: false,
+              ativo: true,
             }
+            this.$router.go(-1)
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => {
+            console.log(er);
+            this.toast(er.data.mensagem, 'times')
+          })
           .finally(() => this.loading = false)
       }
     }

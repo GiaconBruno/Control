@@ -5,11 +5,11 @@ const routes = [{
   redirect: '/'
 }, {
   path: '/',
-  component: () => import('./views/Login/Index.vue'),
-  name: 'logIn',
+  component: () => import('./views/Home/Index.vue'),
+  // name: 'logIn',
   children: [{
     path: '/',
-    component: () => import('./views/Login/components/Login.vue'),
+    component: () => import('./views/Home/Login.vue'),
   }, {
     path: '/cadastro',
     component: () => import('./views/Usuarios/Usuario.vue'),
