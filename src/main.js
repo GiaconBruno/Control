@@ -46,6 +46,8 @@ Vue.prototype.api = process.env.VUE_APP_BASE_URL;
 // Vue.prototype.common = common;
 Vue.mixin(access);
 
+Vue.component('Filterable', () => import('./views/components/Filter.vue'));
+
 Vue.config.productionTip = false;
 console.log(process.env.VUE_APP_BASE_URL);
 

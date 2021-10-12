@@ -1,121 +1,90 @@
 <template>
-  <div class="row">
-    <div class="col-12 px-2">
-      <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
-      <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
-      <div v-else>
-        <div class="row m-0">
-          <div class="col-12 px-0">
-            <h5 class="smallText">Contas: </h5>
+  <div>
+    <div class="row m-0">
+      <div class="col-12 px-0">
+        <h5 class="smallText">Contas: </h5>
+      </div>
+    </div>
+    <filterable v-bind="{filter}" @change="filter=$event" />
+    <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
+    <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
+    <div v-else class="accordion" role="tablist">
+      <div v-for="(conta,i) in contas" :key="conta.id" v-show="filtring(conta)" class="mb-3">
+        <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
+          :class="{'contabord': (showParcelas), 'pago': (conta.status)}"
+          class="btn text-left alert-success row m-0 px-1 px-lg-3 d-flex justify-content-between align-items-center">
+          <div class="col-1 col-lg-auto px-0">
+            <i :class="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
+              class="fa text-warning px-2 py-1"></i>
           </div>
-        </div>
-        <div class="row m-0 pb-3 justify-content-start">
-          <div class="col-12 px-0 text-left px-2">
-            <span>Contas: </span>
-            <select v-model="contasStatus" @change="getContas(); parcelas=''; parcelasStatus=false">
-              <option value="all">Todas</option>
-              <option :value="true">Pagas</option>
-              <option :value="false">Abertas</option>
-            </select>
-            <span v-if="parcelas.length" class="px-2">
-              <span>Parcelas: </span>
-              <select v-model="parcelasStatus">
-                <option value="all" class="px-2">Todas</option>
-                <option :value="true" class="px-2">Pagas</option>
-                <option :value="false" class="px-2">Abertas</option>
-              </select>
-            </span>
-          </div>
-        </div>
-        <div class="accordion" role="tablist">
-          <div v-for="(conta,i) in contas" :key="conta.id" class="mb-3">
-            <div v-if="((contasStatus != 'all') ?  contasStatus == conta.status : contasStatus)"
-              @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
-              :class="{'contabord': (parcelas.length), 'pago': (conta.status)}"
-              class="btn text-left alert-success row m-0 px-1 px-lg-3 d-flex justify-content-between align-items-center">
-              <div class="col-1 col-lg-auto px-0">
-                <i :class="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
-                  class="fa text-warning px-2 py-1"></i>
+          <div class="col col-lg-10 px-0">
+            <div class="row m-0 align-items-center">
+              <div class="col-12 col-lg-5 px-0 text-center text-lg-left">
+                <span>{{conta.descricao}}</span>
               </div>
-              <div class="col col-lg-10 px-0">
-                <div class="row m-0">
-                  <div class="col-12 px-0">
-                    <div class="row m-0 align-items-center">
-                      <div class="col-12 col-lg-5 px-0 text-center text-lg-left">
-                        <span>{{conta.descricao}}</span>
-                      </div>
-                      <div class="col-12 col-lg-6 px-0 text-center text-sm">
-                        <div v-if="((parcelas.length) && (parcelas[0].fk_conta_id == conta.id))"
-                          class="row m-0 h-100 align-items-center">
-                          <div class="col-12 px-0">
-                            <div class="row m-0 justify-content-center align-items-center">
-                              <div class="col-3 col-lg-3 px-0">
-                                <span>Parcelas: {{ parcelas.length }}</span>
-                              </div>
-                              <div class="col col-lg-5 px-0">
-                                <div class="row m-0 justify-content-center align-items-center">
-                                  <span class="px-2 text-sm text-green h-100">{{ parcelasPagas }} Pagos</span>
-                                  <span class="pl-3 text-sm text-red h-100">{{ parcelas.length-parcelasPagas }}
-                                    Abertos</span>
-                                </div>
-                                <div class="row m-0 justify-content-center align-items-center">
-                                  <span class="text-green">{{ totalPago }} </span>
-                                  <span class="px-1"> | </span>
-                                  <span class="text-red"> {{ totalAberto }}</span>
-                                </div>
-                              </div>
-                              <div class="col-3 col-lg-4 px-0">
-                                <div class="row m-0 justify-content-center align-items-center">
-                                  <div class="col-12 col-lg-auto px-0 text-lg-right">
-                                    <span><strong>Total: {{ total }} </strong></span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <span v-else class="text-black-50">
-                          Clique para mais detalhes
-                        </span>
+              <div class="col-12 col-lg-6 px-0 text-center text-sm">
+                <div v-if="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id))"
+                  class="row m-0 h-100 align-items-center">
+                  <div class="col-3 col-lg-3 px-0">
+                    <span>Parcelas: {{ showParcelas.length }}</span>
+                  </div>
+                  <div class="col col-lg-5 px-0">
+                    <div class="row m-0 justify-content-center align-items-center">
+                      <span class="px-2 text-sm text-green h-100">{{ parcelasPagas }} Pagos</span>
+                      <span class="pl-3 text-sm text-red h-100">{{ showParcelas.length-parcelasPagas }}
+                        Abertos</span>
+                    </div>
+                    <div class="row m-0 justify-content-center align-items-center">
+                      <span class="text-green">{{ formatMoney(totalPago) }} </span>
+                      <span class="px-1"> | </span>
+                      <span class="text-red"> {{ formatMoney(totalAberto) }}</span>
+                    </div>
+                  </div>
+                  <div class="col-3 col-lg-4 px-0">
+                    <div class="row m-0 justify-content-center align-items-center">
+                      <div class="col-12 col-lg-auto px-0 text-lg-right">
+                        <span><strong>Total: {{ formatMoney(total) }} </strong></span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-1 col-lg-auto px-0">
-                <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
-                  <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
-                    class="fa fa-plus-circle text-success px-2 py-1"></i>
-                  <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
-                  <i @click.stop="editConta(conta)" :id="`iEditConta${i}`"
-                    class="fa fa-edit text-primary px-2 py-1"></i>
-                  <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
-                  </b-tooltip>
-                  <i @click.stop="showDeletar(conta)" :id="`iRemoveConta${i}`"
-                    class="fa fa-trash text-danger px-2 py-1"></i>
-                  <b-tooltip :target="`iRemoveConta${i}`" triggers="hover" noninteractive> Deletar Conta
-                  </b-tooltip>
-                </div>
+                <span v-else class="text-black-50">
+                  Clique para mais detalhes
+                </span>
               </div>
             </div>
-            <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
-              <TodasParcelas v-bind="{parcelas, crypto, getParcelas, parcelasStatus, loadingParcelas}" />
-            </b-collapse>
+          </div>
+          <div class="col-1 col-lg-auto px-0">
+            <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
+              <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
+                class="fa fa-plus-circle text-success px-2 py-1"></i>
+              <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
+              <i @click.stop="editConta(conta)" :id="`iEditConta${i}`" class="fa fa-edit text-primary px-2 py-1"></i>
+              <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
+              </b-tooltip>
+              <i @click.stop="showDeletar(conta)" :id="`iRemoveConta${i}`"
+                class="fa fa-trash text-danger px-2 py-1"></i>
+              <b-tooltip :target="`iRemoveConta${i}`" triggers="hover" noninteractive> Deletar Conta
+              </b-tooltip>
+            </div>
           </div>
         </div>
+        <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
+          <TodasParcelas v-bind="{parcelas, crypto, getParcelas, filter, loadingParcelas}" />
+        </b-collapse>
       </div>
-      <b-modal v-if="deletar" ref="mDelConta" id="mDelConta" hide-footer centered no-close-on-esc no-close-on-backdrop
-        title="Deletar Conta">
-        <p class="my-4">Deseja deletar a conta <strong> {{ deletar.descricao }} </strong>?</p>
-        <hr>
-        <div class="row m-0 justify-content-around">
-          <button @click="$bvModal.hide('mDelConta')" class="btn btn-sm btn-danger" block>Cancelar</button>
-          <button @click="deletarConta()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
-            <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
-          </button>
-        </div>
-      </b-modal>
     </div>
+    <b-modal v-if="deletar" ref="mDelConta" id="mDelConta" hide-footer centered no-close-on-esc no-close-on-backdrop
+      title="Deletar Conta">
+      <p class="my-4">Deseja deletar a conta <strong> {{ deletar.descricao }} </strong>?</p>
+      <hr>
+      <div class="row m-0 justify-content-around">
+        <button @click="$bvModal.hide('mDelConta')" class="btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="deletarConta()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
+          <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+        </button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -138,12 +107,49 @@
         totalAberto: 0,
         total: 0,
         deletar: null,
-        contasStatus: 'all',
-        parcelasStatus: 'all',
+        filter: [{
+          name: 'Conta Status',
+          type: ['Todos', 'Pagos', 'Abertos'],
+          value: null,
+        }, {
+          name: 'Conta Descrição',
+          type: 'Text',
+          value: '',
+        }, {
+          name: 'Parcela Status',
+          type: ['Todos', 'Pagos', 'Abertos'],
+          value: null,
+          show: false,
+        }, {
+          name: 'Parcela Descrição',
+          type: 'Text',
+          value: '',
+          show: false,
+        }, {
+          name: 'Dt. Venc.',
+          type: 'Date',
+          value: ['', ''],
+          show: false,
+        }, {
+          name: 'Dt. Pagto.',
+          type: 'Date',
+          value: ['', ''],
+          show: false,
+        }],
       }
     },
     beforeMount() {
       this.getContas();
+    },
+    computed: {
+      showParcelas() {
+        const all = [];
+        this.parcelas.map(p => {
+          if (p.show) all.push(p)
+        })
+        this.formatting();
+        return all;
+      }
     },
     methods: {
       getContas() {
@@ -175,11 +181,14 @@
         let conta = 0;
         if (this.parcelas.length) conta = this.parcelas[0].fk_conta_id;
         this.parcelas = [];
+        this.filter.map((f, i) => f.show = (i > 1) ? false : f.show);
         if ((conta == payload) && (type != 'deletar')) return;
 
         this.$store.dispatch('getParcelas', payload)
           .then(response => {
+            response.map(r => r.show = true)
             this.parcelas = response
+            this.filter.map((f, i) => f.show = (i > 1) ? true : f.show);
           })
           .catch(er => console.log(er))
           .finally(() => {
@@ -193,34 +202,23 @@
         this.totalAberto = 0;
         this.total = 0;
 
-        const formatMoney = (payload) => {
-          return (payload > 1000) ?
-            `R$ ${String((payload).toFixed(2)).replace(/(\d*)(\d{3}).(\d*)/g, '$1.$2,$3')}` :
-            `R$ ${String((payload).toFixed(2)).replace('.', ',')}`;
-        };
-
         if (this.parcelas.length)
           this.parcelas.map(e => {
-            //Totalizando
-            if (e.status) this.parcelasPagas++;
-            (e.recebido) ? this.totalPago += e.recebido: this.totalAberto += e.valor;
-            this.total += e.valor;
-            //Formatando
-            e.valor = formatMoney(e.valor);
+            if (e.show) {
+              //Totalizando
+              if (e.status) this.parcelasPagas++;
+              (e.recebido) ? this.totalPago += e.recebido: this.totalAberto += e.valor;
+              this.total += e.valor;
+              //Formatando
 
-            e.oriVenc = e.vencimento;
-            e.vencimento = ((e.vencimento).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
+              e.oriVenc = e.vencimento;
+              e.vencimento = ((e.vencimento).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
 
-            if (e.data_pagto)
-              e.data_pagto = ((e.data_pagto).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
+              if (e.data_pagto)
+                e.data_pagto = ((e.data_pagto).slice(0, 10).split('-').reverse().join().replaceAll(',', '/'));
 
-            e.recebido = formatMoney(e.recebido);
-
+            }
           });
-        this.totalPago = formatMoney(this.totalPago)
-        this.totalAberto = formatMoney(this.totalAberto);
-        this.total = formatMoney(this.total);
-
       },
       async showDeletar(payload) {
         await (this.deletar = payload);
@@ -241,6 +239,12 @@
             this.$refs['mDelConta'].hide()
           })
       },
+      filtring(c) {
+        const has = (payload) => this.filter[this.filter.findIndex(f => f.name == payload)].value
+        return (c.status == has('Conta Status') || has('Conta Status') == null) &&
+          (((c.descricao.toLowerCase()).replace(has('Conta Descrição').toLowerCase(), '') !=
+            c.descricao.toLowerCase()) || has('Conta Descrição') == '')
+      }
     }
   }
 </script>

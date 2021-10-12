@@ -1,7 +1,10 @@
 <template>
   <div v-if="(loadingParcelas)" class="fas fa-2x fa-spinner fa-pulse text-success my-2" role="status">
   </div>
-  <div v-else-if="(parcelas.length) && (hasParcelasStatus)" class="text-sm">
+  <div v-else-if="!parcelas.length">
+    <span class="pl-5 text-black-50 text-sm">Nenhuma parcela encontrada!</span>
+  </div>
+  <div v-else class="text-sm">
     <div class="row m-0" style="background-color: #ffc10790">
       <div class="col-11 px-0">
         <div class="row m-0">
@@ -24,17 +27,17 @@
       </div>
     </div>
     <hr class="m-0">
-    <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status && (parcelasStatus)),
-     'parcela':((parcela.status==parcelasStatus) || parcelasStatus=='all')}" class="row m-0 align-items-center"
+    <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
+      class="row m-0 align-items-center"
       :style="(vencido(parcela)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
-      <template v-if="((parcelasStatus != 'all') ? parcelasStatus==parcela.status : parcelasStatus)">
+      <template v-if="filtring(parcela)">
         <div class="col-11 px-0">
           <div class="row m-0">
             <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
               <div class="row m-0">
                 <div class="col-4 pl-3 pr-2 text-left text-sm">
                   {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
-                <div class="col-3 pl-0 pr-2">{{ parcela.valor }}</div>
+                <div class="col-3 pl-0 pr-2">{{ formatMoney(parcela.valor) }}</div>
                 <div class="col-3 pl-0 pr-2">{{ parcela.vencimento}}</div>
                 <div class="col-2 px-0">
                   {{ (parcela.status) ? 'Pago' : 'Aberto' }}</div>
@@ -44,7 +47,7 @@
               <div :class="{'vencido': (vencido(parcela))}" class="row m-0">
                 <div class="col-4 px-2 pl-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
                 <div class="col-4 pl-0 pr-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
-                <div class="col-3 px-0">{{ parcela.recebido }}</div>
+                <div class="col-3 px-0">{{ formatMoney(parcela.recebido) }}</div>
               </div>
             </div>
           </div>
@@ -67,7 +70,7 @@
     <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" hide-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Parcela">
       <p class="my-4">Deseja deletar a parcela de valor
-        <strong> {{ deletar.valor }} </strong>
+        <strong> {{ formatMoney(deletar.valor) }} </strong>
         e vencimento <strong> {{ deletar.vencimento }} </strong> ?
       </p>
       <hr>
@@ -79,29 +82,21 @@
       </div>
     </b-modal>
   </div>
-  <div v-else>
-    <span class="pl-5 text-black-50 text-sm">Nenhuma parcela encontrada!</span>
-  </div>
 </template>
 
 <script>
   export default {
-    props: ['parcelas', 'crypto', 'getParcelas', 'parcelasStatus', 'loadingParcelas'],
+    props: ['parcelas', 'crypto', 'getParcelas', 'filter', 'loadingParcelas'],
     data() {
       return {
         deletar: '',
         loadingDel: false,
       }
     },
-    computed: {
-      hasParcelasStatus() {
-        return this.parcelas.some(parcela => ((this.parcelasStatus == 'all') ||
-          (parcela.status == this.parcelasStatus)))
-      }
-    },
     methods: {
       vencido(payload) {
-        return (Date.parse(new Date(payload.oriVenc.slice(0, 10) + 'T23:59:59')) < Date.now() && (!payload.status))
+        return (Date.parse(new Date(payload.oriVenc.slice(0, 10).split('/').reverse().join('-') + 'T23:59:59')) <
+          Date.now() && (!payload.status))
       },
       editParcela(payload) {
         this.$store.commit('SET_EDIT_PARCELA', payload)
@@ -123,6 +118,20 @@
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loadingDel = false)
       },
+      filtring(p) {
+        const has = (payload) => this.filter[this.filter.findIndex(f => f.name == payload)].value
+        const venct = Date.parse(p.vencimento.split('/').reverse().join('-'));
+        const pagto = Date.parse((p.data_pagto || '').split('/').reverse().join('-'));
+
+        p.show = (p.status == has('Parcela Status') || has('Parcela Status') == null) &&
+          (((p.descricao.toLowerCase()).replace(has('Parcela Descrição').toLowerCase(), '') !=
+            p.descricao.toLowerCase()) || has('Parcela Descrição') == '') &&
+          ((venct >= Date.parse(has('Dt. Venc.')[0]) && venct <= Date.parse(has('Dt. Venc.')[1])) ||
+            has('Dt. Venc.')[0] == '' || has('Dt. Venc.')[1] == '') &&
+          ((pagto >= Date.parse(has('Dt. Pagto.')[0]) && pagto <= Date.parse(has('Dt. Pagto.')[1])) ||
+            has('Dt. Pagto.')[0] == '' || has('Dt. Pagto.')[1] == '')
+        return p.show;
+      }
     }
   }
 </script>

@@ -1,9 +1,8 @@
 <template>
-  <section class="pt-3 pt-lg-5">
-    <div v-if="usuario" class="container position-relative">
+  <div class="px-2 pt-3 pt-lg-5">
+    <div v-if="usuario" class="container px-2 position-relative">
       <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
-      <hr class="mt-0" />
-      <div class="row mx-0">
+      <div class="row mx-0 mt-3">
         <div class="col-10 col-lg-9 offset-lg-1 px-0">
           <div class="row mx-0 align-items-center">
             <div class="col-12 col-md-6 px-0">
@@ -55,11 +54,18 @@
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
-  </section>
+    <div class="col-12 px-0 pt-2">
+      <Footer />
+    </div>
+  </div>
 </template>
 
 <script>
+  import Footer from './Footer.vue'
   export default {
+    components: {
+      Footer
+    },
     data() {
       return {
         loading: false,

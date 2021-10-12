@@ -1,8 +1,9 @@
 <template>
   <div>
-    <h5 class="smallText text-center">Usuários: </h5>
+    <h5 class="smallText my-0 text-center">Usuários: </h5>
+    <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="usuarios.length" class="row m-0">
-      <div v-for="(usuario, i) in usuarios" :key="usuario.id"
+      <div v-for="(usuario, i) in usuarios" :key="usuario.id" v-show="filtring(usuario)"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
         <div class="row align-items-center">
           <div class="col-10 col-lg-11 pl-1 pl-lg-3 pr-0 py-lg-0">
@@ -73,6 +74,19 @@
         loading: false,
         usuarios: [],
         deletar: {},
+        filter: [{
+          name: 'Permissão',
+          type: ['Todos', 'Sim', 'Não'],
+          value: null,
+        }, {
+          name: 'Ativo',
+          type: ['Todos', 'Sim', 'Não'],
+          value: null,
+        }, {
+          name: 'Nome',
+          type: 'Text',
+          value: '',
+        }]
       }
     },
     beforeMount() {
@@ -109,6 +123,12 @@
             this.getUsuarios();
           })
       },
+      filtring(user) {
+        const has = (payload) => this.filter[this.filter.findIndex(f => f.name == payload)].value
+        return (user.permissao == has('Permissão') || has('Permissão') == null) &&
+          (user.ativo == has('Ativo') || has('Ativo') == null) &&
+          (((user.nome.toLowerCase()).replace(has('Nome').toLowerCase(), '') != user.nome.toLowerCase()) || has('Nome') == '')
+      }
     }
   }
 </script>
