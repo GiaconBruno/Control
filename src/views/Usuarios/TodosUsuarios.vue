@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="smallText my-0 text-center">Usuários: </h5>
+    <h5 class="smallText my-0 text-center">({{ usuarios.length }}) Usuários: </h5>
     <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="usuarios.length" class="row m-0">
       <div v-for="(usuario, i) in usuarios" :key="usuario.id" v-show="filtring(usuario)"
@@ -125,9 +125,15 @@
       },
       filtring(user) {
         const has = (payload) => this.filter[this.filter.findIndex(f => f.name == payload)].value
-        return (user.permissao == has('Permissão') || has('Permissão') == null) &&
-          (user.ativo == has('Ativo') || has('Ativo') == null) &&
-          (((user.nome.toLowerCase()).replace(has('Nome').toLowerCase(), '') != user.nome.toLowerCase()) || has('Nome') == '')
+
+        const usuarioPermissao = () => (user.permissao == has('Permissão')) || (has('Permissão') == null)
+
+        const usuarioAtivo = () => (user.ativo == has('Ativo')) || (has('Ativo') == null)
+
+        const usuarioNome = () => (has('Nome') == '') ||
+          (((user.nome.toLowerCase()).replace(has('Nome').toLowerCase(), '')) != (user.nome.toLowerCase()))
+
+        return usuarioPermissao() && usuarioAtivo() && usuarioNome()
       }
     }
   }

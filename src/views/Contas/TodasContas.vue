@@ -2,7 +2,7 @@
   <div>
     <div class="row m-0">
       <div class="col-12 px-0">
-        <h5 class="smallText">Contas: </h5>
+        <h5 class="smallText"> ({{ contas.length }}) Contas: </h5>
       </div>
     </div>
     <filterable v-bind="{filter}" @change="filter=$event" />
@@ -241,9 +241,13 @@
       },
       filtring(c) {
         const has = (payload) => this.filter[this.filter.findIndex(f => f.name == payload)].value
-        return (c.status == has('Conta Status') || has('Conta Status') == null) &&
-          (((c.descricao.toLowerCase()).replace(has('Conta Descrição').toLowerCase(), '') !=
-            c.descricao.toLowerCase()) || has('Conta Descrição') == '')
+
+        const contaStatus = () => (c.status == has('Conta Status') || has('Conta Status') == null)
+
+        const contaDesc = () => (has('Conta Descrição') == '') ||
+          ((c.descricao.toLowerCase()).replace(has('Conta Descrição').toLowerCase(), '') != c.descricao.toLowerCase())
+
+        return contaStatus() && contaDesc();
       }
     }
   }

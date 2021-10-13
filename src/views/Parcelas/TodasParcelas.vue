@@ -123,13 +123,19 @@
         const venct = Date.parse(p.vencimento.split('/').reverse().join('-'));
         const pagto = Date.parse((p.data_pagto || '').split('/').reverse().join('-'));
 
-        p.show = (p.status == has('Parcela Status') || has('Parcela Status') == null) &&
-          (((p.descricao.toLowerCase()).replace(has('Parcela Descrição').toLowerCase(), '') !=
-            p.descricao.toLowerCase()) || has('Parcela Descrição') == '') &&
-          ((venct >= Date.parse(has('Dt. Venc.')[0]) && venct <= Date.parse(has('Dt. Venc.')[1])) ||
-            has('Dt. Venc.')[0] == '' || has('Dt. Venc.')[1] == '') &&
-          ((pagto >= Date.parse(has('Dt. Pagto.')[0]) && pagto <= Date.parse(has('Dt. Pagto.')[1])) ||
-            has('Dt. Pagto.')[0] == '' || has('Dt. Pagto.')[1] == '')
+        const parcelaStatus = () => (p.status == has('Parcela Status') || has('Parcela Status') == null)
+
+        const parcelaDesc = () => (has('Parcela Descrição') == '') ||
+          ((p.descricao.toLowerCase()).replace(has('Parcela Descrição').toLowerCase(), '') !=
+            p.descricao.toLowerCase())
+
+        const parcelaVenc = () => (has('Dt. Venc.')[0] == '') || (has('Dt. Venc.')[1] == '') ||
+          ((venct >= Date.parse(has('Dt. Venc.')[0])) && (venct <= Date.parse(has('Dt. Venc.')[1])))
+
+        const parcelaPagto = () => (has('Dt. Pagto.')[0] == '') || (has('Dt. Pagto.')[1] == '') ||
+          ((pagto >= Date.parse(has('Dt. Pagto.')[0])) && (pagto <= Date.parse(has('Dt. Pagto.')[1])))
+
+        p.show = parcelaStatus() && parcelaDesc() && parcelaVenc() && parcelaPagto()
         return p.show;
       }
     }
