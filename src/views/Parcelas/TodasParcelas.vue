@@ -28,14 +28,14 @@
     </div>
     <hr class="m-0">
     <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
-      class="row m-0 align-items-center"
+      class="row m-0 align-items-center border-bottom"
       :style="(vencido(parcela)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
       <template v-if="filtring(parcela)">
-        <div class="col-11 px-0">
+        <div class="col px-0">
           <div class="row m-0">
             <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
-              <div class="row m-0">
-                <div class="col-4 pl-3 pr-2 text-left text-sm">
+              <div class="row m-0 align-items-center">
+                <div class="col-4 px-2 text-left">
                   {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
                 <div class="col-3 pl-0 pr-2">{{ formatMoney(parcela.valor) }}</div>
                 <div class="col-3 pl-0 pr-2">{{ parcela.vencimento}}</div>
@@ -44,7 +44,7 @@
               </div>
             </div>
             <div class="col-12 col-lg-5 pl-2 pr-1 px-lg-0">
-              <div :class="{'vencido': (vencido(parcela))}" class="row m-0">
+              <div :class="{'vencido': (vencido(parcela))}" class="row m-0 h-100 align-items-center">
                 <div class="col-4 px-2 pl-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
                 <div class="col-4 pl-0 pr-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
                 <div class="col-3 px-0">{{ formatMoney(parcela.recebido) }}</div>
@@ -52,14 +52,14 @@
             </div>
           </div>
         </div>
-        <div class="col-1 px-0 px-lg-2 text-right">
-          <div class="row m-0 pr-1 pr-lg-0 justify-content-between">
+        <div class="px-0 px-lg-2 text-right">
+          <div class="row m-0 pr-1 pr-lg-0 justify-content-center justify-content-sm-between">
             <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
-              class="btn fa fa-dollar-sign text-success px-0 px-lg-2"></i>
+              class="btn fa fa-dollar-sign text-success px-1 px-lg-2"></i>
             <b-tooltip :target="`iPagarEditar${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Pagar/Editar
               Parcela </b-tooltip>
             <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${crypto(parcela.id)}`"
-              class="btn fa fa-trash-alt text-danger px-0 px-lg-1"></i>
+              class="btn fa fa-trash-alt text-danger px-1 px-lg-2"></i>
             <b-tooltip :target="`iRemoveParcela${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Deletar
               Parcela
             </b-tooltip>
@@ -165,18 +165,18 @@
 
 .pago::before {
   content: "Pago";
-  padding: 0 10px;
+  padding: 0 20px;
   font-size: 8px;
   color: white;
   background-color: seagreen;
-  box-shadow: 0 0 5px 3px #eee;
+  /* box-shadow: 0 0 5px 3px #eee; */
   /* border-radius: 50%; */
   display: block;
+  text-align: center;
   position: absolute;
-  top: 8px;
-  left: -13px;
-  bottom: 8px;
-  z-index: 10;
+  top: 35%;
+  left: -24px;
+  /* bottom: calc(50% - 5px); */
   z-index: 10;
   transform: rotate(-90deg);
 }

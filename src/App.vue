@@ -33,4 +33,48 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.overflow::-webkit-scrollbar {
+  width: 5px;
+}
+
+.overflow::-moz-scrollbar {
+  width: 5px;
+}
+
+.overflow::-ms-scrollbar {
+  width: 5px;
+}
+
+.overflow::-o-scrollbar {
+  width: 5px;
+}
+
+.overflow::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.overflow::-moz-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+  -ms-border-radius: 10px;
+}
+
+.overflow::-ms-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -moz-border-radius: 10px;
+  -ms-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.overflow::-o-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -o-border-radius: 10px;
+  -o-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+}
 </style>

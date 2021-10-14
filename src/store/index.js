@@ -1,7 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
 import access from './access.js';
-const { methods: { formatDate } } = access
+const { methods: { dateToSend } } = access
 
 const state = {
   access: {
@@ -127,7 +127,7 @@ const actions = {
   },
   updateAcessUser(context) {
     const payload = {
-      acesso: formatDate(new Date())
+      acesso: dateToSend(new Date())
     }
     let promise = new Promise((resolve, reject) => {
       axios.post(`/api/atualizar-acesso/${context.state.access.auth.id}`, payload)

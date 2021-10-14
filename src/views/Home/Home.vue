@@ -2,7 +2,7 @@
   <div class="px-2 pt-3 pt-lg-5">
     <div v-if="usuario" class="container px-2 position-relative">
       <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
-      <div class="row mx-0 mt-3">
+      <div class="row mx-0 my-3">
         <div class="col-10 col-lg-9 offset-lg-1 px-0">
           <div class="row mx-0 align-items-center">
             <div class="col-12 col-md-6 px-0">
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-      <hr class="my-2" />
+      <!-- <hr class="my-2" /> -->
       <!-- :auth="usuario" -->
       <transition name="anim" mode="out-in">
         <router-view v-if="!loading" v-bind="{setEditUsuario}" ref="All" />
@@ -138,16 +138,12 @@
 </script>
 
 <style scoped>
-section {
-  min-height: 100vh;
-}
-
 .container {
-  min-height: calc(100vh - 5.5rem);
-  max-height: calc(100vh - 5.5rem);
+  min-height: 90vh;
+  max-height: 90vh;
   border-radius: 5px;
   background: ghostwhite;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
@@ -181,15 +177,15 @@ section {
 
 @media screen and (max-width: 992px) {
   .container {
-    min-height: calc(100vh - 3rem);
-    max-height: calc(100vh - 3rem);
+    min-height: 85vh;
+    max-height: 85vh;
   }
 }
 
 @media screen and (max-width: 767px) {
   .container {
-    min-height: calc(100vh - 4rem);
-    max-height: calc(100vh - 4rem);
+    min-height: 80vh;
+    max-height: 80vh;
   }
 }
 </style>

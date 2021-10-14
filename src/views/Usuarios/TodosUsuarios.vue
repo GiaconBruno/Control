@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow">
     <h5 class="smallText my-0 text-center">({{ usuarios.length }}) Usuários: </h5>
     <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="usuarios.length" class="row m-0">
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
-    <div class="row text-center">
+    <div class="row mx-0 text-center">
       <div class="col-12 mb-3">
         <button @click="$router.go(-1)" class="btn btn-sm btn-light border border-secondary">Voltar</button>
       </div>
@@ -140,6 +140,12 @@
 </script>
 
 <style scoped>
+.overflow {
+  /* overflow-x: hidden; */
+  overflow-y: auto;
+  max-height: calc(90vh - 70px);
+}
+
 .text-sm {
   font-size: 0.8em;
 }
@@ -155,6 +161,12 @@
 
   .text-lg-sm {
     font-size: medium;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .overflow {
+    max-height: calc(80vh - 103px);
   }
 }
 </style>

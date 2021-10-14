@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow">
     <div class="row m-0">
       <div class="col-12 px-0">
         <h5 class="smallText"> ({{ contas.length }}) Contas: </h5>
@@ -28,10 +28,10 @@
                   <div class="col-3 col-lg-3 px-0">
                     <span>Parcelas: {{ showParcelas.length }}</span>
                   </div>
-                  <div class="col col-lg-5 px-0">
+                  <div class="col col-lg-5 px-0 text-md">
                     <div class="row m-0 justify-content-center align-items-center">
-                      <span class="px-2 text-sm text-green h-100">{{ parcelasPagas }} Pagos</span>
-                      <span class="pl-3 text-sm text-red h-100">{{ showParcelas.length-parcelasPagas }}
+                      <span class="px-2 text-green h-100">{{ parcelasPagas }} Pagos</span>
+                      <span class="pl-3 text-red h-100">{{ showParcelas.length-parcelasPagas }}
                         Abertos</span>
                     </div>
                     <div class="row m-0 justify-content-center align-items-center">
@@ -254,6 +254,11 @@
 </script>
 
 <style scoped>
+.overflow {
+  overflow-y: auto;
+  max-height: calc(90vh - 70px);
+}
+
 .mb-3:focus,
 .btn:focus {
   outline-style: none;
@@ -262,6 +267,10 @@
 
 label {
   color: dimgray;
+}
+
+.text-md {
+  font-size: 0.9em;
 }
 
 .text-sm {
@@ -316,8 +325,16 @@ label {
     font-size: 70%;
   }
 
+  .overflow {
+    max-height: calc(80vh - 103px);
+  }
+
   .btn {
     font-size: 130%;
+  }
+
+  .text-md {
+    font-size: 0.8em;
   }
 }
 </style>

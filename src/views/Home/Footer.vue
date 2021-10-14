@@ -1,8 +1,8 @@
 <template>
-  <div class="row mx-0 justify-content-center align-items-center text-white">
+  <div class="row mx-0 flex-row-reverse justify-content-center align-items-center text-white">
     <div>
       <span v-for="(item,i) in contact" :key="i" class="px-2">
-        <a :href="item.link">
+        <a :href="item.link" :target="(item.icon != 'fas fa-envelope')?'_blank':'_self'">
           <i :class="item.icon" class="text-white social"></i>
         </a>
       </span>
