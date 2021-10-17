@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!loading" class="py-4 py-lg-5 px-4 bg-white w-100 text-left position-relative">
-      <div :class="{'not-allowed':(!loading)}" class="bg-white position-absolute"></div>
+      <div :class="{'not-allowed':(!servidor && !loading)}" class="bg-white position-absolute"></div>
       <div v-if="loadServ" class="alert bg-warning alert-dismissible fade show" role="alert">
         <div class="spinner-border spinner-border-sm mr-3 my-1" role="status"></div>
         <strong>Aguarde!</strong>
@@ -77,7 +77,6 @@
             else localStorage.clear();
           })
           .catch(() => {
-            console.log('Catch', this.access.auth.id);
             this.servidor = false
           })
           .finally(() => this.loadServ = false)

@@ -190,7 +190,11 @@
             this.parcelas = response
             this.filter.map((f, i) => f.show = (i > 1) ? true : f.show);
           })
-          .catch(er => console.log(er))
+          .catch(er => {
+            localStorage.clear();
+            this.$router.push('/');
+            console.log(er)
+          })
           .finally(() => {
             this.formatting();
             this.loadingParcelas = false;
