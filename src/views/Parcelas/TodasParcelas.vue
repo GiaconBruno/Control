@@ -28,9 +28,9 @@
     </div>
     <hr class="m-0">
     <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
-      class="row m-0 align-items-center border-bottom"
-      :style="(vencido(parcela)) ? 'background-color: #dc354580' : 'background-color: #ffc10790'">
-      <template v-if="filtring(parcela)">
+      class="row m-0 align-items-center border-bottom"  v-show="filtring(parcela)"
+      :style="`background-color: ${(vencido(parcela)) ? '#dc354580' : '#ffc10790'}`">
+      <template>
         <div class="col px-0">
           <div class="row m-0">
             <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
