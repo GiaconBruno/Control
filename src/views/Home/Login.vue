@@ -57,8 +57,8 @@
         loading: false,
         loadServ: false,
         servidor: false,
-        user: "admin",
-        password: "n3x4n5",
+        user: "",
+        password: "",
         errors: [],
       };
     },
