@@ -103,7 +103,11 @@
               if (user.acesso) user.acesso = this.formatDate(user.acesso)
             })
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => {
+            localStorage.clear();
+            this.$router.push('/');
+            console.log(er)
+          })
           .finally(() => this.loading = false)
       },
       showDeletar(payload) {

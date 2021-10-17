@@ -68,7 +68,7 @@ const actions = {
           resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -82,7 +82,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -95,7 +95,7 @@ const actions = {
           context.commit('SET_EDIT_USER', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -107,7 +107,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -119,7 +119,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -161,7 +161,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -177,7 +177,7 @@ const actions = {
         }).catch((error) => {
           reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -189,7 +189,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -201,7 +201,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -213,7 +213,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -225,7 +225,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -239,7 +239,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -251,7 +251,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -263,7 +263,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -275,7 +275,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
@@ -287,7 +287,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error.response.data);
+          console.log(error);
           reject(error.response);
         })
     })
