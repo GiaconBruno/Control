@@ -260,6 +260,7 @@
 <style scoped>
 .overflow {
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: calc(90vh - 70px);
 }
 

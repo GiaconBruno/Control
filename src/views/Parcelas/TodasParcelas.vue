@@ -2,7 +2,10 @@
   <div v-if="(loadingParcelas)" class="fas fa-2x fa-spinner fa-pulse text-success my-2" role="status">
   </div>
   <div v-else-if="!parcelas.length">
-    <span class="pl-5 text-black-50 text-sm">Nenhuma parcela encontrada!</span>
+    <p class="pl-5 my-0 text-black-50 text-sm">Nenhuma parcela encontrada!</p>
+    <button @click="$router.push('/parcela')" class="btn btn-success btn-sm my-1">
+      <span class="text-sm">Criar Parcelas</span>
+    </button>
   </div>
   <div v-else class="text-sm">
     <div class="row m-0" style="background-color: #ffc10790">
@@ -28,7 +31,7 @@
     </div>
     <hr class="m-0">
     <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
-      class="row m-0 align-items-center border-bottom"  v-show="filtring(parcela)"
+      class="row m-0 align-items-center border-bottom" v-show="filtring(parcela)"
       :style="`background-color: ${(vencido(parcela)) ? '#dc354580' : '#ffc10790'}`">
       <template>
         <div class="col px-0">

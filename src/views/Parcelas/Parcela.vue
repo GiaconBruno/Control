@@ -98,7 +98,8 @@
           <label id="lbRepetir" for="repetir">Replicar:</label>
           <input v-model="parcela.repetir"
             @blur="(parcela.repetir<0)? parcela.repetir=0:(parcela.repetir>12)?parcela.repetir=12:parcela.repetir"
-            type="number" min="0" max="12" name="repetir" id="repetir" class="form-control mx-2" />vezes
+            type="number" min="0" max="12" name="repetir" id="repetir" class="form-control mx-2 px-0 px-md-2" />
+            <span>vezes</span>
         </div>
       </div>
       <hr />
