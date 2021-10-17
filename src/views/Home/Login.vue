@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-show="!loading" class="py-4 py-lg-5 px-4 bg-white w-100 text-left position-relative">
-      <div :class="{'not-allowed':(loading)}" class="bg-white position-absolute"></div>
+      <div :class="{'not-allowed':(!loading)}" class="bg-white position-absolute"></div>
       <div v-if="loadServ" class="alert bg-warning alert-dismissible fade show" role="alert">
-        <div class="spinner-border spinner-border-sm mr-3" role="status"></div>
+        <div class="spinner-border spinner-border-sm mr-3 my-1" role="status"></div>
         <strong>Aguarde!</strong>
       </div>
       <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
@@ -11,7 +11,10 @@
         Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
       </div>
       <div v-if="(!servidor && !loading)" :class="{'alert': (loadServ)}" class="m-0 p-0 text-center">
-        <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary">Consultar</button>
+        <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary position-relative"
+          style="z-index:11;">
+          Consultar
+        </button>
       </div>
       <div :class="{'hasError': errors.includes('login')}" class="position-relative">
         <label for="login">Usuário:</label>

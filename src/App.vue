@@ -34,6 +34,10 @@
   color: #42b983;
 }
 
+.btn:focus {
+  box-shadow: none !important;
+}
+
 .overflow::-webkit-scrollbar {
   width: 5px;
 }

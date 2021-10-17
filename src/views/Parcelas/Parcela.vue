@@ -3,8 +3,8 @@
     <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-3">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
-      <div class="row">
-        <div :class="{'has_errors': errors.includes('descricao')}" class="col-7 col-lg-6 px-1 px-lg-3 text-left">
+      <div class="row text-left">
+        <div :class="{'has_errors': errors.includes('descricao')}" class="col-7 col-lg-6 px-1 px-lg-3">
           <label id="lbDescricao" for="descricao">Descrição:</label>
           <div class="position-relative">
             <i id="iDescricao" class="fa fa-pen-alt text-gray"></i>
@@ -12,7 +12,7 @@
               class="form-control" placeholder="Descrição" />
           </div>
         </div>
-        <div :class="{'has_errors': errors.includes('vencimento')}" class="col-5 col-lg-6 px-1 px-lg-3 text-left">
+        <div :class="{'has_errors': errors.includes('vencimento')}" class="col-5 col-lg-6 px-1 px-lg-3">
           <label id="lbVencimento" for="vencimento">Vencimento:</label>
           <div class="position-relative">
             <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
@@ -21,8 +21,8 @@
           </div>
         </div>
       </div>
-      <div class="row justify-content-between">
-        <div :class="{'has_errors': errors.includes('valor')}" class="col-4 px-1 px-lg-3 text-left text-red">
+      <div class="row text-left justify-content-between">
+        <div :class="{'has_errors': errors.includes('valor')}" class="col-4 px-1 px-lg-3 text-red">
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
             <i id="iValor" class="fa fa-money-bill-alt text-gray"></i>
@@ -33,7 +33,7 @@
         <div class="position-relative" style="width: 14px;">
           <i class="fa fa-plus text-gray" style="top: auto; left: 0; bottom: 0;"></i>
         </div>
-        <div class="col-4 px-1 px-lg-3 text-left">
+        <div class="col-4 px-1 px-lg-3">
           <label for="outros">Outros:</label>
           <div class="position-relative">
             <i class="fa fa-money-bill-wave text-gray"></i>
@@ -41,7 +41,7 @@
               placeholder="R$ 0,00" />
           </div>
         </div>
-        <div class="col-3 px-0 text-left">
+        <div class="col-3 px-0">
           <label for="total">Total:</label>
           <div class="position-relative pt-2">
             <i class="fa fa-equals text-gray" style="top: auto; left: 0; bottom: 0;"></i>
@@ -49,8 +49,8 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3 text-left">
+      <div class="row text-left">
+        <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
             <i id="iformaPagto" class="fa fa-dollar-sign text-gray"></i>
@@ -76,7 +76,7 @@
             <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
           </div>
         </div>
-        <div :class="{'has_errors': errors.includes('recebido')}" class="col-3 pl-0 px-1 px-lg-3 text-left">
+        <div :class="{'has_errors': errors.includes('recebido')}" class="col-3 pl-0 px-1 px-lg-3">
           <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
             <i id="iRecebido" class="fa fa-donate text-gray"></i>
@@ -84,13 +84,21 @@
               placeholder="R$ 0,00" />
           </div>
         </div>
-        <div :class="{'has_errors': errors.includes('data_pagto')}" class="col-5 px-1 px-lg-3 text-left">
+        <div :class="{'has_errors': errors.includes('data_pagto')}" class="col-5 px-1 px-lg-3">
           <label id="lbPagamento" for="pagamento">Pagamento:</label>
           <div class="position-relative">
             <i id="iPagamento" class="fa fa-calendar-check text-gray"></i>
             <input v-model="parcela.data_pagto" @keydown.delete="parcela.data_pagto = null" type="date" name="pagamento"
               id="pagamento" class="form-control" />
           </div>
+        </div>
+      </div>
+      <div v-if="parcela.repetir!=undefined" class="row text-left">
+        <div class="col-6 col-md-4 mx-auto d-flex align-items-end">
+          <label id="lbRepetir" for="repetir">Replicar:</label>
+          <input v-model="parcela.repetir"
+            @blur="(parcela.repetir<0)? parcela.repetir=0:(parcela.repetir>12)?parcela.repetir=12:parcela.repetir"
+            type="number" min="0" max="12" name="repetir" id="repetir" class="form-control mx-2" />vezes
         </div>
       </div>
       <hr />
@@ -117,7 +125,8 @@
         conta: null,
         parcela: {
           forma_pagto: null,
-          vencimento: new Date(new Date()).toLocaleString('pt-BR').slice(0, 10).split('/').reverse().join('-')
+          vencimento: new Date(new Date()).toLocaleString('pt-BR').slice(0, 10).split('/').reverse().join('-'),
+          repetir: 0,
         },
         formaPagto: [],
         formSelect: {
@@ -252,7 +261,7 @@
           .finally(() => this.loading = false)
       },
       updateParcela() {
-        if (!this.valid()) {
+        if (this.valid()) {
           this.toast('Prenche os compos corretamente', 'times')
           return
         }
@@ -298,15 +307,6 @@ select {
   border: 0;
   border-radius: 0;
   border-bottom: 1px solid #333;
-}
-
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
 }
 
 input:focus,
