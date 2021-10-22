@@ -1,5 +1,7 @@
 <template>
-  <div class="row mx-0 flex-row-reverse justify-content-center align-items-center text-white">
+  <div class="row mx-0 flex-row-reverse justify-content-around align-items-center text-white">
+    <span class="px-2 smallText text-white font-weight-light">versão:
+      {{ require('@/../package.json').version }}</span>
     <div>
       <span v-for="(item,i) in contact" :key="i" class="px-2">
         <a :href="item.link" :target="(item.icon != 'fas fa-envelope')?'_blank':'_self'">
@@ -44,5 +46,9 @@
 .social:hover {
   transform: scale(1.5);
   transition: all 0.3s;
+}
+
+.smallText {
+  font-size: smaller;
 }
 </style>

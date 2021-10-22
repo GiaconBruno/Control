@@ -8,7 +8,7 @@
             <div class="col-12 col-md-6 px-0">
               <h2 class="m-0">
                 <span class="smallText">Bem Vindo, </span>
-                {{ usuario.nome }}
+                <span>{{ usuario.nome }}</span>
                 <span v-if="(usuario.permissao)" class="largeText">(Master) </span>
               </h2>
             </div>
@@ -54,7 +54,7 @@
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
-    <div class="col-12 px-0 pt-2">
+    <div class="row mx-0 pt-2 justify-content-center">
       <Footer />
     </div>
   </div>
@@ -138,7 +138,7 @@
 </script>
 
 <style scoped>
-.container {
+.container.position-relative {
   min-height: 90vh;
   max-height: 90vh;
   border-radius: 5px;
@@ -151,8 +151,12 @@
   font-size: large;
 }
 
+.smallerText {
+  font-size: smaller;
+}
+
 .smallText {
-  font-size: 10px;
+  font-size: small;
 }
 
 .text-underline {
@@ -176,16 +180,9 @@
 }
 
 @media screen and (max-width: 992px) {
-  .container {
+  .container.position-relative {
     min-height: 85vh;
     max-height: 85vh;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .container {
-    min-height: 80vh;
-    max-height: 80vh;
   }
 }
 </style>

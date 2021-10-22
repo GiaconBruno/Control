@@ -4,12 +4,12 @@
       <div class="col-12 col-md-12 text-center text-lg-left align-self-end">
         <h1 class="my-3">Control-First</h1>
       </div>
-      <div id="signIn" class="col-12 col-md-6 col-lg-4 ml-auto">
+      <div id="signIn" class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8">
         <transition name="anim" mode="out-in">
           <router-view />
         </transition>
       </div>
-      <div class="col-12 px-0">
+      <div class="col-12 col-lg-6 mx-auto">
         <Footer />
       </div>
     </div>

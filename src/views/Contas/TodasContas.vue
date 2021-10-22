@@ -177,6 +177,7 @@
       },
       getParcelas(payload, type) {
         this.loadingParcelas = true;
+        this.$store.commit('SET_CONTA_PARCELA', this.crypto(payload))
         this.conta = payload;
         let conta = 0;
         if (this.parcelas.length) conta = this.parcelas[0].fk_conta_id;
@@ -331,7 +332,7 @@ label {
   }
 
   .overflow {
-    max-height: calc(80vh - 103px);
+    max-height: calc(85vh - 103px);
   }
 
   .btn {
