@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-0 flex-row-reverse justify-content-around align-items-center text-white">
+  <div class="row mt-3 mt-lg-4 mx-0 flex-row-reverse justify-content-around align-items-center text-white">
     <span class="px-2 smallText text-white font-weight-light">versão:
       {{ require('@/../package.json').version }}</span>
     <div>
@@ -9,7 +9,7 @@
         </a>
       </span>
     </div>
-    <span class="px-2 font-weight-light">Desenvolvido por: Bruno Giacon</span>
+    <span class="px-2 smallerText font-weight-light">Desenvolvido por: Bruno Giacon</span>
   </div>
 </template>
 
@@ -36,13 +36,6 @@
 </script>
 
 <style scoped>
-.position-fixed {
-  top: auto !important;
-  bottom: 1rem;
-  left: 0 !important;
-  right: 0;
-}
-
 .social:hover {
   transform: scale(1.5);
   transition: all 0.3s;
@@ -50,5 +43,11 @@
 
 .smallText {
   font-size: smaller;
+}
+
+@media screen and (max-width: 992px) {
+  .smallerText {
+    font-size: smaller;
+  }
 }
 </style>

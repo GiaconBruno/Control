@@ -1,16 +1,20 @@
 <template>
-  <div class="container position-relative">
-    <div id="login" class="row mx-0 justify-content-between align-items-center">
-      <div class="col-12 col-md-12 text-center text-lg-left align-self-end">
-        <h1 class="my-3">Control-First</h1>
+  <div class="container px-0 position-relative">
+    <div class="row mx-0 h-100 flex-column justify-content-center">
+      <div id="login" class="row w-100 mx-0 mb-md-5 justify-content-between align-items-center">
+        <div class="col-12 col-md-6 text-center text-lg-left align-self-start">
+          <h1 class="my-3">Control-First</h1>
+        </div>
+        <div id="signIn" class="col-12 col-sm-8 mx-auto col-md-6 mx-md-0 col-lg-4">
+          <transition name="anim" mode="out-in">
+            <router-view />
+          </transition>
+        </div>
       </div>
-      <div id="signIn" class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8">
-        <transition name="anim" mode="out-in">
-          <router-view />
-        </transition>
-      </div>
-      <div class="col-12 col-lg-6 mx-auto">
-        <Footer />
+      <div class="row mx-0 w-100">
+        <div class="col-12 col-lg-6 mx-auto">
+          <Footer />
+        </div>
       </div>
     </div>
   </div>
@@ -31,15 +35,9 @@ section {
   height: 100vh;
 }
 
-#login {
+.container {
   height: 100vh;
   overflow-x: hidden;
-}
-
-.position-absolute {
-  top: 20vh;
-  left: auto;
-  /* font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; */
 }
 
 h1 {
@@ -52,10 +50,6 @@ h1 {
 
 .text-underline {
   text-decoration: underline;
-}
-
-#signIn {
-  height: 442px;
 }
 
 .anim-enter-active {
@@ -78,20 +72,6 @@ h1 {
   to {
     transform: translateX(0);
     opacity: 1;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .position-absolute {
-    position: relative !important;
-    top: 0;
-    text-align: center;
-    padding: 1em 0;
-  }
-
-  #login {
-    height: 90vh !important;
-    min-height: 580px;
   }
 }
 </style>

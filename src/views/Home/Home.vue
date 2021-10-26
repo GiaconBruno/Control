@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2 pt-3 pt-lg-5">
+  <div class="row mx-0 px-1 h-100 flex-column justify-content-center">
     <div v-if="usuario" class="container px-2 position-relative">
       <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
       <div class="row mx-0 my-3">
@@ -15,24 +15,24 @@
             <div class="col-12 col-md-6 px-0">
               <div class="rounded border border-dark p-0 m-0">
                 <i @click="changeVisible('contas');" id="todasContas"
-                  class="btn fa fa-home text-secundary px-1 mx-2"></i>
+                  class="btn fa fa-home text-secundary px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="todasContas" triggers="hover" noninteractive> início </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('usuarios');" id="todosUsuarios"
-                  class="btn fa fa-user-friends text-dark px-1 mx-2"></i>
+                  class="btn fa fa-user-friends text-dark px-0 px-md-1 mx-2"></i>
                 <b-tooltip v-if="(usuario.permissao)" target="todosUsuarios" triggers="hover" noninteractive>
                   Usuários </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('usuario')" id="criarUsuario"
-                  class="btn fa fa-user-plus text-success px-1 mx-2"></i>
+                  class="btn fa fa-user-plus text-success px-0 px-md-1 mx-2"></i>
                 <b-tooltip v-if="(usuario.permissao)" target="criarUsuario" triggers="hover" noninteractive>
                   Criar Usuários </b-tooltip>
                 <i @click="setEditUsuario(usuario.id)" id="editarUsuario"
-                  class="btn fa fa-user-edit text-warning px-1 mx-2"></i>
+                  class="btn fa fa-user-edit text-warning px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
                 <i @click="changeVisible('conta')" id="criarConta"
-                  class="btn fa fa-folder-plus text-primary px-1 mx-2"></i>
+                  class="btn fa fa-folder-plus text-primary px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
                 <i v-show="(['/contas','/usuarios'].includes($route.path))" @click="refresh()" id="atualizar"
-                  class="btn fa fa-redo-alt text-green px-1 mx-2"></i>
+                  class="btn fa fa-redo-alt text-green px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
               </div>
             </div>
@@ -54,8 +54,10 @@
       </transition>
     </div>
     <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
-    <div class="row mx-0 pt-2 justify-content-center">
-      <Footer />
+    <div class="row mx-0 w-100">
+      <div class="col-12 col-lg-8 mx-auto">
+        <Footer />
+      </div>
     </div>
   </div>
 </template>
@@ -139,8 +141,8 @@
 
 <style scoped>
 .container.position-relative {
-  min-height: 90vh;
-  max-height: 90vh;
+  min-height: 85vh;
+  max-height: 85vh;
   border-radius: 5px;
   background: ghostwhite;
   overflow-y: hidden;
@@ -176,13 +178,6 @@
   to {
     transform: translateX(0);
     opacity: 1;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .container.position-relative {
-    min-height: 85vh;
-    max-height: 85vh;
   }
 }
 </style>

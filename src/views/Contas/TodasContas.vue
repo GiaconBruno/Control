@@ -262,7 +262,7 @@
 .overflow {
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(90vh - 70px);
+  max-height: calc(85vh - 70px);
 }
 
 .mb-3:focus,
@@ -326,13 +326,13 @@ label {
   transform: rotate(-35deg);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   .accordion {
     font-size: 70%;
   }
 
   .overflow {
-    max-height: calc(85vh - 103px);
+    max-height: calc(85vh - 105px);
   }
 
   .btn {
@@ -341,6 +341,12 @@ label {
 
   .text-md {
     font-size: 0.8em;
+  }
+}
+
+@media screen and (max-width: 335px) {
+  .overflow {
+    max-height: 60vh;
   }
 }
 </style>

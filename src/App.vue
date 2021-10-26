@@ -13,8 +13,7 @@
   text-align: center;
   color: #2c3e50;
 
-  width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   font-family: "Poppins", sans-serif;
   background: #093028;
   background: -webkit-linear-gradient(to bottom, #237a57, #093028);
