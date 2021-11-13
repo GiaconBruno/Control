@@ -23,6 +23,9 @@ const routes = [{
     path: '/contas',
     component: () => import('./views/Contas/TodasContas.vue'),
   }, {
+    path: '/todas-contas',
+    component: () => import('./views/Contas/TodasContas.vue'),
+  }, {
     path: '/parcelas',
     component: () => import('./views/Parcelas/TodasParcelas.vue'),
   }, {

@@ -40,6 +40,10 @@ section {
   overflow-x: hidden;
 }
 
+#login {
+  min-height: 450px;
+}
+
 h1 {
   color: white;
 }

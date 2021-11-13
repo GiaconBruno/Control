@@ -9,7 +9,7 @@
   </div>
   <div v-else class="text-sm">
     <div class="row m-0" style="background-color: #ffc10790">
-      <div class="col-11 px-0">
+      <div :class="($route.path == '/contas')?'col-11':'col-12'" class="px-0">
         <div class="row m-0">
           <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0 text-sm">
             <div class="row m-0">
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <div class="px-0 px-lg-2 text-right">
+        <div v-if="$route.path == '/contas'" class="px-0 px-lg-2 text-right">
           <div class="row m-0 pr-1 pr-lg-0 justify-content-center justify-content-sm-between">
             <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
               class="btn fa fa-dollar-sign text-success px-1 px-lg-2"></i>

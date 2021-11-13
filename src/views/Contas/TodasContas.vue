@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <div class="col-1 col-lg-auto px-0">
+          <div v-if="$route.path == '/contas'" class="col-1 col-lg-auto px-0">
             <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
               <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
                 class="fa fa-plus-circle text-success px-2 py-1"></i>
@@ -68,7 +68,18 @@
               </b-tooltip>
             </div>
           </div>
+          <div v-else class="col px-2 text-sm"> {{ conta.criado.slice(0,10).split('-').reverse().join('/')}} </div>
         </div>
+        <template v-if="$route.path == '/todas-contas'">
+          <div class="row mx-0 alert-primary text-left text-sm" v-for="(user, x) in conta.usuarios"
+            :key="`${user.nome}-${x}`">
+            <div class="col px-2"> Usuário: {{ user.nome }} </div>
+            <div class="col px-2"> Acesso:
+              {{ (user.acesso)? user.acesso.slice(0,10).split('-').reverse().join('/'):'Nenhum' }} </div>
+            <div class="col px-2"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa"></i></div>
+            <div class="col px-2"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa"></i></div>
+          </div>
+        </template>
         <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
           <TodasParcelas v-bind="{parcelas, crypto, getParcelas, filter, loadingParcelas}" />
         </b-collapse>
@@ -141,6 +152,11 @@
     beforeMount() {
       this.getContas();
     },
+    watch: {
+      $route(to) {
+        if (['/contas', '/todas-contas'].includes(to.path)) this.getContas();
+      },
+    },
     computed: {
       showParcelas() {
         const all = [];
@@ -155,7 +171,7 @@
       getContas() {
         this.loading = true;
         this.parcelas = [];
-        this.$store.dispatch('getContas')
+        this.$store.dispatch((this.$route.path == '/contas') ? 'getContas' : 'getAllContas')
           .then(response => this.contas = response)
           .catch(er => {
             localStorage.clear();

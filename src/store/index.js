@@ -183,6 +183,20 @@ const actions = {
     })
     return promise
   },
+  getAllContas(context) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/contas-all`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          reject(localStorage.clear());
+          reject(context.commit('LOGOUT'));
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
   getContasId(context, payload) {
     let promise = new Promise((resolve, reject) => {
       axios.get(`/api/contas/${payload}`)

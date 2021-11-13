@@ -16,7 +16,7 @@
               <div class="rounded border border-dark p-0 m-0">
                 <i @click="changeVisible('contas');" id="todasContas"
                   class="btn fa fa-home text-secundary px-0 px-md-1 mx-2"></i>
-                <b-tooltip target="todasContas" triggers="hover" noninteractive> início </b-tooltip>
+                <b-tooltip target="todasContas" triggers="hover" noninteractive> Início </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('usuarios');" id="todosUsuarios"
                   class="btn fa fa-user-friends text-dark px-0 px-md-1 mx-2"></i>
                 <b-tooltip v-if="(usuario.permissao)" target="todosUsuarios" triggers="hover" noninteractive>
@@ -28,11 +28,14 @@
                 <i @click="setEditUsuario(usuario.id)" id="editarUsuario"
                   class="btn fa fa-user-edit text-warning px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
+                <i v-if="(usuario.permissao)" @click="changeVisible('todas-contas')" id="TodasConta"
+                  class="btn fa fa-file-alt text-primary px-0 px-md-1 mx-2"></i>
+                <b-tooltip target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip>
                 <i @click="changeVisible('conta')" id="criarConta"
                   class="btn fa fa-folder-plus text-primary px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
-                <i v-show="(['/contas','/usuarios'].includes($route.path))" @click="refresh()" id="atualizar"
-                  class="btn fa fa-redo-alt text-green px-0 px-md-1 mx-2"></i>
+                <i v-show="(['/contas','/usuarios','/todas-contas'].includes($route.path))" @click="refresh()"
+                  id="atualizar" class="btn fa fa-redo-alt text-green px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
               </div>
             </div>
@@ -127,7 +130,7 @@
         this.parcelaEdit = {};
       },
       refresh() {
-        (this.$route.path == "/contas") ? this.$refs.All.getContas():
+        (["/contas", "/todas-contas"].includes(this.$route.path)) ? this.$refs.All.getContas():
           this.$refs.All.getUsuarios();
       },
       sigOut() {
