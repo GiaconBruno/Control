@@ -1,7 +1,8 @@
 # Contro - VueJS
 #### Sistema de controle Financeiro, desenvolvido em VueJS
-Crie, Edite, Pague e Exclua as parcelas das suas Contas
-Crie seu usuário e experiente
+Tenha um controle simples e prático de suas finanças.<br>
+Crie, Edite, Pague ou Exclua as Parcelas e Contas.<br>
+Crie seu usuário e experiente.<br>
 
 > https://control-vue-js.vercel.app/ >>
 
@@ -10,6 +11,8 @@ Crie seu usuário e experiente
 ```sh
 https://github.com/GiaconBruno/Control-BackEnd
 ```
+
+## ------ Criando projeto VUE-JS ------ 
 ### Acessar a pasta onde irá criar o projeto
 ```sh
 cd "caminho da pasta"
@@ -28,6 +31,11 @@ cd "nome do projeto"
 ### Instalar Dependências
 ```sh
 npm i vue-router
+npm i vuex
+npm i dotenv
+npm i axios
+npm i bootstrap-vue
+npm i vue-toasted
 ```
 
 ### Inicia o projeto
