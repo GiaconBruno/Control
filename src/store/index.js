@@ -65,7 +65,7 @@ const actions = {
         .then((response) => {
           resolve(context.commit('SET_AUTH', response.data));
           axios.defaults.headers.common['token'] = context.state.access.auth.token;
-          resolve(context.dispatch('updateAcessUser'));
+          // resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
