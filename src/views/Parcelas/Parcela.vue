@@ -49,6 +49,8 @@
           </div>
         </div>
       </div>
+      <hr>
+      <label class="text-center text-md-sm m-0"> Informações de pagamento </label>
       <div class="row text-left">
         <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
@@ -99,7 +101,7 @@
           <input v-model="parcela.repetir"
             @blur="(parcela.repetir<0)? parcela.repetir=0:(parcela.repetir>12)?parcela.repetir=12:parcela.repetir"
             type="number" min="0" max="12" name="repetir" id="repetir" class="form-control mx-2 px-0 px-md-2" />
-            <span>vezes</span>
+          <span>vezes</span>
         </div>
       </div>
       <hr />
@@ -245,7 +247,9 @@
       },
       createParcela() {
         if (this.valid()) {
-          this.toast('Prenche os compos corretamente', 'times')
+          this.toast('Prenche os campos corretamente.', 'times')
+          this.toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'times', 8000)
+          this.toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'times', 12000)
           return
         }
         //Formating
@@ -263,7 +267,9 @@
       },
       updateParcela() {
         if (this.valid()) {
-          this.toast('Prenche os compos corretamente', 'times')
+          this.toast('Prenche os campos corretamente.', 'times')
+          this.toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'times', 8000)
+          this.toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'times', 12000)
           return
         }
         //Formating
