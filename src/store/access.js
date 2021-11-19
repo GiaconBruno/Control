@@ -9,7 +9,7 @@ const access = {
   methods: {
     formatDate(data) {
       return (new Date(data).toLocaleString('pt-BR').split('T').join('-') + 'T')
-        .replace(/\//g, '-').slice(0, -1)
+        .replace(/\//g, '/').slice(0, -1)
     },
     formatMoney(payload) {
       return parseFloat(payload).toLocaleString('pt-BR', {

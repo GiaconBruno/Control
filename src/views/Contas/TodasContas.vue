@@ -68,14 +68,14 @@
               </b-tooltip>
             </div>
           </div>
-          <div v-else class="col px-2 text-sm"> {{ conta.criado.slice(0,10).split('-').reverse().join('/')}} </div>
+          <div v-else class="col px-2 text-sm"> {{ formatDate(conta.criado) }} </div>
         </div>
         <template v-if="$route.path == '/todas-contas'">
           <div class="row mx-0 alert-primary text-left text-sm" v-for="(user, x) in conta.usuarios"
             :key="`${user.nome}-${x}`">
             <div class="col px-2"> Usuário: {{ user.nome }} </div>
             <div class="col px-2"> Acesso:
-              {{ (user.acesso)? user.acesso.slice(0,10).split('-').reverse().join('/'):'Nenhum' }} </div>
+              {{ (user.acesso)? formatDate(user.acesso):'Nenhum' }} </div>
             <div class="col px-2"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa"></i></div>
             <div class="col px-2"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa"></i></div>
           </div>
