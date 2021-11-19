@@ -8,8 +8,7 @@ const access = {
   },
   methods: {
     formatDate(data) {
-      return (new Date(data).toLocaleString('pt-BR').split('T').join('-') + 'T')
-        .replace(/\//g, '/').slice(0, -1)
+      return (new Date(data).toLocaleString('pt-BR'))
     },
     formatMoney(payload) {
       return parseFloat(payload).toLocaleString('pt-BR', {
