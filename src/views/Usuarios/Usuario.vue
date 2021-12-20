@@ -29,7 +29,7 @@
               class="form-control" placeholder="Digite uma Senha" />
             <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray"></i>
           </div>
-          <div v-if="(autorization && autorization.id)" class="row m-0">
+          <div v-if="false" class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
               <span class="d-flex p-0">
                 <b-form-checkbox v-model="usuario.permissao" switch>
