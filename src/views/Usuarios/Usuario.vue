@@ -29,7 +29,7 @@
               class="form-control" placeholder="Digite uma Senha" />
             <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray"></i>
           </div>
-          <div v-if="false" class="row m-0">
+          <div v-if="access.auth.permissao" class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
               <span class="d-flex p-0">
                 <b-form-checkbox v-model="usuario.permissao" switch>
@@ -66,7 +66,6 @@
       return {
         loading: false,
         see: false,
-        autorization: {},
         usuario: {
           permissao: false,
           ativo: true,
@@ -76,7 +75,6 @@
       }
     },
     beforeMount() {
-      this.autorization = this.access.auth;
       if (this.access.userEdit && this.access.userEdit.id) {
         this.usuario = this.access.userEdit;
         this.title = `Edição de Usuário`;
