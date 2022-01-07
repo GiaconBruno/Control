@@ -17,7 +17,7 @@
                   <span class="text-xs text-sm"> {{ usuario.acesso || 'Nenhum' }}</span>
                 </div>
               </div>
-              <div class="col-12 col-lg-3 px-0 px-lg-3">
+              <div class="col-12 col-lg-4 px-0 px-lg-3">
                 <div class="row justify-content-around align-items-center text-center text-sm">
                   <div class="col-6 pr-0">
                     <span>Permissão: </span>
@@ -147,7 +147,7 @@
 .overflow {
   /* overflow-x: hidden; */
   overflow-y: auto;
-  max-height: calc(90vh - 70px);
+  max-height: calc(85vh - 71px);
 }
 
 .text-sm {
@@ -170,7 +170,7 @@
 
 @media screen and (max-width: 768px) {
   .overflow {
-    max-height: calc(80vh - 103px);
+    max-height: calc(85vh - 103px);
   }
 }
 </style>
