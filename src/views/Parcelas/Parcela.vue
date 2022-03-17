@@ -106,7 +106,7 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="$router.push('/contas')" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="(action=='Criar')?createParcela():updateParcela()" :disabled="loading"
           class="btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
@@ -260,7 +260,7 @@
         this.$store.dispatch('createParcela', payload)
           .then(response => {
             this.toast(response.mensagem, 'check')
-            this.$router.push("/contas")
+            this.$router.go(-1)
           })
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
@@ -280,7 +280,7 @@
         this.$store.dispatch('updateParcela', payload.parcela)
           .then(response => {
             this.toast(response.mensagem, 'check')
-            this.$router.push("/contas")
+            this.$router.go(-1)
           })
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)

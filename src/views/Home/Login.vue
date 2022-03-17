@@ -70,10 +70,10 @@
         this.loadServ = true;
         this.$store.dispatch('status')
           .then(response => {
-            console.log(response.data.start);
+            console.log(response.data);
             this.servidor = true;
             this.$store.commit('GET_ACCESS');
-            if (this.access.auth && this.access.auth.id) this.$router.push("/contas");
+            if (this.access.auth && this.access.auth.id) this.$router.push("/dashboard");
             else localStorage.clear();
           })
           .catch(() => {
@@ -104,7 +104,7 @@
         }
         this.$store.dispatch('sigIn', payload)
           .then(() => {
-            this.$router.push("/contas")
+            this.$router.push("/dashboard")
           })
           .catch(er => {
             this.toast(er.data.mensagem, 'times')

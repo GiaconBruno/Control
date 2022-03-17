@@ -1,6 +1,6 @@
 {
   "name": "control-vuejs",
-  "version": "2.10.21",
+  "version": "3.03.16",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode development",

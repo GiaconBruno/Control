@@ -2,12 +2,17 @@
   <div class="overflow">
     <div class="row m-0">
       <div class="col-12 px-0">
-        <h5 class="smallText"> ({{ contas.length }}) Contas: </h5>
+        <h5 class="smallText"> ({{ contas.length }}) {{ rota.title }}: </h5>
       </div>
     </div>
     <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
-    <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
+    <div v-else-if="!contas.length">
+      <p class="my-0 text-black-50 text-sm">Nenhuma conta disponivel!</p>
+      <button @click="$router.push('/conta')" class="btn btn-success btn-sm my-1">
+        <span class="text-sm">Criar Conta</span>
+      </button>
+    </div>
     <div v-else class="accordion" role="tablist">
       <div v-for="(conta,i) in contas" :key="conta.id" v-show="filtring(conta)" class="mb-3">
         <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
@@ -54,7 +59,7 @@
               </div>
             </div>
           </div>
-          <div v-if="$route.path == '/contas'" class="col-1 col-lg-auto px-0">
+          <div v-if="['/entradas', '/saidas'].includes($route.path)" class="col-1 col-lg-auto px-0">
             <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
               <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
                 class="fa fa-plus-circle text-success px-2 py-1"></i>
@@ -100,7 +105,7 @@
 </template>
 
 <script>
-  import TodasParcelas from '../Parcelas/TodasParcelas'
+  import TodasParcelas from '../Parcelas/TodasParcelas.vue'
   export default {
     components: {
       TodasParcelas
@@ -154,7 +159,7 @@
     },
     watch: {
       $route(to) {
-        if (['/contas', '/todas-contas'].includes(to.path)) this.getContas();
+        if (['/entradas', '/saidas', '/todas-contas'].includes(to.path)) this.getContas();
       },
     },
     computed: {
@@ -165,13 +170,29 @@
         })
         this.formatting();
         return all;
+      },
+      rota() {
+        switch (this.$route.path) {
+          case '/entradas':
+            return {
+              title: 'Contas de Entradas', dispatch: 'getContasEntradas'
+            };
+          case '/saidas':
+            return {
+              title: 'Contas de Saídas', dispatch: 'getContasSaidas'
+            };;
+          default:
+            return {
+              title: 'Todas as Contas', dispatch: 'getAllContas'
+            };;
+        }
       }
     },
     methods: {
       getContas() {
         this.loading = true;
         this.parcelas = [];
-        this.$store.dispatch((this.$route.path == '/contas') ? 'getContas' : 'getAllContas')
+        this.$store.dispatch(this.rota.dispatch)
           .then(response => this.contas = response)
           .catch(er => {
             localStorage.clear();
@@ -278,7 +299,7 @@
 .overflow {
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(85vh - 70px);
+  height: calc(85vh - 70px);
 }
 
 .mb-3:focus,
@@ -351,7 +372,7 @@ label {
     max-height: calc(85vh - 105px);
   }
 
-  .btn {
+  .btn:not(.btn-sm) {
     font-size: 130%;
   }
 

@@ -14,9 +14,9 @@
             </div>
             <div class="col-12 col-md-6 px-0">
               <div class="rounded border border-dark p-0 m-0">
-                <i @click="changeVisible('contas');" id="todasContas"
+                <i v-show="($route.path != '/dashboard')" @click="changeVisible('dashboard');" id="home"
                   class="btn fa fa-home text-secundary px-0 px-md-1 mx-2"></i>
-                <b-tooltip target="todasContas" triggers="hover" noninteractive> Início </b-tooltip>
+                <b-tooltip target="home" triggers="hover" noninteractive> Início </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('usuarios');" id="todosUsuarios"
                   class="btn fa fa-user-friends text-dark px-0 px-md-1 mx-2"></i>
                 <b-tooltip v-if="(usuario.permissao)" target="todosUsuarios" triggers="hover" noninteractive>
@@ -30,12 +30,12 @@
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('todas-contas')" id="TodasConta"
                   class="btn fa fa-file-alt text-primary px-0 px-md-1 mx-2"></i>
-                <b-tooltip target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip>
+                <b-tooltip v-if="(usuario.permissao)" target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip>
                 <i @click="changeVisible('conta')" id="criarConta"
                   class="btn fa fa-folder-plus text-primary px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
-                <i v-show="(['/contas','/usuarios','/todas-contas'].includes($route.path))" @click="refresh()"
-                  id="atualizar" class="btn fa fa-redo-alt text-green px-0 px-md-1 mx-2"></i>
+                <i v-show="(['/dashboard','/entradas', '/saidas','/usuarios','/todas-contas'].includes($route.path))"
+                  @click="refresh()" id="atualizar" class="btn fa fa-redo-alt text-green px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
               </div>
             </div>
@@ -130,8 +130,19 @@
         this.parcelaEdit = {};
       },
       refresh() {
-        (["/contas", "/todas-contas"].includes(this.$route.path)) ? this.$refs.All.getContas():
-          this.$refs.All.getUsuarios();
+        switch (this.$route.path) {
+          case '/dashboard':
+            this.$refs.All.getDash();
+            break;
+          case '/entradas':
+          case '/saidas':
+          case '/todas-contas':
+            this.$refs.All.getContas();
+            break;
+          case '/usuarios':
+            this.$refs.All.getUsuarios();
+            break;
+        }
       },
       sigOut() {
         this.$store.commit('LOGOUT');

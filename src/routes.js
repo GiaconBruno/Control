@@ -20,7 +20,13 @@ const routes = [{
   component: () => import('./views/Home/Home.vue'),
   name: 'home',
   children: [{
-    path: '/contas',
+    path: '/dashboard',
+    component: () => import('./views/components/Dashboard.vue'),
+  }, {
+    path: '/entradas',
+    component: () => import('./views/Contas/TodasContas.vue'),
+  }, {
+    path: '/saidas',
     component: () => import('./views/Contas/TodasContas.vue'),
   }, {
     path: '/todas-contas',

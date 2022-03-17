@@ -96,7 +96,7 @@
         this.$store.dispatch('createUser', this.usuario)
           .then((response) => {
             this.toast(response.mensagem, 'check')
-            this.$router.push('/contas')
+            this.$router.go(-1)
           })
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)

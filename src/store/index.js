@@ -51,7 +51,7 @@ const actions = {
   status: () => {
     let promise = new Promise((resolve, reject) => {
       axios.get('/')
-        .then(response => resolve(response))
+        .then(response => resolve(JSON.stringify(response)))
         .catch(error => reject(error))
     })
     return promise
@@ -169,9 +169,23 @@ const actions = {
   },
 
   //CONTAS
-  getContas(context) {
+  getContasEntradas(context) {
     let promise = new Promise((resolve, reject) => {
-      axios.get(`/api/contas/${context.state.access.auth.id}`)
+      axios.get(`/api/contas-entradas/${context.state.access.auth.id}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          reject(localStorage.clear());
+          reject(context.commit('LOGOUT'));
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getContasSaidas(context) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/contas-saidas/${context.state.access.auth.id}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
