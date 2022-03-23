@@ -9,7 +9,7 @@
     <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
     <div v-else-if="!contas.length">
       <p class="my-0 text-black-50 text-sm">Nenhuma conta disponivel!</p>
-      <button @click="$router.push('/conta')" class="btn btn-success btn-sm my-1">
+      <button @click="$emit('changeVisible', 'conta')" class="btn btn-success btn-sm my-1">
         <span class="text-sm">Criar Conta</span>
       </button>
     </div>
@@ -175,15 +175,15 @@
         switch (this.$route.path) {
           case '/entradas':
             return {
-              title: 'Contas de Entradas', dispatch: 'getContasEntradas'
+              title: 'Contas de Entradas', dispatch: 'getContasEntradas', tipo: 'E'
             };
           case '/saidas':
             return {
-              title: 'Contas de Saídas', dispatch: 'getContasSaidas'
+              title: 'Contas de Saídas', dispatch: 'getContasSaidas', tipo: 'S'
             };;
           default:
             return {
-              title: 'Todas as Contas', dispatch: 'getAllContas'
+              title: 'Todas as Contas', dispatch: 'getAllContas', tipo: 'S'
             };;
         }
       }

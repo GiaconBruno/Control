@@ -1,7 +1,7 @@
 <template>
   <section>
+    <h3>Dashdoard</h3>
     <div v-if="info.length && !loading">
-      <h3>Dashdoard</h3>
       <div class="row my-lg-4 mx-0">
         <div v-for="i in info" :key="i.title" class="col-lg-4 mx-auto">
           <router-link :to="i.route">
@@ -74,6 +74,7 @@ section {
   height: calc(100vh - 185px);
   overflow-y: auto;
 }
+
 a {
   text-decoration: none;
 }

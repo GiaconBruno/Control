@@ -3,7 +3,7 @@
   </div>
   <div v-else-if="!parcelas.length">
     <p class="pl-5 my-0 text-black-50 text-sm">Nenhuma parcela encontrada!</p>
-    <button v-if="[!'/todas-contas'].includes($route.path)" @click="$router.push('/parcela')"
+    <button v-if="!['/todas-contas'].includes($route.path)" @click="$router.push('/parcela')"
       class="btn btn-success btn-sm my-1">
       <span class="text-sm">Criar Parcelas</span>
     </button>

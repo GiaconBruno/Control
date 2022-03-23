@@ -13,6 +13,23 @@
           </div>
         </div>
         <div class="col-12 text-left">
+          <label for="usuario">Tipo:</label>
+          <div class="position-relative">
+            <b-icon icon="arrow-down-up"></b-icon>
+            <div class="row m-0 mb-3">
+              <div class="col-12 px-0">
+                <select v-model="conta.tipo" name="tipo" id="tipo" class="form-control py-0">
+                  <option value="E" class="form-control">Entrada</option>
+                  <option value="S" class="form-control">Saída</option>
+                </select>
+              </div>
+              <!-- <div class="col-1 p-0">
+                <i @click="addUsuario(usuario)" class="fa fa-plus btn btn-primary px-0 py-1 text-white w-100"></i>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-12 text-left">
           <label for="usuario">Quem pode visualizar?</label>
           <div class="position-relative">
             <i class="fa fa-user text-gray"></i>
@@ -61,7 +78,9 @@
     data() {
       return {
         loading: false,
-        conta: {},
+        conta: {
+          tipo: ''
+        },
         fk_usuario_id: [],
         usuario: null,
         usuarios: [],
@@ -77,15 +96,18 @@
         })
         .catch(er => this.toast(er.data.mensagem, 'times'))
         .finally(() => this.loading = false)
+      this.conta.tipo = this.$route.query.tipo;
 
-      this.fk_usuario_id.push(this.access.auth.id);
+      // this.fk_usuario_id.push(this.access.auth.id);
       if (this.access.contaEdit && this.access.contaEdit.id) {
         this.conta.descricao = this.access.contaEdit.descricao;
+        this.conta.tipo = this.access.contaEdit.tipo;
         this.title = 'Editar Conta';
         this.action = 'Alterar';
-        this.fk_usuario_id =
-          (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
-            .split(",")).map(c => parseInt(c));
+        // this.fk_usuario_id =
+        //   (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
+        //     .split(",")).map(c => parseInt(c));
+        this.fk_usuario_id.push(this.access.contaEdit.ref_usuario.fk_usuario_id)
       }
     },
     computed: {
@@ -110,11 +132,19 @@
           this.fk_usuario_id.splice(payload, 1);
         }
       },
-      createConta() {
+      valid() {
         if (!this.conta.descricao) {
           this.toast('Preencha a Descrição', 'times')
           return
         }
+        if (!this.conta.tipo) {
+          this.toast('Preencha o Tipo da Conta', 'times')
+          return
+        }
+        return true
+      },
+      createConta() {
+        if (!this.valid()) return
         this.loading = true;
         let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
         this.conta.fk_usuario_id = contas;
@@ -129,10 +159,7 @@
           .finally(() => this.loading = false)
       },
       updateConta() {
-        if (!this.conta.descricao) {
-          this.toast('Preencha a Descrição', 'times')
-          return
-        }
+        if (!this.valid()) return
         this.loading = true;
         let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
         this.conta.fk_usuario_id = contas;
@@ -155,7 +182,8 @@ label {
   margin: 1rem 0 0 0;
 }
 
-.fa:not(.fa-plus) {
+.fa:not(.fa-plus),
+.b-icon {
   color: dimgray;
   top: 5px;
   left: 5px;

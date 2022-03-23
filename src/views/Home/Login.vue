@@ -70,7 +70,7 @@
         this.loadServ = true;
         this.$store.dispatch('status')
           .then(response => {
-            console.log(response.data);
+            console.log(response.data.join('\n'));
             this.servidor = true;
             this.$store.commit('GET_ACCESS');
             if (this.access.auth && this.access.auth.id) this.$router.push("/dashboard");

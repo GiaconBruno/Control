@@ -30,7 +30,8 @@
                 <b-tooltip target="editarUsuario" triggers="hover" noninteractive> Editar Usuários </b-tooltip>
                 <i v-if="(usuario.permissao)" @click="changeVisible('todas-contas')" id="TodasConta"
                   class="btn fa fa-file-alt text-primary px-0 px-md-1 mx-2"></i>
-                <b-tooltip v-if="(usuario.permissao)" target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip>
+                <b-tooltip v-if="(usuario.permissao)" target="TodasConta" triggers="hover" noninteractive> Todas as
+                  Conta </b-tooltip>
                 <i @click="changeVisible('conta')" id="criarConta"
                   class="btn fa fa-folder-plus text-primary px-0 px-md-1 mx-2"></i>
                 <b-tooltip target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
@@ -52,7 +53,7 @@
       <!-- <hr class="my-2" /> -->
       <!-- :auth="usuario" -->
       <transition name="anim" mode="out-in">
-        <router-view v-if="!loading" v-bind="{setEditUsuario}" ref="All" />
+        <router-view v-if="!loading" v-bind="{setEditUsuario}" ref="All" @changeVisible="changeVisible($event)" />
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
       </transition>
     </div>
@@ -103,7 +104,13 @@
     },
     methods: {
       changeVisible(payload) {
-        if (this.$route.path != `/${payload}`) this.$router.push(`/${payload}`)
+        let tipo = (this.$route.path == '/entradas') ? 'E' : 'S';
+        if (this.$route.path != `/${payload}`) this.$router.push({
+          path: `/${payload}`,
+          query: {
+            tipo: tipo
+          }
+        })
       },
       setEditUsuario(payload) {
         this.loading = true;

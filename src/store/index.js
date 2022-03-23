@@ -51,7 +51,7 @@ const actions = {
   status: () => {
     let promise = new Promise((resolve, reject) => {
       axios.get('/')
-        .then(response => resolve(JSON.stringify(response)))
+        .then(response => resolve(response))
         .catch(error => reject(error))
     })
     return promise
