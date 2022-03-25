@@ -1,5 +1,5 @@
 <template>
-  <div class="row m-0 justify-content-center">
+  <div id="overflow" class="row m-0 justify-content-center">
     <div v-if="(usuarios.length)" class="col-12 col-lg-6 card border-secondary p-3">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
@@ -51,10 +51,11 @@
         </div>
         <div class="col-12 text-center">
           <div class="row m-0 position-relative">
-            <div v-for="(contaUsuario, ci) in fk_usuario_id" :key="contaUsuario"
+            <div v-for="(user, ci) in fk_usuario_id" :key="`${user.id}`"
               class="col-auto p-2 pt-3 m-2 alert-success text-sm rounded">
-              {{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].nome }}
-              @{{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].usuario }}
+              <!-- {{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].nome }}
+              @{{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].usuario }} -->
+              {{ user.nome }} @{{ user.usuario }}
               <i v-if="(ci>0)" @click="removeUsuario(ci)" class="fa fa-times text-danger"></i>
             </div>
           </div>
@@ -96,18 +97,20 @@
         })
         .catch(er => this.toast(er.data.mensagem, 'times'))
         .finally(() => this.loading = false)
-      this.conta.tipo = this.$route.query.tipo;
+      this.conta.tipo = this.access.contaTipo;
 
       // this.fk_usuario_id.push(this.access.auth.id);
       if (this.access.contaEdit && this.access.contaEdit.id) {
+        // console.log(this.access.contaEdit.Usuarios);
         this.conta.descricao = this.access.contaEdit.descricao;
         this.conta.tipo = this.access.contaEdit.tipo;
         this.title = 'Editar Conta';
         this.action = 'Alterar';
-        // this.fk_usuario_id =
+        this.fk_usuario_id = this.access.contaEdit.Usuarios;
+        // this.fk_usuario_id = 
         //   (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
         //     .split(",")).map(c => parseInt(c));
-        this.fk_usuario_id.push(this.access.contaEdit.ref_usuario.fk_usuario_id)
+        // this.fk_usuario_id.push(this.access.contaEdit.ref_usuario.fk_usuario_id)
       }
     },
     computed: {
@@ -178,6 +181,11 @@
 </script>
 
 <style scoped>
+#overflow {
+  overflow-y: scroll;
+  max-height: calc(100vh - 175px);
+}
+
 label {
   margin: 1rem 0 0 0;
 }
@@ -224,5 +232,11 @@ hr {
 
 .btn:not(.fa-plus) {
   min-width: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  #overflow {
+    max-height: calc(100vh - 175px);
+  }
 }
 </style>

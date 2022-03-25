@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="col px-0">
-            <i @click="setEditUsuario(usuario.id)" :id="`usuarioEditar${i}`"
+            <i @click="$emit('SEU', usuario.id)" :id="`usuarioEditar${i}`"
               class="btn fa fa-edit text-primary p-0 mx-1 mx-lg-2"></i>
             <b-tooltip :target="`usuarioEditar${i}`" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
             <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2"></i>
@@ -68,7 +68,6 @@
 
 <script>
   export default {
-    props: ['setEditUsuario'],
     data() {
       return {
         loading: false,
@@ -147,7 +146,7 @@
 .overflow {
   /* overflow-x: hidden; */
   overflow-y: auto;
-  max-height: calc(85vh - 71px);
+  max-height: calc(85vh - 80px);
 }
 
 .text-sm {

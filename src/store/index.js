@@ -8,6 +8,7 @@ const state = {
     auth: {},
     userEdit: {},
     contaEdit: {},
+    contaTipo: '',
     formPagtos: {},
     contaParcela: null,
     parcelaEdit: {},
@@ -44,6 +45,10 @@ const mutations = {
     state.access.parcelaEdit = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
+  SET_CONTA_TIPO: (state, payload) => {
+    state.access.contaTipo = payload;
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
 }
 
 const actions = {
@@ -66,6 +71,20 @@ const actions = {
           resolve(context.commit('SET_AUTH', response.data));
           axios.defaults.headers.common['token'] = context.state.access.auth.token;
           // resolve(context.dispatch('updateAcessUser'));
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+
+  //Dash
+  getDashboard(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/dashboard/`)
+        .then((response) => {
           resolve(response.data);
         }).catch((error) => {
           console.log(error);

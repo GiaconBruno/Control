@@ -299,7 +299,7 @@
 .overflow {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(85vh - 70px);
+  height: calc(85vh - 80px);
 }
 
 .mb-3:focus,

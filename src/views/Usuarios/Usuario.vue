@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-0 mb-3">
+  <div id="overflow" class="row mx-0 mb-3">
     <div v-if="(usuario)" :class="($route.path=='/usuario') ? 'col-10 col-md-6 col-lg-4' : 'col-12 px-0'"
       class="card mx-auto border-secondary p-3 shadow-lg">
       <label class="m-0"> {{ title }} </label>
@@ -127,6 +127,11 @@
 </script>
 
 <style scoped>
+#overflow {
+  overflow-y: scroll;
+  max-height: calc(100vh - 185px);
+}
+
 label {
   margin: 1rem 0 0 0;
 }
@@ -167,5 +172,11 @@ hr {
 
 .btn {
   min-width: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  #overflow {
+    max-height: calc(100vh - 190px);
+  }
 }
 </style>

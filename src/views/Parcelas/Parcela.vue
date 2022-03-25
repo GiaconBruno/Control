@@ -1,5 +1,5 @@
 <template>
-  <div class="row m-0 justify-content-center">
+  <div id="overflow" class="row m-0 justify-content-center">
     <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-3">
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
@@ -290,6 +290,10 @@
 </script>
 
 <style scoped>
+#overflow {
+  overflow-y: scroll;
+  max-height: calc(100vh - 175px);
+}
 label {
   margin: 1rem 0 0 0;
 }
@@ -347,6 +351,12 @@ hr {
 @media screen and (max-width: 992px) {
   * {
     font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #overflow {
+    max-height: calc(100vh - 175px);
   }
 }
 </style>

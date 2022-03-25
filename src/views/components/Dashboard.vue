@@ -1,15 +1,19 @@
 <template>
   <section>
-    <h3>Dashdoard</h3>
-    <div v-if="info.length && !loading">
-      <div class="row my-lg-4 mx-0">
-        <div v-for="i in info" :key="i.title" class="col-lg-4 mx-auto">
+    <div class="row mx-0 justify-content-center">
+      <Header @R="$emit('R')" @CV="$emit('CV', $event)" @SEU="$emit('SEU',$event)" v-bind={loading} />
+    </div>
+    <h3 class="my-md-3">Dashdoard</h3>
+    <div v-if="!loading" id="overflow">
+      <div class="row mx-0">
+        <div v-for="(i, x) in info" :key="x" class="col-lg-4 mx-auto">
           <router-link :to="i.route">
             <div :class="i.color" class="small-box">
               <div class="inner px-4">
-                <h3><small> {{ i.qtd }} </small>- {{ i.title}} </h3>
-                <p class="text-left">Abertos: {{ i.open}} </p>
-                <p class="text-left">Pagos: {{ i.close}} </p>
+                <h3><small> {{ (x==0)?dashboard.qtdEntradas:dashboard.qtdSaidas }} </small>- {{ i.title}} </h3>
+                <p class="text-left">Abertos: {{ formatMoney((x==0)?dashboard.abertoEntradas:dashboard.abertoSaidas) }}
+                </p>
+                <p class="text-left">Pagos: {{ formatMoney((x==0)?dashboard.pagosEntradas:dashboard.pagosSaidas) }} </p>
               </div>
               <div class="icon">
                 <b-icon :icon="i.icon"></b-icon>
@@ -30,10 +34,25 @@
 </template>
 
 <script>
+  import Header from '../Home/Header.vue';
   export default {
+    components: {
+      Header
+    },
     data() {
       return {
-        info: [],
+        info: [{
+          route: '/entradas',
+          title: 'Entradas',
+          color: 'bg-success',
+          icon: 'patch-plus-fill'
+        }, {
+          route: '/saidas',
+          title: 'Saídas',
+          color: 'bg-danger',
+          icon: 'patch-minus-fill'
+        }],
+        dashboard: {},
         loading: true,
       }
     },
@@ -42,28 +61,15 @@
     },
     methods: {
       getDash() {
-        this.info = [];
+        this.dashboard = [];
         this.loading = true;
-        this.info = [{
-          route: '/entradas',
-          title: 'Entradas',
-          qtd: 'X',
-          open: 'R$ XX,xx',
-          close: 'R$ XX,xx',
-          color: 'bg-success',
-          icon: 'patch-plus-fill'
-        }, {
-          route: '/saidas',
-          title: 'Saídas',
-          qtd: 'X',
-          open: 'R$ XX,xx',
-          close: 'R$ XX,xx',
-          color: 'bg-danger',
-          icon: 'patch-minus-fill'
-        }]
-        setTimeout(() => {
-          this.loading = false;
-        }, 1000);
+        this.$store.dispatch('getDashboard')
+          .then(response => {
+            this.dashboard = response;
+            // this.toast('Dashboard Atualizado!', 'check')
+          })
+          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .finally(() => this.loading = false)
       }
     }
   }
@@ -71,7 +77,12 @@
 
 <style scoped>
 section {
-  height: calc(100vh - 185px);
+  height: calc(100vh - 160px);
+  overflow-y: auto;
+}
+
+#overflow {
+  height: calc(100vh - 330px);
   overflow-y: auto;
 }
 
@@ -132,5 +143,15 @@ a {
   text-align: center;
   text-decoration: none;
   z-index: 10;
+}
+
+@media screen and (max-width: 768px) {
+  section {
+    height: calc(100vh - 180px);
+  }
+
+  #overflow {
+    height: calc(100vh - 315px);
+  }
 }
 </style>
