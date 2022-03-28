@@ -63,7 +63,7 @@
         @click="$emit('R')" class="btn col col-md-auto px-0 py-1">
         <!-- <i id="atualizar" :class="{'fa-2x':dash}" class="fa fa-redo-alt text-green"></i> -->
         <!-- <b-icon id="atualizar" icon="arrow-clockwise" :font-scale="(dash)?'2.5':'1.3'" variant="dark" :animation="(loading)?'spin':''" /> -->
-        <b-iconstack id="atualizar" :font-scale="(dash)?'2.5':'1.3'" variant="dark" :animation="(loading)?'spin':''">
+        <b-iconstack id="atualizar" :font-scale="(dash)?'2.5':'1.3'" variant="dark">
           <b-icon stacked icon="dot" shift-h="-9" shift-v="0" />
           <b-icon stacked icon="dot" shift-h="-8" shift-v="-4" />
           <b-icon stacked icon="dot" shift-h="-5" shift-v="-7" />
@@ -79,13 +79,12 @@
         <b-tooltip v-if="!dash" target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
         <p v-if="(dash)" class="pt-md-1 m-0">Atualizar</p>
       </div>
-    </div>{{loading}}
+    </div>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['loading'],
     computed: {
       usuario() {
         return this.access.auth;

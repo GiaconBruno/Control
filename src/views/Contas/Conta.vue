@@ -38,7 +38,7 @@
                 <select v-model="usuario" @change="addUsuario(usuario)" :class="{'text-sm': (usuario==null)}"
                   name="usuarios" id="usuario" class="form-control py-0">
                   <option :value="null" class="form-control">Selecione..</option>
-                  <option v-for="user in (listaUsers)" :key="user.id" :value="user.id" class="form-control">
+                  <option v-for="user in (listaUsers)" :key="user.id" :value="user" class="form-control">
                     {{user.nome}} @{{user.usuario}}
                   </option>
                 </select>
@@ -92,33 +92,34 @@
     beforeMount() {
       this.loading = true
       this.$store.dispatch('getUserContas')
-        .then(response => {
-          this.usuarios = response
-        })
+        .then(response => this.usuarios = response)
         .catch(er => this.toast(er.data.mensagem, 'times'))
-        .finally(() => this.loading = false)
-      this.conta.tipo = this.access.contaTipo;
-
-      // this.fk_usuario_id.push(this.access.auth.id);
-      if (this.access.contaEdit && this.access.contaEdit.id) {
-        // console.log(this.access.contaEdit.Usuarios);
-        this.conta.descricao = this.access.contaEdit.descricao;
-        this.conta.tipo = this.access.contaEdit.tipo;
-        this.title = 'Editar Conta';
-        this.action = 'Alterar';
-        this.fk_usuario_id = this.access.contaEdit.Usuarios;
-        // this.fk_usuario_id = 
-        //   (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
-        //     .split(",")).map(c => parseInt(c));
-        // this.fk_usuario_id.push(this.access.contaEdit.ref_usuario.fk_usuario_id)
-      }
+        .finally(() => {
+          this.conta.tipo = this.access.contaTipo;
+          this.fk_usuario_id.push(this.usuarios.find(u => u.id == this.access.auth.id));
+          if (this.access.contaEdit && this.access.contaEdit.id) {
+            // console.log(this.access.contaEdit.Usuarios);
+            this.conta.descricao = this.access.contaEdit.descricao;
+            this.conta.tipo = this.access.contaEdit.tipo;
+            this.title = 'Editar Conta';
+            this.action = 'Alterar';
+            this.fk_usuario_id = this.access.contaEdit.Usuarios.sort((a, b) => {
+              if (a.id == this.access.contaEdit.owner) return -1
+              else return 0
+            });
+            // this.fk_usuario_id = 
+            //   (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
+            //     .split(",")).map(c => parseInt(c));
+            // this.fk_usuario_id.push(this.access.contaEdit.ref_usuario.fk_usuario_id)
+          }
+          this.loading = false
+        })
     },
     computed: {
       listaUsers() {
         let users = [];
-        this.usuarios.forEach(user => {
-          if ((this.fk_usuario_id).includes(user.id) == false)
-            users.push(user);
+        this.usuarios.map(user => {
+          if (!(this.fk_usuario_id.find(fk => fk.id == user.id))) users.push(user);
         });
         return users;
       }
@@ -149,8 +150,7 @@
       createConta() {
         if (!this.valid()) return
         this.loading = true;
-        let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
-        this.conta.fk_usuario_id = contas;
+        this.conta.fk_usuario_id = String(`[${this.fk_usuario_id.map(user => `'${user.id}'`)}]`);;
         this.conta.status = false;
 
         this.$store.dispatch('createConta', this.conta)
@@ -164,10 +164,8 @@
       updateConta() {
         if (!this.valid()) return
         this.loading = true;
-        let contas = String(`[${this.fk_usuario_id.map(user => `'${user}'`)}]`);
-        this.conta.fk_usuario_id = contas;
+        this.conta.fk_usuario_id = String(`[${this.fk_usuario_id.map(user => `'${user.id}'`)}]`);;
         this.conta.status = false;
-
         this.$store.dispatch('updateConta', this.conta)
           .then(response => {
             this.toast(response.mensagem, 'check')
@@ -182,7 +180,7 @@
 
 <style scoped>
 #overflow {
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: calc(100vh - 175px);
 }
 

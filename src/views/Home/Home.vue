@@ -13,7 +13,7 @@
               </h2>
             </div>
             <Header v-if="$route.path != '/dashboard'" @CV="changeVisible($event)" @SEU="setEditUsuario($event)"
-              @R="refresh()" :loading="load" />
+              @R="refresh()" />
           </div>
         </div>
         <div class="col-auto px-0">
@@ -78,9 +78,6 @@
       usuario() {
         return this.access.auth;
       },
-      load() {
-        return this.$refs.All.loading;
-      }
     },
     methods: {
       changeVisible(payload) {

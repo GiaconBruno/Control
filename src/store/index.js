@@ -232,7 +232,7 @@ const actions = {
   },
   getContasId(context, payload) {
     let promise = new Promise((resolve, reject) => {
-      axios.get(`/api/contas/${payload}`)
+      axios.get(`/api/conta/${payload}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
