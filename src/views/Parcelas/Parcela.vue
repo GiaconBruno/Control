@@ -292,7 +292,7 @@
 <style scoped>
 #overflow {
   overflow-y: scroll;
-  max-height: calc(100vh - 175px);
+  max-height: calc(85vh - 80px);
 }
 label {
   margin: 1rem 0 0 0;
@@ -356,7 +356,7 @@ hr {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(100vh - 175px);
+    max-height: calc(85vh - 95px);
   }
 }
 </style>

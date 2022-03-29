@@ -1,6 +1,6 @@
 <template>
-  <div :class="{'col-md-10':dash}" class="col-12 col-md-6 pb-2 px-0">
-    <div :class="{'py-md-2':dash}" class="row justify-content-around rounded border border-dark p-0 m-0">
+  <div :class="{'col-md-10':dash}" class="col-12 col-md-6 px-0 pb-2 pb-lg-0">
+    <div class="row justify-content-around rounded border border-dark p-0 m-0">
       <div @click="$emit('CV','dashboard');" :class="(dash)?'disabled':''" class="btn col col-md-auto px-0 py-1">
         <!-- <i  id="home" :class="{'fa-2x':dash}" class="fa fa-home text-secundary"></i> -->
         <b-icon id="home" icon="house-door-fill" :font-scale="(dash)?'2.5':'1.3'" variant="secundary" />
@@ -57,7 +57,7 @@
         <!-- <i id="criarConta" :class="{'fa-2x':dash}" class="fa fa-folder-plus text-primary"></i> -->
         <b-icon id="criarConta" icon="file-earmark-plus-fill" :font-scale="(dash)?'2.5':'1.3'" variant="primary" />
         <b-tooltip v-if="!dash" target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
-        <p v-if="(dash)" class="pt-md-1 m-0">Criar Conta</p>
+        <p v-if="(dash)" class="pt-md-1 m-0">Criar</p>
       </div>
       <div v-if="(['/dashboard','/entradas','/saidas','/usuarios','/todas-contas'].includes($route.path))"
         @click="$emit('R')" class="btn col col-md-auto px-0 py-1">

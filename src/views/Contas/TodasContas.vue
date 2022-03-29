@@ -377,7 +377,7 @@ label {
   }
 
   .overflow {
-    max-height: calc(85vh - 105px);
+    max-height: calc(85vh - 95px);
   }
 
   .btn:not(.btn-sm) {

@@ -39,7 +39,7 @@
                   name="usuarios" id="usuario" class="form-control py-0">
                   <option :value="null" class="form-control">Selecione..</option>
                   <option v-for="user in (listaUsers)" :key="user.id" :value="user" class="form-control">
-                    {{user.nome}} @{{user.usuario}}
+                    {{ user.nome.split(' ').slice(0,2).join(' ') }} @{{ user.usuario }}
                   </option>
                 </select>
               </div>
@@ -55,7 +55,7 @@
               class="col-auto p-2 pt-3 m-2 alert-success text-sm rounded">
               <!-- {{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].nome }}
               @{{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].usuario }} -->
-              {{ user.nome }} @{{ user.usuario }}
+              {{ user.nome.split(' ').slice(0,2).join(' ') }} @{{ user.usuario }}
               <i v-if="(ci>0)" @click="removeUsuario(ci)" class="fa fa-times text-danger"></i>
             </div>
           </div>
@@ -181,7 +181,7 @@
 <style scoped>
 #overflow {
   overflow-y: auto;
-  max-height: calc(100vh - 175px);
+  max-height: calc(85vh - 80px);
 }
 
 label {
@@ -234,7 +234,7 @@ hr {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(100vh - 175px);
+    max-height: calc(85vh - 95px);
   }
 }
 </style>

@@ -11,7 +11,7 @@
               <div class="col col-lg px-0">
                 <div class="row mx-0 justify-content-between align-items-center">
                   <span class="text-sm text-lg-sm">
-                    <strong>{{ [usuario.nome.split(' ')[0],usuario.nome.split(' ')[1]].join(' ')}}</strong> -
+                    <strong>{{ usuario.nome.split(' ').slice(0,2).join(' ') }}</strong> -
                     @{{ usuario.usuario }}
                   </span>
                   <span class="text-xs text-sm"> {{ usuario.acesso || 'Nenhum' }}</span>

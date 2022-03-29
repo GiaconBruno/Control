@@ -3,7 +3,7 @@
     <div v-if="usuario" class="container px-2 position-relative">
       <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
       <div class="row mx-0 mt-2 my-md-3 justify-content-around">
-        <div class="col-10 col-lg-9 mx-auto1 px-0">
+        <div class="col col-lg-10 px-0">
           <div class="row mx-0 align-items-center justify-content-center">
             <div class="col-12 col-md-6 px-0">
               <h2 class="m-0">
@@ -16,12 +16,10 @@
               @R="refresh()" />
           </div>
         </div>
-        <div class="col-auto px-0">
-          <div class="row mx-0 align-items-top justify-content-end h-100">
+        <div class="col-1 col-lg-auto px-0 my-auto mx-2 mx-lg-auto">
             <span @click="sigOut()" class="btn px-0">
               <i class="fas fa-sign-in-alt"></i> Sair
             </span>
-          </div>
         </div>
       </div>
       <!-- <hr class="my-2" /> -->
