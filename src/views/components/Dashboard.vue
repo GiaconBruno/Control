@@ -1,38 +1,57 @@
 <template>
   <section>
     <div class="row mx-0 justify-content-center">
-      <Header @R="$emit('R')" @CV="$emit('CV', $event)" @SEU="$emit('SEU',$event)" v-bind={loading} />
+      <Header @R="$emit('R')" @CV="$emit('CV', $event)" @SEU="$emit('SEU',$event)" />
     </div>
     <h3 class="my-md-2">Dashdoard</h3>
-    <div v-if="!loading" id="overflow">
-      <div class="row mx-0">
-        <div v-for="(i, x) in info" :key="x" class="col-lg-5 mx-auto">
-          <router-link :to="i.route">
-            <div :class="i.color" class="small-box">
-              <div class="inner px-4">
-                <h3><small> {{ (x==0)?(dashboard.qtdEntradas||0):(dashboard.qtdSaidas||0) }} </small>- {{ i.title}}
-                </h3>
-                <p class="text-left">Abertos:
-                  {{ formatMoney((x==0)?(dashboard.abertoEntradas||0):(dashboard.abertoSaidas||0)) }}
-                </p>
-                <p class="text-left">Pagos:
-                  {{ formatMoney((x==0)?(dashboard.pagosEntradas||0):(dashboard.pagosSaidas||0)) }} </p>
-              </div>
-              <div class="icon">
-                <b-icon :icon="i.icon"></b-icon>
-              </div>
-              <div class="small-box-footer py-2"></div>
-            </div>
-          </router-link>
+    <div id="overflow">
+      <div class="row mb-2 mx-0 align-items-center">
+        <div class="col-12 col-lg-3 px-1 px-lg-3">Período:</div>
+        <div class="col-5 col-lg-3 px-1 px-lg-3">
+          <input type="date" v-model="periodo[0]" class="form-control smallText" />
         </div>
+        <div class="col-5 col-lg-3 px-1 px-lg-3">
+          <input type="date" v-model="periodo[1]" class="form-control smallText" />
+        </div>
+        <b-button @click="getDash()" variant="outline-success" size="sm" class="mx-2">
+          <b-icon icon="arrow-repeat" aria-hidden="true"></b-icon>
+        </b-button>
       </div>
-      <div class="row mx-0 my-3">
-        <div class="col-lg-11 mx-auto">
-          <div class="card py-5">Graphic</div>
-        </div>
+      <div class="row mx-0 justify-content-center align-items-center">
+        <template v-if="!loadingDash">
+          <div v-for="(i, x) in info" :key="x" class="col-lg-5 mx-auto">
+            <router-link :to="i.route">
+              <div :class="i.color" class="small-box">
+                <div class="inner px-4">
+                  <h3><small> {{ (x==0)?(dashboard.qtdEntradas||0):(dashboard.qtdSaidas||0) }} </small>- {{ i.title}}
+                  </h3>
+                  <p class="text-left">Abertos:
+                    {{ formatMoney((x==0)?(dashboard.abertoEntradas||0):(dashboard.abertoSaidas||0)) }}
+                  </p>
+                  <p class="text-left">Pagos:
+                    {{ formatMoney((x==0)?(dashboard.pagosEntradas||0):(dashboard.pagosSaidas||0)) }} </p>
+                </div>
+                <div class="icon">
+                  <b-icon :icon="i.icon"></b-icon>
+                </div>
+                <div class="small-box-footer py-2"></div>
+              </div>
+            </router-link>
+          </div>
+        </template>
+        <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
+      </div>
+      <div class="row mx-0 my-3 justify-content-center">
+        <template v-if="!loadingGraphic">
+          <div class="col-12 col-lg-11 mx-auto">
+            <div class="card px-1 px-lg-3">
+              <apexchart height="300px" :options="chartOptions" :series="series" />
+            </div>
+          </div>
+        </template>
+        <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
       </div>
     </div>
-    <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
   </section>
 </template>
 
@@ -44,6 +63,8 @@
     },
     data() {
       return {
+        loadingDash: true,
+        loadingGraphic: true,
         info: [{
           route: '/entradas',
           title: 'Entradas',
@@ -55,24 +76,159 @@
           color: 'bg-danger',
           icon: 'patch-minus-fill'
         }],
+        periodo: [null, null],
         dashboard: {},
-        loading: true,
+        series: [],
+        chartOptions: {
+          title: {
+            text: 'Contas nos ultimos 12 meses',
+            align: 'center',
+            style: {
+              fontFamily: "Poppins"
+            }
+          },
+          chart: {
+            type: 'area',
+            toolbar: {
+              show: false,
+              tools: {
+                download: false,
+                selection: false,
+                zoom: false,
+                zoomin: false,
+                zoomout: false,
+                pan: false,
+                reset: false,
+              },
+            },
+          },
+          xaxis: {
+            categories: [0],
+            labels: {
+              rotate: -45,
+              rotateAlways: true,
+            }
+          },
+          yaxis: {
+            labels: {
+              offsetX: -18,
+              style: {
+                fontSize: '10px',
+              },
+              formatter: (value) => {
+                return parseFloat(value).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                });
+              }
+            },
+          },
+          colors: ['#237a57', '#D9534F'],
+          dataLabels: {
+            enabled: false,
+            offsetY: -5,
+            textAnchor: 'middle',
+            style: {
+              colors: ['#fff'],
+              fontSize: '9px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 'normal',
+            },
+            background: {
+              enabled: true,
+              foreColor: '#333',
+              padding: 4,
+              borderRadius: 2,
+              borderWidth: 1,
+              borderColor: '#333',
+              opacity: 0.8,
+              dropShadow: {
+                enabled: false,
+              }
+            },
+            formatter: (value) => {
+              return parseFloat(value).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+              });
+            }
+          },
+          stroke: {
+            curve: 'smooth',
+            width: 2.5
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              type: "vertical",
+              shade: 'white',
+              shadeIntensity: 0.5,
+              inverseColors: false,
+              opacityFrom: 0.7,
+              opacityTo: 0.9,
+              stops: [0, 50, 100]
+            }
+          },
+          legend: {
+            position: 'bottom',
+            horizontalAlign: 'center'
+          },
+          grid: {
+            clipMarkers: false,
+            yaxis: {
+              lines: {
+                show: false
+              }
+            }
+          },
+          tooltip: {
+            enabled: true,
+            followCursor: true,
+            y: {
+              formatter: function (value) {
+                return (value) ? value.toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                }) : (0).toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                })
+              }
+            }
+          }
+        },
       }
     },
     beforeMount() {
       this.getDash();
+      this.getGraphic();
     },
     methods: {
       getDash() {
+        this.loadingDash = true;
         this.dashboard = [];
-        this.loading = true;
-        this.$store.dispatch('getDashboard')
+        this.$store.dispatch('getDashboard', this.periodo)
+          .then(response => this.dashboard = response.dash)
+          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .finally(() => this.loadingDash = false)
+      },
+      getGraphic() {
+        this.loadingGraphic = true;
+        this.series = [];
+        this.chartOptions.xaxis.categories = [];
+        this.$store.dispatch('getGraphic')
           .then(response => {
-            this.dashboard = response.dash;
-            // this.toast('Dashboard Atualizado!', 'check')
+            this.chartOptions.xaxis.categories = response.graphic.categories;
+            this.series.push({
+              name: 'Entradas',
+              data: response.graphic.entradas
+            }, {
+              name: 'Saídas',
+              data: response.graphic.saidas
+            });
           })
           .catch(er => this.toast(er.data.mensagem, 'times'))
-          .finally(() => this.loading = false)
+          .finally(() => this.loadingGraphic = false)
       }
     }
   }
@@ -86,6 +242,10 @@
 
 a {
   text-decoration: none;
+}
+
+.smallText {
+  font-size: small;
 }
 
 .small-box {

@@ -180,11 +180,11 @@
           case '/saidas':
             return {
               title: 'Contas de Saídas', dispatch: 'getContasSaidas', tipo: 'S'
-            };;
+            };
           default:
             return {
               title: 'Todas as Contas', dispatch: 'getAllContas', tipo: 'S'
-            };;
+            };
         }
       }
     },

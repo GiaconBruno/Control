@@ -82,8 +82,23 @@ const actions = {
 
   //Dash
   getDashboard(context, payload) {
+    let info = 'inicio&fim'
+    if (payload[0]) info = info.replace('inicio', `inicio=${payload[0]}`)
+    if (payload[1]) info = info.replace('fim', `fim=${payload[1]}`)
     let promise = new Promise((resolve, reject) => {
-      axios.get(`/api/dashboard/`)
+      axios.get(`/api/dashboard?${info}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getGraphic(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/graphic`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {

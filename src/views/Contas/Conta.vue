@@ -103,7 +103,7 @@
             this.conta.tipo = this.access.contaEdit.tipo;
             this.title = 'Editar Conta';
             this.action = 'Alterar';
-            this.fk_usuario_id = this.access.contaEdit.Usuarios.sort((a, b) => {
+            this.fk_usuario_id = this.access.contaEdit.Usuarios.sort(a => {
               if (a.id == this.access.contaEdit.owner) return -1
               else return 0
             });
@@ -150,7 +150,7 @@
       createConta() {
         if (!this.valid()) return
         this.loading = true;
-        this.conta.fk_usuario_id = String(`[${this.fk_usuario_id.map(user => `'${user.id}'`)}]`);;
+        this.conta.fk_usuario_id = String(`[${this.fk_usuario_id.map(user => `'${user.id}'`)}]`);
         this.conta.status = false;
 
         this.$store.dispatch('createConta', this.conta)
@@ -164,7 +164,7 @@
       updateConta() {
         if (!this.valid()) return
         this.loading = true;
-        this.conta.fk_usuario_id = String(`[${this.fk_usuario_id.map(user => `'${user.id}'`)}]`);;
+        this.conta.fk_usuario_id = String(`[${this.fk_usuario_id.map(user => `'${user.id}'`)}]`);
         this.conta.status = false;
         this.$store.dispatch('updateConta', this.conta)
           .then(response => {

@@ -110,6 +110,7 @@
         switch (this.$route.path) {
           case '/dashboard':
             this.$refs.All.getDash();
+            this.$refs.All.getGraphic();
             break;
           case '/entradas':
           case '/saidas':
