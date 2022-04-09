@@ -12,14 +12,13 @@
                 <span v-if="(usuario.permissao)" class="largeText">(Master) </span>
               </h2>
             </div>
-            <Header v-if="$route.path != '/dashboard'" @CV="changeVisible($event)" @SEU="setEditUsuario($event)"
-              @R="refresh()" />
+            <Header v-if="!extra" @CV="changeVisible($event)" @SEU="setEditUsuario($event)" @R="refresh()" />
           </div>
         </div>
         <div class="col-1 col-lg-auto px-0 my-auto mx-2 mx-lg-auto">
-            <span @click="sigOut()" class="btn px-0">
-              <i class="fas fa-sign-in-alt"></i> Sair
-            </span>
+          <span @click="sigOut()" class="btn px-0">
+            <i class="fas fa-sign-in-alt"></i> Sair
+          </span>
         </div>
       </div>
       <!-- <hr class="my-2" /> -->
@@ -76,6 +75,9 @@
       usuario() {
         return this.access.auth;
       },
+      extra() {
+        return ['/dashboard', '/settings', '/logs'].includes(this.$route.path)
+      }
     },
     methods: {
       changeVisible(payload) {

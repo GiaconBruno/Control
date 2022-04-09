@@ -355,6 +355,46 @@ const actions = {
     })
     return promise
   },
+
+  //SETTINGS
+  statusContas(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/fix-status-contas`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  vincUsuariosConta(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/contas-fix-users`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+
+  //Logs
+  getLogs(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/logs`, payload)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
 }
 
 export default {

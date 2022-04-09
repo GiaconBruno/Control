@@ -46,6 +46,15 @@ const routes = [{
   }, {
     path: '/usuario',
     component: () => import('./views/Usuarios/Usuario.vue'),
+  }, {
+    path: '/settings',
+    component: () => import('./views/settings/Parametros.vue'),
+  }, {
+    path: '/logs',
+    component: () => import('./views/settings/Logs.vue'),
+  }, {
+    path: '/mensagens',
+    component: () => import('./views/settings/Mensagens.vue'),
   },]
 },
 ];
