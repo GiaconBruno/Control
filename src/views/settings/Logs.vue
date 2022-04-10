@@ -32,6 +32,7 @@
       return {
         loading: false,
         periodo: new Date(Date.now()).toISOString().slice(0, 10),
+        ambiente: '',
         status: [{
           title: 200,
           color: 'bg-success'
@@ -57,10 +58,9 @@
       getLogs(status) {
         this.loading = true;
         this.info = [];
-        this.$store.dispatch('getLogs', {
-            periodo: this.periodo,
-            status: status
-          }).then(response => this.info = response)
+        const payload = `status=${status}&periodo=${this.periodo}&ambiente=${this.ambiente}`;
+        this.$store.dispatch('getLogs', payload)
+          .then(response => this.info = response)
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
       },

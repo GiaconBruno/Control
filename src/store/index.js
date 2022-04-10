@@ -385,7 +385,7 @@ const actions = {
   //Logs
   getLogs(context, payload) {
     let promise = new Promise((resolve, reject) => {
-      axios.get(`/api/logs`, payload)
+      axios.get(`/api/logs/?${payload}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
@@ -395,6 +395,18 @@ const actions = {
     })
     return promise
   },
+  deleteLogs(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.delete(`/api/logs/${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  }
 }
 
 export default {
