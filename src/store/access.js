@@ -10,15 +10,19 @@ const access = {
     formatDate(data) {
       return (new Date(data).toLocaleString('pt-BR'))
     },
+    dateToSend(data) {
+      return (new Date(data).toLocaleString('pt-BR').split(' ').join('/') + 'T')
+        .split('/').reverse().join('-').split('T-').reverse().join(' ')
+    },
+    showDate(data) {
+      return (new Date(data).toISOString().split('T').join('-') + 'T')
+        .split('-').reverse().join('/').split('T/').reverse().join(' ').slice(0, -5)
+    },
     formatMoney(payload) {
       return parseFloat(payload).toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
       });
-    },
-    dateToSend(data) {
-      return (new Date(data).toLocaleString('pt-BR').split(' ').join('/') + 'T')
-        .split('/').reverse().join('-').split('T-').reverse().join(' ')
     },
     toast(title, icon, duration) {
       this.$toasted.show(title || 'Erro interno', {

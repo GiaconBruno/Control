@@ -6,6 +6,8 @@ const { methods: { dateToSend } } = access
 const state = {
   access: {
     auth: {},
+    dash: {},
+    graphic: {},
     userEdit: {},
     contaEdit: {},
     contaTipo: '',
@@ -27,6 +29,14 @@ const mutations = {
   },
   SET_AUTH: (state, payload) => {
     state.access.auth = payload;
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
+  SET_DASH: (state, payload) => {
+    state.access.dash = { dash: payload, validate: Date.now() + (1000 * 60 * 30) };
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
+  SET_GRAPHIC: (state, payload) => {
+    state.access.graphic = { graphic: payload, validate: Date.now() + (1000 * 60 * 30) };
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
   SET_EDIT_USER: (state, payload) => {
@@ -68,7 +78,7 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/autenticar`, secret)
         .then((response) => {
-          resolve(context.commit('SET_AUTH', response.data));
+          context.commit('SET_AUTH', response.data);
           axios.defaults.headers.common['token'] = context.state.access.auth.token;
           // resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
@@ -82,12 +92,15 @@ const actions = {
 
   //Dash
   getDashboard(context, payload) {
+    if (context.state.access.dash && Date.now() < context.state.access.dash.validate && !payload.force)
+      return context.state.access.dash.dash;
     let info = 'inicio&fim'
-    if (payload[0]) info = info.replace('inicio', `inicio=${payload[0]}`)
-    if (payload[1]) info = info.replace('fim', `fim=${payload[1]}`)
+    if (payload.periodo[0]) info = info.replace('inicio', `inicio=${payload.periodo[0]}`)
+    if (payload.periodo[1]) info = info.replace('fim', `fim=${payload.periodo[1]}`)
     let promise = new Promise((resolve, reject) => {
       axios.get(`/api/dashboard?${info}`)
         .then((response) => {
+          context.commit('SET_DASH', response.data);
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
@@ -97,9 +110,12 @@ const actions = {
     return promise
   },
   getGraphic(context, payload) {
+    if (context.state.access.graphic && Date.now() < context.state.access.graphic.validate && !payload)
+      return context.state.access.graphic.graphic;
     let promise = new Promise((resolve, reject) => {
       axios.get(`/api/graphic`)
         .then((response) => {
+          context.commit('SET_GRAPHIC', response.data);
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
@@ -179,8 +195,7 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/api/atualizar-usuario/${payload.id}`, payload)
         .then((response) => {
-          if (context.state.access.auth.id == payload.id)
-            resolve(context.dispatch('sigIn', payload))
+          if (context.state.access.auth.id == payload.id) context.dispatch('sigIn', payload)
           resolve(response.data);
         }).catch((error) => {
           console.log(error);

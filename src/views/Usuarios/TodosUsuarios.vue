@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow">
+  <div id="overflow">
     <h5 class="smallText my-0 text-center">({{ usuarios.length }}) Usuários: </h5>
     <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="usuarios.length" class="row m-0">
@@ -143,7 +143,7 @@
 </script>
 
 <style scoped>
-.overflow {
+#overflow {
   /* overflow-x: hidden; */
   overflow-y: auto;
   max-height: calc(85vh - 80px);
@@ -168,7 +168,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .overflow {
+  #overflow {
     max-height: calc(85vh - 103px);
   }
 }

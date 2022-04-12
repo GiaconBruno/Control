@@ -111,8 +111,8 @@
       refresh() {
         switch (this.$route.path) {
           case '/dashboard':
-            this.$refs.All.getDash();
-            this.$refs.All.getGraphic();
+            this.$refs.All.getDash(true);
+            this.$refs.All.getGraphic(true);
             break;
           case '/entradas':
           case '/saidas':

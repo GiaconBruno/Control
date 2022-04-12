@@ -37,44 +37,76 @@
   box-shadow: none !important;
 }
 
-.overflow::-webkit-scrollbar {
+#overflow::-webkit-scrollbar,
+.code::-webkit-scrollbar {
   width: 5px;
 }
 
-.overflow::-moz-scrollbar {
+#overflow::-moz-scrollbar,
+.code::-moz-scrollbar {
   width: 5px;
 }
 
-.overflow::-ms-scrollbar {
+#overflow::-ms-scrollbar,
+.code::-ms-scrollbar {
   width: 5px;
 }
 
-.overflow::-o-scrollbar {
+#overflow::-o-scrollbar,
+.code::-o-scrollbar {
   width: 5px;
 }
 
-.overflow::-webkit-scrollbar-thumb {
+#overflow::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.6);
   -webkit-border-radius: 10px;
   -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
-.overflow::-moz-scrollbar-thumb {
+#overflow::-moz-scrollbar-thumb {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.6);
   -moz-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
   -ms-border-radius: 10px;
 }
 
-.overflow::-ms-scrollbar-thumb {
+#overflow::-ms-scrollbar-thumb {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.6);
   -moz-border-radius: 10px;
   -ms-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
-.overflow::-o-scrollbar-thumb {
+#overflow::-o-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -o-border-radius: 10px;
+  -o-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.code::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.code::-moz-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+  -ms-border-radius: 10px;
+}
+
+.code::-ms-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  -moz-border-radius: 10px;
+  -ms-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.code::-o-scrollbar-thumb {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.6);
   -o-border-radius: 10px;

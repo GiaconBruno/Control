@@ -13,7 +13,7 @@
         <div class="col-5 col-lg-3 px-1 px-lg-3">
           <input type="date" v-model="periodo[1]" class="form-control smallText" />
         </div>
-        <b-button @click="getDash()" variant="outline-success" size="sm" class="mx-2">
+        <b-button @click="getDash(true)" variant="outline-success" size="sm" class="mx-2">
           <b-icon icon="arrow-repeat" aria-hidden="true"></b-icon>
         </b-button>
       </div>
@@ -38,6 +38,8 @@
               </div>
             </router-link>
           </div>
+          <div class="col-11 xSmallText text-left">*Atualizado: {{ formatDate(access.dash.validate-(1000*60*30))}}
+          </div>
         </template>
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
       </div>
@@ -47,6 +49,8 @@
             <div class="card px-1 px-lg-3">
               <apexchart height="300px" :options="chartOptions" :series="series" />
             </div>
+          </div>
+          <div class="col-11 xSmallText text-left">*Atualizado: {{ formatDate(access.graphic.validate-(1000*60*30))}}
           </div>
         </template>
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
@@ -63,8 +67,8 @@
     },
     data() {
       return {
-        loadingDash: true,
-        loadingGraphic: true,
+        loadingDash: false,
+        loadingGraphic: false,
         info: [{
           route: '/entradas',
           title: 'Entradas',
@@ -81,7 +85,7 @@
         series: [],
         chartOptions: {
           title: {
-            text: 'Contas nos ultimos 12 meses',
+            text: 'Contas Pagas nos ultimos 12 meses',
             align: 'center',
             style: {
               fontFamily: "Poppins"
@@ -204,19 +208,27 @@
       this.getGraphic();
     },
     methods: {
-      getDash() {
+      getDash(force) {
         this.loadingDash = true;
         this.dashboard = [];
-        this.$store.dispatch('getDashboard', this.periodo)
-          .then(response => this.dashboard = response.dash)
+        const payload = {
+          periodo: this.periodo,
+          force
+        }
+        this.$store.dispatch('getDashboard', payload)
+          .then(response => {
+            this.dashboard = response.dash
+            if (!this.periodo[0]) this.periodo[0] = response.inicio
+            if (!this.periodo[1]) this.periodo[1] = response.fim
+          })
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loadingDash = false)
       },
-      getGraphic() {
+      getGraphic(force) {
         this.loadingGraphic = true;
         this.series = [];
         this.chartOptions.xaxis.categories = [];
-        this.$store.dispatch('getGraphic')
+        this.$store.dispatch('getGraphic', force)
           .then(response => {
             this.chartOptions.xaxis.categories = response.graphic.categories;
             this.series.push({
@@ -248,11 +260,14 @@ a {
   font-size: small;
 }
 
+.xSmallText {
+  font-size: x-small;
+}
+
 .small-box {
   border-radius: 0.25rem;
   box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
   display: block;
-  margin-bottom: 20px;
   position: relative;
 }
 

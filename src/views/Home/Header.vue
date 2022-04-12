@@ -62,7 +62,7 @@
           <p v-if="(extra)" class="m-0">Atualizar</p>
         </div>
         <div v-if="(usuario.permissao)" @click="$emit('CV','settings')" class="btn col col-md-auto px-0 py-1">
-          <b-icon id="settings" icon="gear-fill" :font-scale="(extra)?'2.5':'1.3'" style="color: #7952b3;" />
+          <b-icon id="settings" icon="tools" :font-scale="(extra)?'2.5':'1.3'" style="color: #7952b3;" />
           <b-tooltip v-if="!extra" target="settings" triggers="hover" noninteractive> Settings </b-tooltip>
           <p v-if="(extra)" class="m-0">Settings</p>
         </div>

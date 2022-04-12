@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow">
+  <div id="overflow">
     <div class="row m-0">
       <div class="col-12 px-0">
         <h5 class="smallText"> ({{ contas.length }}) {{ rota.title }}: </h5>
@@ -304,7 +304,7 @@
 </script>
 
 <style scoped>
-.overflow {
+#overflow {
   overflow-y: auto;
   overflow-x: hidden;
   height: calc(85vh - 80px);
@@ -376,7 +376,7 @@ label {
     font-size: 70%;
   }
 
-  .overflow {
+  #overflow {
     max-height: calc(85vh - 95px);
   }
 
@@ -390,7 +390,7 @@ label {
 }
 
 @media screen and (max-width: 335px) {
-  .overflow {
+  #overflow {
     max-height: 60vh;
   }
 }
