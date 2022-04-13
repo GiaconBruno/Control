@@ -37,7 +37,7 @@
           <i class="fas fa-sign-in-alt mr-2 mr-sm-5"></i>
           <span class="text-white mr-2 mr-sm-5"> Entrar</span>
         </button>
-        <button @click="$router.push('/cadastro')" :disabled="loading" class="form-control btn btn-primary mt-3">
+        <button @click="create()" :disabled="loading" class="form-control btn btn-primary mt-3">
           <i class="fas fa-user-circle mr-2 mr-sm-5"></i>
           <span class="text-white mr-2 mr-sm-5"> Criar</span>
         </button>
@@ -111,6 +111,10 @@
             localStorage.clear();
           })
           .finally(() => this.loading = false)
+      },
+      create() {
+        localStorage.clear();
+        this.$router.push('/cadastro')
       },
     },
   };

@@ -112,7 +112,7 @@
         switch (this.$route.path) {
           case '/dashboard':
             this.$refs.All.getDash(true);
-            this.$refs.All.getGraphic(true);
+            // this.$refs.All.getGraphic(true);
             break;
           case '/entradas':
           case '/saidas':
@@ -126,8 +126,8 @@
       },
       sigOut() {
         this.$store.commit('LOGOUT');
-        localStorage.clear();
         this.$router.push("/");
+        localStorage.clear();
       },
     },
   };

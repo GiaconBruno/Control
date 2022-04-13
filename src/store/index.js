@@ -104,6 +104,7 @@ const actions = {
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
+          context.commit('LOGOUT');
           reject(error.response);
         })
     })
@@ -119,6 +120,7 @@ const actions = {
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
+          context.commit('LOGOUT');
           reject(error.response);
         })
     })
@@ -167,7 +169,7 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/api/usuario`, payload)
         .then((response) => {
-          resolve(response.data);
+          resolve(context.dispatch('sigIn', payload))
         }).catch((error) => {
           console.log(error);
           reject(error.response);
@@ -224,8 +226,8 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
+          // reject(localStorage.clear());
           console.log(error);
           reject(error.response);
         })
@@ -238,8 +240,8 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
+          // reject(localStorage.clear());
           console.log(error);
           reject(error.response);
         })

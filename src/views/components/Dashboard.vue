@@ -18,7 +18,7 @@
         </b-button>
       </div>
       <div class="row mx-0 justify-content-center align-items-center">
-        <template v-if="!loadingDash">
+        <template v-if="!loadingDash && access.dash">
           <div v-for="(i, x) in info" :key="x" class="col-lg-5 mx-auto">
             <router-link :to="i.route">
               <div :class="i.color" class="small-box">
@@ -44,7 +44,7 @@
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
       </div>
       <div class="row mx-0 my-3 justify-content-center">
-        <template v-if="!loadingGraphic">
+        <template v-if="!loadingGraphic && access.graphic">
           <div class="col-12 col-lg-11 mx-auto">
             <div class="card px-1 px-lg-3">
               <apexchart height="300px" :options="chartOptions" :series="series" />
@@ -85,7 +85,7 @@
         series: [],
         chartOptions: {
           title: {
-            text: 'Contas Pagas nos ultimos 12 meses',
+            text: 'Contas Pagas nos últimos 12 meses',
             align: 'center',
             style: {
               fontFamily: "Poppins"
@@ -205,12 +205,14 @@
     },
     beforeMount() {
       this.getDash();
-      this.getGraphic();
     },
     methods: {
       getDash(force) {
         this.loadingDash = true;
         this.dashboard = [];
+        if (!this.periodo[0]) this.periodo[0] = this.dateToSend(new Date((new Date(Date.now())).getFullYear(), (
+          new Date(Date.now()).getMonth()), 1)).slice(0, 10);
+        if (!this.periodo[1]) this.periodo[1] = this.dateToSend(Date.now()).slice(0, 10);
         const payload = {
           periodo: this.periodo,
           force
@@ -218,16 +220,21 @@
         this.$store.dispatch('getDashboard', payload)
           .then(response => {
             this.dashboard = response.dash
-            if (!this.periodo[0]) this.periodo[0] = response.inicio
-            if (!this.periodo[1]) this.periodo[1] = response.fim
+            this.getGraphic();
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
-          .finally(() => this.loadingDash = false)
+          .catch(er => {
+            this.toast(er.data.mensagem, 'times')
+            this.$router.push('/');
+            localStorage.clear();
+          })
+          .finally(() => {
+            this.loadingDash = false
+          })
       },
       getGraphic(force) {
-        this.loadingGraphic = true;
         this.series = [];
         this.chartOptions.xaxis.categories = [];
+        this.loadingGraphic = true;
         this.$store.dispatch('getGraphic', force)
           .then(response => {
             this.chartOptions.xaxis.categories = response.graphic.categories;
@@ -239,7 +246,11 @@
               data: response.graphic.saidas
             });
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => {
+            this.toast(er.data.mensagem, 'times')
+            this.$router.push('/');
+            localStorage.clear();
+          })
           .finally(() => this.loadingGraphic = false)
       }
     }
