@@ -14,6 +14,7 @@ const state = {
     formPagtos: {},
     contaParcela: null,
     parcelaEdit: {},
+    notifyCount: 0,
   }
 }
 
@@ -57,6 +58,10 @@ const mutations = {
   },
   SET_CONTA_TIPO: (state, payload) => {
     state.access.contaTipo = payload;
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
+  SET_NOTIFY_COUNT: (state, payload) => {
+    state.access.notifyCount = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
 }
@@ -363,6 +368,81 @@ const actions = {
   deleteParcela(context, payload) {
     let promise = new Promise((resolve, reject) => {
       axios.delete(`/api/deletar-parcela/${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+
+  //MENSAGENS
+  getNotifyCount(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/noti-count`)
+        .then((response) => {
+          context.commit('SET_NOTIFY_COUNT', response.data);
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getNotifyReceived(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/noti-recebidas`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getNotifySend(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/noti-enviadas`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  createNotify(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.post(`/api/notificacao`, payload)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  updateStatusNotify(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.put(`/api/notificacao/${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  deleteNotify(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.delete(`/api/notificacao/${payload}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {

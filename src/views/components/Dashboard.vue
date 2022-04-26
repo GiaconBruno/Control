@@ -227,9 +227,7 @@
             this.$router.push('/');
             localStorage.clear();
           })
-          .finally(() => {
-            this.loadingDash = false
-          })
+          .finally(() => this.loadingDash = false)
       },
       getGraphic(force) {
         this.series = [];

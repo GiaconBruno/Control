@@ -54,7 +54,7 @@ const routes = [{
     component: () => import('./views/settings/Logs.vue'),
   }, {
     path: '/mensagens',
-    component: () => import('./views/settings/Mensagens.vue'),
+    component: () => import('./views/Mensagens/Mensagens.vue'),
   },]
 },
 ];

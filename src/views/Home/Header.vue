@@ -37,8 +37,10 @@
           <b-tooltip v-if="!extra" target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
           <p v-if="(extra)" class="m-0">Criar</p>
         </div>
-        <div @click="$emit('CV','mensagens')" class="btn col col-md-auto px-0 py-1">
+        <div @click="$emit('CV','mensagens')" class="btn col col-md-auto px-0 py-1 position-relative">
           <b-icon id="notificacao" icon="chat-left-dots" :font-scale="(extra)?'2.5':'1.3'" style="color:#01a3a4" />
+          <b-badge v-if="extra && notifyCount" pill variant="danger" class="position-absolute font-weight-normal px-1"
+            :style="`font-size:${(extra)?'14':'10'}px; top:3px;`"> {{ notifyCount }} </b-badge>
           <b-tooltip v-if="!extra" target="notificacao" triggers="hover" noninteractive> Info </b-tooltip>
           <p v-if="(extra)" class="m-0">Info</p>
         </div>
@@ -109,9 +111,16 @@
       usuario() {
         return this.access.auth;
       },
+      notifyCount() {
+        return this.access.notifyCount;
+      },
       extra() {
         return ['/dashboard', '/settings', '/logs'].includes(this.$route.path)
       }
+    },
+    beforeMount() {
+      this.$store.dispatch('getNotifyCount')
+        .catch(er => this.toast(er.data.mensagem, 'times'))
     },
   }
 </script>
