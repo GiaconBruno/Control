@@ -21,7 +21,8 @@
             :class="[(type)?'alert-info':'alert-secondary', (!msg.status && type)?'font-weight-bold':'font-weight-normal']"
             class="row mx-0 align-items-center alert text-left my-0 px-1 px-md-2 smallText">
             <div class="col-4 px-1 px-md-2"> {{ msg.titulo }} </div>
-            <div v-if="type" class="col px-1 px-md-2"> de: {{ msg.ref_remetente.nome }} </div>
+            <div v-if="type" class="col px-1 px-md-2"> de: {{ msg.ref_remetente.nome }}
+              {{ (access.auth.permissao)? ` -> @${msg.ref_remetente.usuario}`:'' }} </div>
             <div v-else-if="!access.auth.permissao" class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }}
             </div>
             <div v-else class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }} </div>
@@ -50,7 +51,7 @@
               <input v-model="sendMessage.titulo" type="text" name="titulo" id="titulo" class="form-control"
                 placeholder="Digite o título da mensagem" />
             </div>
-            <div :class="{'has_errors': errors.includes('mensagem')}" class="mb-3">
+            <div :class="{'has_errors': errors.includes('mensagem')}">
               <label for="mensagem" class="my-0">Mensagem: </label>
               <textarea v-model="sendMessage.mensagem" @keyup="sendMessage.mensagem=sendMessage.mensagem.slice(0,250)"
                 name="mensagem" id="mensagem" rows="3" class="form-control"
@@ -71,8 +72,8 @@
                 </option>
               </select>
               <hr />
-              <p class="m-0 smallText text-left">* Essa mensagem será enviada para o administrador.</p>
             </template>
+            <p v-else class="m-0 smallText text-left">* Essa mensagem será enviada para o administrador.</p>
             <div class="row mt-3 justify-content-around">
               <button @click="send()" :disabled="loading" class="btn btn-sm btn-success">
                 <b-icon icon="cursor"></b-icon>
