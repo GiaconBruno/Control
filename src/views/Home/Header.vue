@@ -6,7 +6,7 @@
         <!-- <i  id="home" :class="{'fa-2x':extra}" class="fa fa-home text-secundary"></i> -->
         <b-icon id="home" icon="house-door-fill" :font-scale="(extra)?'2.5':'1.3'" variant="secundary" />
         <b-tooltip v-if="!extra" target="home" triggers="hover" noninteractive> Início </b-tooltip>
-        <p v-if="(extra)" class="m-0">Início</p>
+        <p v-else class="m-0">Início</p>
       </div>
       <template v-if="!['/settings', '/logs'].includes($route.path)">
         <div @click="$emit('SEU', usuario.id)" class="btn col col-md-auto px-0 py-1">
@@ -16,33 +16,33 @@
             <b-icon stacked icon="person-fill" />
           </b-iconstack>
           <b-tooltip v-if="!extra" target="editarUsuario" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
-          <p v-if="(extra)" class="m-0">Editar</p>
+          <p v-else class="m-0">Editar</p>
         </div>
         <div @click="$emit('CV','entradas')" class="btn col col-md-auto px-0 py-1">
           <!-- <i id="contaUp" :class="{'fa-2x':extra}" class="fas file-upload text-success"></i> -->
           <b-icon id="contaUp" icon="file-earmark-arrow-up-fill" :font-scale="(extra)?'2.5':'1.3'" variant="success" />
           <b-tooltip v-if="!extra" target="contaUp" triggers="hover" noninteractive> Entradas </b-tooltip>
-          <p v-if="(extra)" class="m-0">Entradas</p>
+          <p v-else class="m-0">Entradas</p>
         </div>
         <div @click="$emit('CV','saidas')" class="btn col col-md-auto px-0 py-1">
           <!-- <i id="contaDown" :class="{'fa-2x':extra}" class="fas fa-folder-download text-danger"></i> -->
           <b-icon id="contaDown" icon="file-earmark-arrow-down-fill" :font-scale="(extra)?'2.5':'1.3'"
             variant="danger" />
           <b-tooltip v-if="!extra" target="contaDown" triggers="hover" noninteractive> Saídas </b-tooltip>
-          <p v-if="(extra)" class="m-0">Saídas</p>
+          <p v-else class="m-0">Saídas</p>
         </div>
         <div @click="$emit('CV','conta')" class="btn col col-md-auto px-0 py-1">
           <!-- <i id="criarConta" :class="{'fa-2x':extra}" class="fa fa-folder-plus text-primary"></i> -->
           <b-icon id="criarConta" icon="file-earmark-plus-fill" :font-scale="(extra)?'2.5':'1.3'" variant="primary" />
           <b-tooltip v-if="!extra" target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip>
-          <p v-if="(extra)" class="m-0">Criar</p>
+          <p v-else class="m-0">Criar</p>
         </div>
         <div @click="$emit('CV','mensagens')" class="btn col col-md-auto px-0 py-1 position-relative">
           <b-icon id="notificacao" icon="chat-left-dots" :font-scale="(extra)?'2.5':'1.3'" style="color:#01a3a4" />
           <b-badge v-if="extra && notifyCount" pill variant="danger" class="position-absolute font-weight-normal px-1"
             :style="`font-size:${(extra)?'14':'10'}px; top:3px;`"> {{ notifyCount }} </b-badge>
           <b-tooltip v-if="!extra" target="notificacao" triggers="hover" noninteractive> Info </b-tooltip>
-          <p v-if="(extra)" class="m-0">Info</p>
+          <p v-else class="m-0">Info</p>
         </div>
         <div v-if="(['/dashboard','/entradas','/saidas','/usuarios','/todas-contas'].includes($route.path))"
           @click="$emit('R')" class="btn col col-md-auto px-0 py-1">
@@ -61,12 +61,12 @@
             <b-icon stacked icon="dot" shift-h="-2" shift-v="8" scale="0.5" />
           </b-iconstack> -->
           <b-tooltip v-if="!extra" target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
-          <p v-if="(extra)" class="m-0">Atualizar</p>
+          <p v-else class="m-0">Atualizar</p>
         </div>
         <div v-if="(usuario.permissao)" @click="$emit('CV','settings')" class="btn col col-md-auto px-0 py-1">
           <b-icon id="settings" icon="tools" :font-scale="(extra)?'2.5':'1.3'" style="color: #7952b3;" />
           <b-tooltip v-if="!extra" target="settings" triggers="hover" noninteractive> Settings </b-tooltip>
-          <p v-if="(extra)" class="m-0">Settings</p>
+          <p v-else class="m-0">Settings</p>
         </div>
       </template>
       <template v-else-if="usuario.permissao">
@@ -78,7 +78,7 @@
           </b-iconstack> -->
           <b-icon id="criarUsuario" icon="person-plus-fill" :font-scale="(extra)?'2.5':'1.3'" variant="success" />
           <b-tooltip v-if="!extra" target="criarUsuario" triggers="hover" noninteractive> Criar Usuários </b-tooltip>
-          <p v-if="(extra)" class="m-0">Criar</p>
+          <p v-else class="m-0">Criar</p>
         </div>
         <div @click="$emit('CV','usuarios');" class="btn col col-md-auto px-0 py-1">
           <!-- <i id="todosUsuarios" :class="{'fa-2x':extra}" class="fa fa-user-friends text-dark"></i> -->
@@ -87,18 +87,18 @@
             <b-icon stacked icon="person-fill" shift-h="-4" shift-v="-1" style="color:#007bff" />
           </b-iconstack>
           <b-tooltip v-if="!extra" target="todosUsuarios" triggers="hover" noninteractive> Usuários </b-tooltip>
-          <p v-if="(extra)" class="m-0">Usuários</p>
+          <p v-else class="m-0">Usuários</p>
         </div>
         <div @click="$emit('CV','todas-contas')" class="btn col col-md-auto px-0 py-1">
           <!-- <i id="TodasConta" :class="{'fa-2x':extra}" class="fa fa-file-alt text-primary"></i> -->
           <b-icon id="TodasConta" icon="card-list" :font-scale="(extra)?'2.5':'1.3'" style="color:#fd7e14" />
           <b-tooltip v-if="!extra" target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip>
-          <p v-if="(extra)" class="m-0">Contas</p>
+          <p v-else class="m-0">Contas</p>
         </div>
         <div @click="$emit('CV','logs')" class="btn col col-md-auto px-0 py-1">
           <b-icon id="logs" icon="card-checklist" :font-scale="(extra)?'2.5':'1.3'" style="color:#dc3545" />
           <b-tooltip v-if="!extra" target="logs" triggers="hover" noninteractive> Logs </b-tooltip>
-          <p v-if="(extra)" class="m-0">Logs</p>
+          <p v-else class="m-0">Logs</p>
         </div>
       </template>
     </div>
@@ -107,21 +107,24 @@
 
 <script>
   export default {
-    computed: {
-      usuario() {
-        return this.access.auth;
-      },
-      notifyCount() {
-        return this.access.notifyCount;
-      },
-      extra() {
-        return ['/dashboard', '/settings', '/logs'].includes(this.$route.path)
+    data() {
+      return {
+        notifyCount: 0,
       }
     },
     beforeMount() {
       this.$store.dispatch('getNotifyCount')
+        .then(response => this.notifyCount= response)
         .catch(er => this.toast(er.data.mensagem, 'times'))
     },
+    computed: {
+      usuario() {
+        return this.access.auth;
+      },
+      extra() {
+        return ['/dashboard', '/settings', '/logs'].includes(this.$route.path)
+      }
+    }
   }
 </script>
 

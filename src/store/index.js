@@ -14,7 +14,6 @@ const state = {
     formPagtos: {},
     contaParcela: null,
     parcelaEdit: {},
-    notifyCount: 0,
   }
 }
 
@@ -58,10 +57,6 @@ const mutations = {
   },
   SET_CONTA_TIPO: (state, payload) => {
     state.access.contaTipo = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
-  },
-  SET_NOTIFY_COUNT: (state, payload) => {
-    state.access.notifyCount = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
 }
@@ -383,7 +378,6 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.get(`/api/noti-count`)
         .then((response) => {
-          context.commit('SET_NOTIFY_COUNT', response.data);
           resolve(response.data);
         }).catch((error) => {
           console.log(error);

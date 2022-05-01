@@ -4,7 +4,7 @@
       <Header @R="$emit('R')" @CV="$emit('CV', $event)" @SEU="$emit('SEU',$event)" />
     </div>
     <div class="row mx-0 my-2 flex-column flex-lg-row">
-      <div class="row mx-0 justify-content-center">
+      <!-- <div class="row mx-0 justify-content-center">
         <div v-for="amb in 2" :key="`amb-${amb}`" @click="ambiente=(amb-1)"
           :class="(amb==1)?'bg-warning':'bg-success text-white'"
           class="btn col-auto d-flex align-items-center py-0 px-2 mx-2 rounded smallText">
@@ -12,7 +12,7 @@
           <b-icon v-else icon="x-square" />
           <span class="px-1">{{ (amb==1)?'Desenvolvimento':'Produção' }}</span>
         </div>
-      </div>
+      </div> -->
       <div class="row mx-auto px-0 px-lg-2 justify-content-center align-items-center">
         <small class="d-none d-lg-block px-3">Período: </small>
         <small><input v-model="periodo" type="date" class="form-control px-1" /></small>
@@ -92,7 +92,6 @@
         loading: false,
         loadingDel: false,
         periodo: new Date(Date.now() - (1000 * 60 * 60 * 3)).toISOString().slice(0, 10),
-        ambiente: 0,
         type: 200,
         deletar: {},
         status: [{
