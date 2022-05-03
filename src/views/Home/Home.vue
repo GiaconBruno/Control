@@ -108,12 +108,12 @@
         this.contaEdit = {};
         this.parcelaEdit = {};
       },
-      refresh() {
+      async refresh() {
         switch (this.$route.path) {
           case '/dashboard':
             // this.$refs.All.getMessage();
-            this.$refs.All.getDash(true);
-            // this.$refs.All.getGraphic(true);
+            await this.$refs.All.getDash(true);
+            // await this.$refs.All.getGraphic(true);
             break;
           case '/entradas':
           case '/saidas':
@@ -122,6 +122,9 @@
             break;
           case '/usuarios':
             this.$refs.All.getUsuarios();
+            break;
+          case '/logs':
+            this.$refs.All.getLogsDash();
             break;
         }
       },

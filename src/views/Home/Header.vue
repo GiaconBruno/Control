@@ -38,30 +38,11 @@
           <p v-else class="m-0">Criar</p>
         </div>
         <div @click="$emit('CV','mensagens')" class="btn col col-md-auto px-0 py-1 position-relative">
-          <b-icon id="notificacao" icon="chat-left-dots" :font-scale="(extra)?'2.5':'1.3'" style="color:#01a3a4" />
+          <b-icon id="mensagens" icon="chat-left-dots" :font-scale="(extra)?'2.5':'1.3'" style="color:#01a3a4" />
           <b-badge v-if="extra && notifyCount" pill variant="danger" class="position-absolute font-weight-normal px-1"
             :style="`font-size:${(extra)?'14':'10'}px; top:3px;`"> {{ notifyCount }} </b-badge>
-          <b-tooltip v-if="!extra" target="notificacao" triggers="hover" noninteractive> Info </b-tooltip>
+          <b-tooltip v-if="!extra" target="mensagens" triggers="hover" noninteractive> Info </b-tooltip>
           <p v-else class="m-0">Info</p>
-        </div>
-        <div v-if="(['/dashboard','/entradas','/saidas','/usuarios','/todas-contas'].includes($route.path))"
-          @click="$emit('R')" class="btn col col-md-auto px-0 py-1">
-          <!-- <i id="atualizar" :class="{'fa-2x':extra}" class="fa fa-redo-alt text-green"></i> :animation="(loading)?'spin':''" -->
-          <b-icon id="atualizar" icon="arrow-clockwise" :font-scale="(extra)?'2.5':'1.3'" variant="dark" rotate="90" />
-          <!-- <b-iconstack id="atualizar" :font-scale="(extra)?'2.5':'1.3'" variant="dark">
-            <b-icon stacked icon="dot" shift-h="-7" shift-v="1" />
-            <b-icon stacked icon="dot" shift-h="-6" shift-v="-2.5" />
-            <b-icon stacked icon="dot" shift-h="-3" shift-v="-5" />
-            <b-icon stacked icon="dot" shift-h="0.5" shift-v="-6" scale="0.9" />
-            <b-icon stacked icon="dot" shift-h="3.5" shift-v="-4" scale="0.85" />
-            <b-icon stacked icon="dot" shift-h="6" shift-v="-1" scale="0.8" />
-            <b-icon stacked icon="dot" shift-h="6" shift-v="3" scale="0.65" />
-            <b-icon stacked icon="dot" shift-h="4" shift-v="6" scale="0.6" />
-            <b-icon stacked icon="dot" shift-h="1.5" shift-v="8" scale="0.55" />
-            <b-icon stacked icon="dot" shift-h="-2" shift-v="8" scale="0.5" />
-          </b-iconstack> -->
-          <b-tooltip v-if="!extra" target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
-          <p v-else class="m-0">Atualizar</p>
         </div>
         <div v-if="(usuario.permissao)" @click="$emit('CV','settings')" class="btn col col-md-auto px-0 py-1">
           <b-icon id="settings" icon="tools" :font-scale="(extra)?'2.5':'1.3'" style="color: #7952b3;" />
@@ -101,6 +82,25 @@
           <p v-else class="m-0">Logs</p>
         </div>
       </template>
+        <div v-if="(['/dashboard','/entradas','/saidas','/usuarios','/todas-contas', '/logs'].includes($route.path))"
+          @click="$emit('R')" class="btn col col-md-auto px-0 py-1">
+          <!-- <i id="atualizar" :class="{'fa-2x':extra}" class="fa fa-redo-alt text-green"></i> :animation="(loading)?'spin':''" -->
+          <b-icon id="atualizar" icon="arrow-clockwise" :font-scale="(extra)?'2.5':'1.3'" variant="dark" rotate="90" />
+          <!-- <b-iconstack id="atualizar" :font-scale="(extra)?'2.5':'1.3'" variant="dark">
+            <b-icon stacked icon="dot" shift-h="-7" shift-v="1" />
+            <b-icon stacked icon="dot" shift-h="-6" shift-v="-2.5" />
+            <b-icon stacked icon="dot" shift-h="-3" shift-v="-5" />
+            <b-icon stacked icon="dot" shift-h="0.5" shift-v="-6" scale="0.9" />
+            <b-icon stacked icon="dot" shift-h="3.5" shift-v="-4" scale="0.85" />
+            <b-icon stacked icon="dot" shift-h="6" shift-v="-1" scale="0.8" />
+            <b-icon stacked icon="dot" shift-h="6" shift-v="3" scale="0.65" />
+            <b-icon stacked icon="dot" shift-h="4" shift-v="6" scale="0.6" />
+            <b-icon stacked icon="dot" shift-h="1.5" shift-v="8" scale="0.55" />
+            <b-icon stacked icon="dot" shift-h="-2" shift-v="8" scale="0.5" />
+          </b-iconstack> -->
+          <b-tooltip v-if="!extra" target="atualizar" triggers="hover" noninteractive> Atualizar </b-tooltip>
+          <p v-else class="m-0">Atualizar</p>
+        </div>
     </div>
   </div>
 </template>

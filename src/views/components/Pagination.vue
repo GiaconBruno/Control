@@ -31,7 +31,7 @@
       }
     },
     beforeMount() {
-      this.$emit('change', this.pagination)
+      // this.$emit('change', this.pagination)
     },
     methods: {
       update(total) {

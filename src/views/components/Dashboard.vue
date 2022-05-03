@@ -220,7 +220,7 @@
         this.$store.dispatch('getDashboard', payload)
           .then(response => {
             this.dashboard = response.dash
-            this.getGraphic();
+            this.getGraphic(force);
           })
           .catch(er => {
             this.toast(er.data.mensagem, 'times')

@@ -76,7 +76,8 @@
             <p v-else class="m-0 smallText text-left">* Essa mensagem será enviada para o administrador.</p>
             <div class="row mt-3 justify-content-around">
               <button @click="send()" :disabled="loading" class="btn btn-sm btn-success">
-                <b-icon icon="cursor"></b-icon>
+                <!-- <b-icon icon="cursor"></b-icon> -->
+                <i class="fa fa-fighter-jet"></i>
                 Enviar
                 <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
               </button>

@@ -474,6 +474,18 @@ const actions = {
   },
 
   //Logs
+  getLogsDash(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/logs-all`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
   getLogs(context, payload) {
     let promise = new Promise((resolve, reject) => {
       axios.get(`/api/logs/?${payload}`)
