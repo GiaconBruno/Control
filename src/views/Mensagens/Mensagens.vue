@@ -20,13 +20,13 @@
           <div @click="see(msg.id)" v-b-toggle="`msg-${msg.id}`"
             :class="[(type)?'alert-info':'alert-secondary', (!msg.status && type)?'font-weight-bold':'font-weight-normal']"
             class="row mx-0 align-items-center alert text-left my-0 px-1 px-md-2 smallText">
-            <div class="col-4 px-1 px-md-2"> {{ msg.titulo }} </div>
-            <div v-if="type" class="col px-1 px-md-2"> de: {{ msg.ref_remetente.nome }}
-              {{ (access.auth.permissao)? ` -> @${msg.ref_remetente.usuario}`:'' }} </div>
+            <div v-if="type" class="col-4 px-1 px-md-2"> de: {{ msg.ref_remetente.nome }}
+              {{ (access.auth.permissao)? ` (@${msg.ref_remetente.usuario})`:'' }} </div>
             <div v-else-if="!access.auth.permissao" class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }}
             </div>
-            <div v-else class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }} </div>
-            <div class="col-3 col-md-auto px-1 px-md-2"> {{ formatDate(msg.created_at) }} </div>
+            <div v-else class="col-4 px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }} </div>
+            <div class="col px-1 px-md-2"> {{ msg.titulo }} </div>
+            <div class="col-3 col-md-auto px-1 px-md-2 text-center"> {{ formatDate(msg.created_at) }} </div>
             <div v-if="type" class="col-auto px-1 px-md-2">
               <b-icon :id="`iLerMsg${m}`" :icon="`${!msg.status?'eye-fill':'eye-slash-fill'}`" class="mx-1" />
               <b-tooltip :target="`iLerMsg${m}`" triggers="hover" noninteractive> Marcar como Lido </b-tooltip>
@@ -36,8 +36,8 @@
             </div>
           </div>
           <b-collapse v-if="!deletar.id" :id="`msg-${msg.id}`" accordion="mensagem"
-            class="mx-2 rounded-bottom px-1 px-md-2 bg-dark text-white text-left" role="tabpanel">
-            <div class="font-weight-light smallText py-1 py-md-2"> {{ msg.mensagem }} </div>
+            class="mx-2 rounded-bottom px-1 px-md-2 bg-dark" role="tabpanel">
+            <div class="font-weight-light smallText py-1 py-md-2 text-white text-left" v-html="msg.mensagem.replace(/[\r\n]+/g, '<br>')"> </div>
           </b-collapse>
           <div class="mt-2 mt-md-3" />
         </div>
@@ -51,12 +51,10 @@
               <input v-model="sendMessage.titulo" type="text" name="titulo" id="titulo" class="form-control"
                 placeholder="Digite o título da mensagem" />
             </div>
-            <div :class="{'has_errors': errors.includes('mensagem')}">
+            <div :class="{'has_errors': errors.includes('mensagem')}" class="mb-3">
               <label for="mensagem" class="my-0">Mensagem: </label>
-              <textarea v-model="sendMessage.mensagem" @keyup="sendMessage.mensagem=sendMessage.mensagem.slice(0,250)"
-                name="mensagem" id="mensagem" rows="3" class="form-control"
-                placeholder="Digite sua mensagem..."> </textarea>
-              <p class="m-0 smallText text-right">Limite: {{ sendMessage.mensagem.length }} /250 </p>
+              <textarea v-model="sendMessage.mensagem" name="mensagem" id="mensagem"
+                rows="3" class="form-control" placeholder="Digite sua mensagem..."> </textarea>
             </div>
             <template v-if="access.auth.permissao">
               <b-form-checkbox v-if="!sendMessage.destinatario" v-model="sendMessage.all" type="checkbox" name="all"

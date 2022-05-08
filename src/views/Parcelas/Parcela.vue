@@ -1,9 +1,9 @@
 <template>
   <div id="overflow" class="row m-0 justify-content-center">
-    <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-3">
-      <label class="m-0"> {{ title }} </label>
+    <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-0">
+      <label class="m-0 pt-3"> {{ title }} </label>
       <hr class="mt-2" />
-      <div class="row text-left">
+      <div class="row mx-0 text-left">
         <div :class="{'has_errors': errors.includes('descricao')}" class="col-7 col-lg-6 px-1 px-lg-3">
           <label id="lbDescricao" for="descricao">Descrição:</label>
           <div class="position-relative">
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="row text-left justify-content-between">
+      <div class="row mx-0 text-left justify-content-between">
         <div :class="{'has_errors': errors.includes('valor')}" class="col-4 px-1 px-lg-3 text-red">
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
@@ -51,7 +51,7 @@
       </div>
       <hr>
       <label class="text-center text-md-sm m-0"> Informações de pagamento </label>
-      <div class="row text-left">
+      <div class="row mx-0 text-left">
         <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
@@ -95,17 +95,30 @@
           </div>
         </div>
       </div>
-      <div v-if="parcela.repetir!=undefined" class="row text-left">
-        <div class="col-6 col-md-4 mx-auto d-flex align-items-end">
-          <label id="lbRepetir" for="repetir">Replicar:</label>
-          <input v-model="parcela.repetir"
-            @blur="(parcela.repetir<0)? parcela.repetir=0:(parcela.repetir>12)?parcela.repetir=12:parcela.repetir"
-            type="number" min="0" max="12" name="repetir" id="repetir" class="form-control mx-2 px-0 px-md-2" />
-          <span>vezes</span>
-        </div>
-      </div>
       <hr />
-      <div class="row mt-4 justify-content-around">
+      <template v-if="parcela.repetir!=undefined">
+        <div class="row mx-0 text-left my-2">
+          <div class="col-6 col-md-4 mx-auto d-flex">
+            <label id="lbRepetir" for="repetir" class="m-0">Replicar:</label>
+            <input id="repetir" v-model="parcela.repetir" type="number"
+              @blur="(parcela.repetir<0)? parcela.repetir=0:(parcela.repetir>12)?parcela.repetir=12:parcela.repetir"
+              min="0" max="12" name="repetir" class="form-control mx-2 px-0 text-center" />
+            <span>vezes</span>
+          </div>
+        </div>
+        <div id="overflow-2" class="overflow-auto">
+          <div v-for="p in (parseFloat(parcela.repetir)+1)" :key="`rep-${p}`"
+            class="row mx-0 justify-content-around alert m-0 py-1 border rounded-0"
+            :class="{'alert-secondary': p%2==0}">
+            <div class="col-auto"> {{ p }} </div>
+            <div class="col"> {{ parcela.descricao || `parcela ${p}` }} </div>
+            <div class="col-auto"> {{ showVencto(p-1) }} </div>
+            <div class="col-auto"> {{ total }} </div>
+          </div>
+        </div>
+        <hr />
+      </template>
+      <div class="row my-md-2 mx-0 justify-content-around">
         <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="(action=='Criar')?createParcela():updateParcela()" :disabled="loading"
           class="btn btn-sm btn-success">{{action}}
@@ -165,8 +178,7 @@
     },
     computed: {
       total() {
-        return `R$ ${(parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0)).toFixed(2).replace('.',',')}` ||
-          'R$ 0,00';
+        return this.formatMoney(parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0))
       }
     },
     methods: {
@@ -194,6 +206,11 @@
           this.parcela.recebido = 0;
           this.parcela.data_pagto = null;
         }
+      },
+      showVencto(pos) {
+        const vencto = new Date(Date.parse(this.parcela.vencimento)+ (3 * 60 * 60 * 1000));
+        const v = new Date(vencto.getFullYear(), vencto.getMonth() + pos, vencto.getDate());
+        return this.showDate(v).slice(0, 10)
       },
       valid() {
         this.errors = [];
@@ -294,8 +311,14 @@
   overflow-y: scroll;
   max-height: calc(85vh - 80px);
 }
+
+#overflow-2 {
+  overflow-y: scroll;
+  height: calc(85vh - 472px);
+}
+
 label {
-  margin: 1rem 0 0 0;
+  margin: 0.5rem 0 0 0;
 }
 
 .fa {
@@ -332,7 +355,7 @@ input::placeholder,
 }
 
 hr {
-  margin: 1rem -15px 0 -15px;
+  margin: 1rem 0 0 0;
   border-color: #888888aa;
 }
 
