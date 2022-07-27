@@ -1,5 +1,5 @@
 <template>
-  <div class="row mt-3 mt-lg-4 mx-0 flex-row-reverse justify-content-around align-items-center text-white">
+  <div class="row mx-0 flex-row-reverse justify-content-around align-items-center text-white">
     <span class="px-2 smallText text-white font-weight-light">versão:
       {{ require('@/../package.json').version }}</span>
     <div>
@@ -10,7 +10,7 @@
         <b-tooltip :target="`icon-${i}`" triggers="hover" noninteractive> {{ item.name }} </b-tooltip>
       </span>
     </div>
-    <span class="px-2 smallerText font-weight-light">Desenvolvido por: Bruno Giacon</span>
+    <span class="mt-2 px-2 smallerText font-weight-light text-white">Desenvolvido por: Bruno Giacon</span>
   </div>
 </template>
 
@@ -41,18 +41,18 @@
 </script>
 
 <style scoped>
-.social:hover {
-  transform: scale(1.5);
-  transition: all 0.3s;
-}
+  .social:hover {
+    transform: scale(1.5);
+    transition: all 0.3s;
+  }
 
-.smallText {
-  font-size: smaller;
-}
-
-@media screen and (max-width: 992px) {
-  .smallerText {
+  .smallText {
     font-size: smaller;
   }
-}
+
+  @media screen and (max-width: 992px) {
+    .smallerText {
+      font-size: smaller;
+    }
+  }
 </style>

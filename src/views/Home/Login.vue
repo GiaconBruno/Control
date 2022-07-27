@@ -37,7 +37,7 @@
           <i class="fas fa-sign-in-alt mr-2 mr-sm-5"></i>
           <span class="text-white mr-2 mr-sm-5"> Entrar</span>
         </button>
-        <button @click="$router.push('/cadastro')" :disabled="loading" class="form-control btn btn-primary mt-3">
+        <button @click="create()" :disabled="loading" class="form-control btn btn-primary mt-3">
           <i class="fas fa-user-circle mr-2 mr-sm-5"></i>
           <span class="text-white mr-2 mr-sm-5"> Criar</span>
         </button>
@@ -70,14 +70,15 @@
         this.loadServ = true;
         this.$store.dispatch('status')
           .then(response => {
-            console.log(response.data.start);
+            console.log(response.data.join('\n'));
             this.servidor = true;
             this.$store.commit('GET_ACCESS');
-            if (this.access.auth && this.access.auth.id) this.$router.push("/contas");
-            else localStorage.clear();
+            if (this.access.auth && this.access.auth.id) this.$router.push("/dashboard");
           })
           .catch(() => {
             this.servidor = false
+            localStorage.clear();
+            if (this.loadServ) this.status();
           })
           .finally(() => this.loadServ = false)
       },
@@ -87,14 +88,13 @@
         if (!this.password) this.errors.push('password')
       },
       sigIn() {
-        this.loading = true;
         this.valid();
         if (!this.user || !this.password) {
           this.toast('Preencha os dados', 'times')
-          this.loading = false;
           return;
         }
-        this.status();
+        this.status()
+        this.loading = true;
 
         this.user = this.user.toLowerCase();
 
@@ -104,76 +104,80 @@
         }
         this.$store.dispatch('sigIn', payload)
           .then(() => {
-            this.$router.push("/contas")
+            this.$router.push("/dashboard")
           })
           .catch(er => {
-            this.toast(er.data.mensagem, 'times')
+            if (er) this.toast(er.data.mensagem, 'times')
             localStorage.clear();
           })
           .finally(() => this.loading = false)
+      },
+      create() {
+        localStorage.clear();
+        this.$router.push('/cadastro')
       },
     },
   };
 </script>
 
 <style scoped>
-.not-allowed {
-  cursor: not-allowed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.4;
-  z-index: 10;
-}
+  .not-allowed {
+    cursor: not-allowed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.4;
+    z-index: 10;
+  }
 
-.alert {
-  z-index: 11;
-}
+  .alert {
+    z-index: 11;
+  }
 
-[class*="bg-"] {
-  transition: all 0.3s;
-}
+  [class*="bg-"] {
+    transition: all 0.3s;
+  }
 
-.bg-white {
-  border-radius: 5px;
-  background-color: #ffffffcc !important;
-}
+  .bg-white {
+    border-radius: 5px;
+    background-color: #ffffffcc !important;
+  }
 
-label {
-  margin: 1.5rem 0 0.5rem 0;
-  color: dimgray;
-}
+  label {
+    margin: 1.5rem 0 0.5rem 0;
+    color: dimgray;
+  }
 
-input.form-control {
-  height: 30px;
-  padding: 0 0 0 2.5rem;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 1px solid #333;
-  background-color: transparent;
-}
+  input.form-control {
+    height: 30px;
+    padding: 0 0 0 2.5rem;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid #333;
+    background-color: transparent;
+  }
 
-input.form-control:focus {
-  outline-width: 0;
-  box-shadow: none;
-}
+  input.form-control:focus {
+    outline-width: 0;
+    box-shadow: none;
+  }
 
-span {
-  top: 60px;
-  left: 10px;
-}
+  span {
+    top: 60px;
+    left: 10px;
+  }
 
-span {
-  color: dimgray;
-}
+  span {
+    color: dimgray;
+  }
 
-.hasError label,
-.hasError span {
-  color: #dc3545;
-}
+  .hasError label,
+  .hasError span {
+    color: #dc3545;
+  }
 
-.hasError input {
-  border-color: #dc3545;
-}
+  .hasError input {
+    border-color: #dc3545;
+  }
 </style>

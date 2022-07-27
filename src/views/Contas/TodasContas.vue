@@ -1,18 +1,23 @@
 <template>
-  <div class="overflow">
+  <div id="overflow">
     <div class="row m-0">
       <div class="col-12 px-0">
-        <h5 class="smallText"> ({{ contas.length }}) Contas: </h5>
+        <h5 class="smallText"> ({{ contas.length }}) {{ rota.title }}: </h5>
       </div>
     </div>
     <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
-    <label v-else-if="!contas.length">Nenhuma conta disponivel!</label>
+    <div v-else-if="!contas.length">
+      <p class="my-0 text-black-50 text-sm">Nenhuma conta disponivel!</p>
+      <button @click="$emit('CV', 'conta')" class="btn btn-success btn-sm my-1">
+        <span class="text-sm">Criar Conta</span>
+      </button>
+    </div>
     <div v-else class="accordion" role="tablist">
       <div v-for="(conta,i) in contas" :key="conta.id" v-show="filtring(conta)" class="mb-3">
         <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
           :class="{'contabord': (showParcelas), 'pago': (conta.status)}"
-          class="btn text-left alert-success row m-0 px-1 px-lg-3 d-flex justify-content-between align-items-center">
+          class="btn text-left alert-success row m-0 px-1 px-lg-2 d-flex justify-content-between align-items-center">
           <div class="col-1 col-lg-auto px-0">
             <i :class="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
               class="fa text-warning px-2 py-1"></i>
@@ -22,13 +27,13 @@
               <div class="col-12 col-lg-5 px-0 text-center text-lg-left">
                 <span>{{conta.descricao}}</span>
               </div>
-              <div class="col-12 col-lg-6 px-0 text-center text-sm">
+              <div class="col-12 col-lg-7 px-0 text-center text-lg-left text-sm">
                 <div v-if="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id))"
                   class="row m-0 h-100 align-items-center">
-                  <div class="col-3 col-lg-3 px-0">
-                    <span>Parcelas: {{ showParcelas.length }}</span>
+                  <div class="col-2 col-lg-3 px-0">
+                    <small>Parcelas: </small> <span>{{ showParcelas.length }}</span>
                   </div>
-                  <div class="col col-lg-5 px-0 text-md">
+                  <div class="col-6 col-lg-5 px-0 text-md">
                     <div class="row m-0 justify-content-center align-items-center">
                       <span class="px-2 text-green h-100">{{ parcelasPagas }} Pagos</span>
                       <span class="pl-3 text-red h-100">{{ showParcelas.length-parcelasPagas }}
@@ -40,7 +45,7 @@
                       <span class="text-red"> {{ formatMoney(totalAberto) }}</span>
                     </div>
                   </div>
-                  <div class="col-3 col-lg-4 px-0">
+                  <div class="col col-lg-4 px-0">
                     <div class="row m-0 justify-content-center align-items-center">
                       <div class="col-12 col-lg-auto px-0 text-lg-right">
                         <span><strong>Total: {{ formatMoney(total) }} </strong></span>
@@ -54,12 +59,12 @@
               </div>
             </div>
           </div>
-          <div v-if="$route.path == '/contas'" class="col-1 col-lg-auto px-0">
+          <div v-if="['/entradas', '/saidas'].includes($route.path)" class="col-1 col-lg-auto px-0">
             <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
               <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
                 class="fa fa-plus-circle text-success px-2 py-1"></i>
               <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
-              <i @click.stop="editConta(conta)" :id="`iEditConta${i}`" class="fa fa-edit text-primary px-2 py-1"></i>
+              <i @click.stop="editConta(conta.id)" :id="`iEditConta${i}`" class="fa fa-edit text-primary px-2 py-1"></i>
               <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
               </b-tooltip>
               <i @click.stop="showDeletar(conta)" :id="`iRemoveConta${i}`"
@@ -68,16 +73,16 @@
               </b-tooltip>
             </div>
           </div>
-          <div v-else class="col px-2 text-sm"> {{ formatDate(conta.criado) }} </div>
+          <div v-else class="col-2 col-lg text-center text-lg-left px-0 text-sm"><small> {{ formatDate(conta.createdAt) }} </small></div>
         </div>
         <template v-if="$route.path == '/todas-contas'">
-          <div class="row mx-0 alert-primary text-left text-sm" v-for="(user, x) in conta.usuarios"
+          <div class="row mx-0 align-items-center alert-primary text-left text-sm" v-for="(user, x) in conta.Usuarios"
             :key="`${user.nome}-${x}`">
             <div class="col px-2"> Usuário: {{ user.nome }} </div>
-            <div class="col px-2"> Acesso:
+            <div class="col col-lg-3 text-center px-0 px-lg-2">
               {{ (user.acesso)? formatDate(user.acesso):'Nenhum' }} </div>
-            <div class="col px-2"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa"></i></div>
-            <div class="col px-2"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa"></i></div>
+            <div class="col-2 col-lg-2 px-2 text-center"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa"></i></div>
+            <div class="col-3 col-lg-2 px-2 text-center"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa"></i></div>
           </div>
         </template>
         <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
@@ -100,7 +105,7 @@
 </template>
 
 <script>
-  import TodasParcelas from '../Parcelas/TodasParcelas'
+  import TodasParcelas from '../Parcelas/TodasParcelas.vue'
   export default {
     components: {
       TodasParcelas
@@ -154,7 +159,7 @@
     },
     watch: {
       $route(to) {
-        if (['/contas', '/todas-contas'].includes(to.path)) this.getContas();
+        if (['/entradas', '/saidas', '/todas-contas'].includes(to.path)) this.getContas();
       },
     },
     computed: {
@@ -165,13 +170,29 @@
         })
         this.formatting();
         return all;
+      },
+      rota() {
+        switch (this.$route.path) {
+          case '/entradas':
+            return {
+              title: 'Contas de Entradas', dispatch: 'getContasEntradas', tipo: 'E'
+            };
+          case '/saidas':
+            return {
+              title: 'Contas de Saídas', dispatch: 'getContasSaidas', tipo: 'S'
+            };
+          default:
+            return {
+              title: 'Todas as Contas', dispatch: 'getAllContas', tipo: 'S'
+            };
+        }
       }
     },
     methods: {
       getContas() {
         this.loading = true;
         this.parcelas = [];
-        this.$store.dispatch((this.$route.path == '/contas') ? 'getContas' : 'getAllContas')
+        this.$store.dispatch(this.rota.dispatch)
           .then(response => this.contas = response)
           .catch(er => {
             localStorage.clear();
@@ -185,8 +206,16 @@
         this.$router.push('/parcela')
       },
       editConta(payload) {
-        this.$store.commit('SET_EDIT_CONTA', payload)
-        this.$router.push('/conta')
+        this.$store.dispatch('getContasId', payload)
+          .then(response => {
+            this.$store.commit('SET_EDIT_CONTA', response)
+            this.$router.push('/conta')
+          })
+          .catch(er => {
+            localStorage.clear();
+            this.$router.push('/');
+            console.log(er)
+          }).finally(() => this.loading = false)
       },
       crypto(payload) {
         return Buffer.from(`${payload*100000}`, 'utf-8').toString('base64')
@@ -275,10 +304,10 @@
 </script>
 
 <style scoped>
-.overflow {
+#overflow {
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(85vh - 70px);
+  height: calc(85vh - 80px);
 }
 
 .mb-3:focus,
@@ -347,11 +376,11 @@ label {
     font-size: 70%;
   }
 
-  .overflow {
-    max-height: calc(85vh - 105px);
+  #overflow {
+    max-height: calc(85vh - 95px);
   }
 
-  .btn {
+  .btn:not(.btn-sm) {
     font-size: 130%;
   }
 
@@ -361,7 +390,7 @@ label {
 }
 
 @media screen and (max-width: 335px) {
-  .overflow {
+  #overflow {
     max-height: 60vh;
   }
 }

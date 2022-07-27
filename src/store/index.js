@@ -6,8 +6,11 @@ const { methods: { dateToSend } } = access
 const state = {
   access: {
     auth: {},
+    dash: {},
+    graphic: {},
     userEdit: {},
     contaEdit: {},
+    contaTipo: '',
     formPagtos: {},
     contaParcela: null,
     parcelaEdit: {},
@@ -28,6 +31,14 @@ const mutations = {
     state.access.auth = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
+  SET_DASH: (state, payload) => {
+    state.access.dash = { dash: payload, validate: Date.now() + (1000 * 60 * 30) };
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
+  SET_GRAPHIC: (state, payload) => {
+    state.access.graphic = { graphic: payload, validate: Date.now() + (1000 * 60 * 30) };
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
   SET_EDIT_USER: (state, payload) => {
     state.access.userEdit = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
@@ -42,6 +53,10 @@ const mutations = {
   },
   SET_EDIT_PARCELA: (state, payload) => {
     state.access.parcelaEdit = payload;
+    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+  },
+  SET_CONTA_TIPO: (state, payload) => {
+    state.access.contaTipo = payload;
     localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
   },
 }
@@ -63,12 +78,49 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/autenticar`, secret)
         .then((response) => {
-          resolve(context.commit('SET_AUTH', response.data));
+          context.commit('SET_AUTH', response.data);
           axios.defaults.headers.common['token'] = context.state.access.auth.token;
           // resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+
+  //Dash
+  getDashboard(context, payload) {
+    if (context.state.access.dash && Date.now() < context.state.access.dash.validate && !payload.force)
+      return context.state.access.dash.dash;
+    let info = 'inicio&fim'
+    if (payload.periodo[0]) info = info.replace('inicio', `inicio=${payload.periodo[0]}`)
+    if (payload.periodo[1]) info = info.replace('fim', `fim=${payload.periodo[1]}`)
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/dashboard?${info}`)
+        .then((response) => {
+          context.commit('SET_DASH', response.data);
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          context.commit('LOGOUT');
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getGraphic(context, payload) {
+    if (context.state.access.graphic && Date.now() < context.state.access.graphic.validate && !payload)
+      return context.state.access.graphic.graphic;
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/graphic`)
+        .then((response) => {
+          context.commit('SET_GRAPHIC', response.data);
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          context.commit('LOGOUT');
           reject(error.response);
         })
     })
@@ -117,7 +169,7 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/api/usuario`, payload)
         .then((response) => {
-          resolve(response.data);
+          resolve(context.dispatch('sigIn', payload))
         }).catch((error) => {
           console.log(error);
           reject(error.response);
@@ -145,8 +197,7 @@ const actions = {
     let promise = new Promise((resolve, reject) => {
       axios.post(`/api/atualizar-usuario/${payload.id}`, payload)
         .then((response) => {
-          if (context.state.access.auth.id == payload.id)
-            resolve(context.dispatch('sigIn', payload))
+          if (context.state.access.auth.id == payload.id) context.dispatch('sigIn', payload)
           resolve(response.data);
         }).catch((error) => {
           console.log(error);
@@ -169,14 +220,28 @@ const actions = {
   },
 
   //CONTAS
-  getContas(context) {
+  getContasEntradas(context) {
     let promise = new Promise((resolve, reject) => {
-      axios.get(`/api/contas/${context.state.access.auth.id}`)
+      axios.get(`/api/contas-entradas/${context.state.access.auth.id}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
+          // reject(localStorage.clear());
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getContasSaidas(context) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/contas-saidas/${context.state.access.auth.id}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          reject(context.commit('LOGOUT'));
+          // reject(localStorage.clear());
           console.log(error);
           reject(error.response);
         })
@@ -199,7 +264,7 @@ const actions = {
   },
   getContasId(context, payload) {
     let promise = new Promise((resolve, reject) => {
-      axios.get(`/api/contas/${payload}`)
+      axios.get(`/api/conta/${payload}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
@@ -307,6 +372,144 @@ const actions = {
     })
     return promise
   },
+
+  //MENSAGENS
+  getNotifyCount(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/noti-count`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getNotifyReceived(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/noti-recebidas`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getNotifySend(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/noti-enviadas`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  createNotify(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.post(`/api/notificacao`, payload)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  updateStatusNotify(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.put(`/api/notificacao/${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  deleteNotify(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.delete(`/api/notificacao/${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+
+  //SETTINGS
+  statusContas(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/fix-status-contas`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  vincUsuariosConta(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/contas-fix-users`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+
+  //Logs
+  getLogsDash(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/logs-all`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  getLogs(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.get(`/api/logs/?${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  },
+  deleteLogs(context, payload) {
+    let promise = new Promise((resolve, reject) => {
+      axios.delete(`/api/logs/${payload}`)
+        .then((response) => {
+          resolve(response.data);
+        }).catch((error) => {
+          console.log(error);
+          reject(error.response);
+        })
+    })
+    return promise
+  }
 }
 
 export default {

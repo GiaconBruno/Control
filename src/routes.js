@@ -20,7 +20,13 @@ const routes = [{
   component: () => import('./views/Home/Home.vue'),
   name: 'home',
   children: [{
-    path: '/contas',
+    path: '/dashboard',
+    component: () => import('./views/components/Dashboard.vue'),
+  }, {
+    path: '/entradas',
+    component: () => import('./views/Contas/TodasContas.vue'),
+  }, {
+    path: '/saidas',
     component: () => import('./views/Contas/TodasContas.vue'),
   }, {
     path: '/todas-contas',
@@ -40,6 +46,15 @@ const routes = [{
   }, {
     path: '/usuario',
     component: () => import('./views/Usuarios/Usuario.vue'),
+  }, {
+    path: '/settings',
+    component: () => import('./views/settings/Parametros.vue'),
+  }, {
+    path: '/logs',
+    component: () => import('./views/settings/Logs.vue'),
+  }, {
+    path: '/mensagens',
+    component: () => import('./views/Mensagens/Mensagens.vue'),
   },]
 },
 ];

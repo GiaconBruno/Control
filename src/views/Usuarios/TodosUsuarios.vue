@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow">
+  <div id="overflow">
     <h5 class="smallText my-0 text-center">({{ usuarios.length }}) Usuários: </h5>
     <filterable v-bind="{filter}" @change="filter=$event" />
     <div v-if="usuarios.length" class="row m-0">
@@ -11,7 +11,7 @@
               <div class="col col-lg px-0">
                 <div class="row mx-0 justify-content-between align-items-center">
                   <span class="text-sm text-lg-sm">
-                    <strong>{{ [usuario.nome.split(' ')[0],usuario.nome.split(' ')[1]].join(' ')}}</strong> -
+                    <strong>{{ usuario.nome.split(' ').slice(0,2).join(' ') }}</strong> -
                     @{{ usuario.usuario }}
                   </span>
                   <span class="text-xs text-sm"> {{ usuario.acesso || 'Nenhum' }}</span>
@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="col px-0">
-            <i @click="setEditUsuario(usuario.id)" :id="`usuarioEditar${i}`"
+            <i @click="$emit('SEU', usuario.id)" :id="`usuarioEditar${i}`"
               class="btn fa fa-edit text-primary p-0 mx-1 mx-lg-2"></i>
             <b-tooltip :target="`usuarioEditar${i}`" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
             <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2"></i>
@@ -68,7 +68,6 @@
 
 <script>
   export default {
-    props: ['setEditUsuario'],
     data() {
       return {
         loading: false,
@@ -144,10 +143,10 @@
 </script>
 
 <style scoped>
-.overflow {
+#overflow {
   /* overflow-x: hidden; */
   overflow-y: auto;
-  max-height: calc(85vh - 71px);
+  max-height: calc(85vh - 80px);
 }
 
 .text-sm {
@@ -169,7 +168,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .overflow {
+  #overflow {
     max-height: calc(85vh - 103px);
   }
 }

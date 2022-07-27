@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-0 mb-3">
+  <div id="overflow" class="row mx-0">
     <div v-if="(usuario)" :class="($route.path=='/usuario') ? 'col-10 col-md-6 col-lg-4' : 'col-12 px-0'"
       class="card mx-auto border-secondary p-3 shadow-lg">
       <label class="m-0"> {{ title }} </label>
@@ -29,7 +29,7 @@
               class="form-control" placeholder="Digite uma Senha" />
             <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray"></i>
           </div>
-          <div v-if="access.auth.permissao" class="row m-0">
+          <div v-if="access.auth && access.auth.permissao" class="row m-0">
             <div class="col-7 px-0 text-left pt-3">
               <span class="d-flex p-0">
                 <b-form-checkbox v-model="usuario.permissao" switch>
@@ -94,9 +94,9 @@
         this.usuario.usuario = this.usuario.usuario.toLowerCase();
 
         this.$store.dispatch('createUser', this.usuario)
-          .then((response) => {
-            this.toast(response.mensagem, 'check')
-            this.$router.push('/contas')
+          .then(() => {
+            this.toast('Usuário cadastrado com exito!!', 'check')
+            this.$router.push('/dashboard')
           })
           .catch(er => this.toast(er.data.mensagem, 'times'))
           .finally(() => this.loading = false)
@@ -127,6 +127,11 @@
 </script>
 
 <style scoped>
+#overflow {
+  overflow-y: auto;
+  max-height: calc(85vh - 80px);
+}
+
 label {
   margin: 1rem 0 0 0;
 }
@@ -167,5 +172,11 @@ hr {
 
 .btn {
   min-width: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  #overflow {
+    max-height: calc(85vh - 95px);
+  }
 }
 </style>
