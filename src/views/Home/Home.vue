@@ -138,44 +138,44 @@
 </script>
 
 <style scoped>
-.container.position-relative {
-  min-height: 85vh;
-  max-height: 85vh;
-  border-radius: 5px;
-  background: ghostwhite;
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-
-.largeText {
-  font-size: large;
-}
-
-.smallerText {
-  font-size: smaller;
-}
-
-.smallText {
-  font-size: small;
-}
-
-.text-underline {
-  text-decoration: underline;
-}
-
-.anim-enter-active {
-  animation: home 0.6s;
-}
-
-@keyframes home {
-  from {
-    transform: translateX(30vw);
-    opacity: 0.5;
+  .container.position-relative {
+    min-height: 85vh;
+    max-height: 85vh;
+    border-radius: 5px;
+    background: ghostwhite;
+    overflow-y: hidden;
+    overflow-x: hidden;
   }
 
-  to {
-    transform: translateX(0);
-    opacity: 1;
+  .largeText {
+    font-size: large;
   }
-}
+
+  .smallerText {
+    font-size: smaller;
+  }
+
+  .smallText {
+    font-size: small;
+  }
+
+  .text-underline {
+    text-decoration: underline;
+  }
+
+  .anim-enter-active {
+    animation: home 0.6s;
+  }
+
+  @keyframes home {
+    from {
+      transform: translateX(30vw);
+      opacity: 0.5;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 </style>
