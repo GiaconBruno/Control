@@ -4,11 +4,12 @@
       <div :class="{'not-allowed':(!servidor && !loading)}" class="bg-white position-absolute"></div>
       <div v-if="loadServ" class="alert bg-warning alert-dismissible fade show" role="alert">
         <div class="spinner-border spinner-border-sm mr-3 my-1" role="status"></div>
-        <strong>Aguarde!</strong>
+        <strong>Aguarde!</strong> <small> ({{ timer.toString().padStart(2,0) }}) </small>
       </div>
       <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
         role="alert">
-        Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}} </strong>
+        Servidor: <strong> {{ (servidor)? 'Online!' : 'Offline!'}}</strong>
+        <small> ({{ timer.toString().padStart(2,0) }}) </small>
       </div>
       <div v-if="(!servidor && !loading)" :class="{'alert': (loadServ)}" class="m-0 p-0 text-center">
         <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary position-relative"
@@ -60,6 +61,9 @@
         user: "",
         password: "",
         errors: [],
+        reload: Function,
+        interval: Function,
+        timer: 0,
       };
     },
     mounted() {
@@ -68,24 +72,34 @@
     methods: {
       status() {
         this.loadServ = true;
+        this.awaitingStart();
         this.$store.dispatch('status')
           .then(response => {
             console.log(response.data.join('\n'));
             this.servidor = true;
+            clearInterval(this.reload);
             this.$store.commit('GET_ACCESS');
             if (this.access.auth && this.access.auth.id) this.$router.push("/dashboard");
           })
           .catch(() => {
             this.servidor = false
             localStorage.clear();
-            if (this.loadServ) this.status();
+            this.reload = setTimeout(() => this.status(), 10000);
           })
-          .finally(() => this.loadServ = false)
+          .finally(() => {
+            this.loadServ = false;
+            clearInterval(this.interval);
+          })
       },
       valid() {
         this.errors = [];
         if (!this.user) this.errors.push('login')
         if (!this.password) this.errors.push('password')
+      },
+      awaitingStart() {
+        this.timer = 0;
+        if (this.loadServ)
+          this.interval = setInterval(() => this.timer++, 1000);
       },
       sigIn() {
         this.valid();
