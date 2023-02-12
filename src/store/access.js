@@ -11,7 +11,7 @@ const access = {
       return (new Date(data).toLocaleString('pt-BR'))
     },
     dateToSend(data) {
-      return (new Date(data).toLocaleString('pt-BR').split(' ').join('/') + 'T')
+      return (new Date(data).toLocaleString('pt-BR').replace(',', '').split(' ').join('/') + 'T')
         .split('/').reverse().join('-').split('T-').reverse().join(' ')
     },
     showDate(data) {

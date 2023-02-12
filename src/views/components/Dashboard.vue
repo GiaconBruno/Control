@@ -256,80 +256,80 @@
 </script>
 
 <style scoped>
-#overflow {
-  height: calc(85vh - 205px);
-  overflow-y: auto;
-}
-
-a {
-  text-decoration: none;
-}
-
-.smallText {
-  font-size: small;
-}
-
-.xSmallText {
-  font-size: x-small;
-}
-
-.small-box {
-  border-radius: 0.25rem;
-  box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
-  display: block;
-  position: relative;
-}
-
-.small-box > .inner {
-  padding: 10px;
-}
-
-.bg-success,
-.bg-danger,
-.bg-success > a,
-.bg-danger > a {
-  color: #fff !important;
-}
-
-.small-box .icon {
-  color: rgba(0, 0, 0, 0.15);
-  z-index: 0;
-}
-
-.small-box .icon > svg {
-  font-size: 90px;
-  position: absolute;
-  right: 10%;
-  top: 20%;
-  transition: -webkit-transform 0.3s linear;
-  transition: transform 0.3s linear;
-  transition: transform 0.3s linear, -webkit-transform 0.3s linear;
-}
-
-.small-box:hover .icon > svg {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.5);
-}
-
-.small-box .icon > svg.b-icon {
-  font-size: 70px;
-  top: 25%;
-}
-
-.small-box > .small-box-footer {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: rgba(255, 255, 255, 0.8);
-  display: block;
-  padding: 3px 0;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  z-index: 10;
-}
-
-@media screen and (max-width: 768px) {
   #overflow {
-    height: calc(85vh - 175px);
+    height: calc(85vh - 205px);
+    overflow-y: auto;
   }
-}
+
+  a {
+    text-decoration: none;
+  }
+
+  .smallText {
+    font-size: small;
+  }
+
+  .xSmallText {
+    font-size: x-small;
+  }
+
+  .small-box {
+    border-radius: 0.25rem;
+    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    display: block;
+    position: relative;
+  }
+
+  .small-box>.inner {
+    padding: 10px;
+  }
+
+  .bg-success,
+  .bg-danger,
+  .bg-success>a,
+  .bg-danger>a {
+    color: #fff !important;
+  }
+
+  .small-box .icon {
+    color: rgba(0, 0, 0, 0.15);
+    z-index: 0;
+  }
+
+  .small-box .icon>svg {
+    font-size: 90px;
+    position: absolute;
+    right: 10%;
+    top: 20%;
+    transition: -webkit-transform 0.3s linear;
+    transition: transform 0.3s linear;
+    transition: transform 0.3s linear, -webkit-transform 0.3s linear;
+  }
+
+  .small-box:hover .icon>svg {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.5);
+  }
+
+  .small-box .icon>svg.b-icon {
+    font-size: 70px;
+    top: 25%;
+  }
+
+  .small-box>.small-box-footer {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    padding: 3px 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    z-index: 10;
+  }
+
+  @media screen and (max-width: 768px) {
+    #overflow {
+      height: calc(85vh - 175px);
+    }
+  }
 </style>
