@@ -8,7 +8,7 @@ const access = {
   },
   methods: {
     formatDate(data) {
-      return (new Date(data).toLocaleString('pt-BR'))
+      return (new Date(data).toLocaleString('pt-BR').replace(',', ''))
     },
     dateToSend(data) {
       return (new Date(data).toLocaleString('pt-BR').replace(',', '').split(' ').join('/') + 'T')

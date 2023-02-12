@@ -141,7 +141,7 @@
         conta: null,
         parcela: {
           forma_pagto: null,
-          vencimento: new Date(new Date()).toLocaleString('pt-BR').slice(0, 10).split('/').reverse().join('-'),
+          vencimento: new Date(new Date()).toLocaleString('pt-BR').replace(',', '').slice(0, 10).split('/').reverse().join('-'),
           repetir: 0,
         },
         formaPagto: [],
@@ -198,7 +198,7 @@
           this.parcela.recebido = parseFloat(this.parcela.valor || 0) + parseFloat(this.parcela.outros || 0);
           if (!this.parcela.data_pagto) {
             this.parcela.data_pagto = new Date(Date.now());
-            this.parcela.data_pagto = (this.parcela.data_pagto).toLocaleString('pt-BR')
+            this.parcela.data_pagto = (this.parcela.data_pagto).toLocaleString('pt-BR').replace(',', '')
               .slice(0, 10).split('/').reverse().join('-')
             // .replace(/(\d{2})\/(\d{2})\/(\d{4}) \d{2}:\d{2}:\d{2}/g, '$3-$2-$1');
           }
