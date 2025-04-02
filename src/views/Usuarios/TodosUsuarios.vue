@@ -22,11 +22,11 @@
                   <div class="col-6 pe-0">
                     <span>Permissão: </span>
                     <i :class="(usuario.permissao) ? 'fa-check text-success': 'fa-times text-danger'"
-                      class="fa mx-1"></i>
+                      class="fa mx-1" />
                   </div>
                   <div class="col-6 pe-0">
                     <span>Ativo: </span>
-                    <i :class="(usuario.ativo) ? 'fa-check text-success': 'fa-times text-danger'" class="fa mx-1"></i>
+                    <i :class="(usuario.ativo) ? 'fa-check text-success': 'fa-times text-danger'" class="fa mx-1" />
                   </div>
                 </div>
               </div>
@@ -34,9 +34,9 @@
           </div>
           <div class="col px-0">
             <i @click="$emit('SEU', usuario.id)" :id="`usuarioEditar${i}`"
-              class="btn fa fa-edit text-primary p-0 mx-1 mx-lg-2"></i>
+              class="btn fa fa-edit text-primary p-0 mx-1 mx-lg-2" />
             <b-tooltip :target="`usuarioEditar${i}`" triggers="hover" noninteractive> Editar Usuário </b-tooltip>
-            <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2"></i>
+            <i @click="showDeletar(usuario)" :id="`usuarioRemove${i}`" class="btn fa fa-trash text-danger p-0 mx-2" />
             <b-tooltip :target="`usuarioRemove${i}`" triggers="hover" noninteractive> Deletar Usuário
             </b-tooltip>
           </div>
@@ -105,7 +105,7 @@
           .catch(er => {
             localStorage.clear();
             this.$router.push('/');
-            console.log(er)
+            console.error(er)
           })
           .finally(() => this.loading = false)
       },
@@ -117,8 +117,8 @@
         this.loading = true;
         //DELETAR USUARIO PERMANENTEMENTE
         this.$store.dispatch('deleteUser', this.deletar.id)
-          .then(response => this.toast(response.mensagem, 'check'))
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .then(response => this.$toast(response.mensagem, 'check'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => {
             this.loading = false
             this.deletar = null;

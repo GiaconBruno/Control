@@ -61,7 +61,6 @@
               })
             } else if ((change.type === 'modified') && (change.doc.id === amb.main)) {
               this.count = change.doc.data().count
-              console.log(this.count);
               this.loading = false;
             }
           })

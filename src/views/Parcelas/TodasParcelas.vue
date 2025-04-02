@@ -59,11 +59,11 @@
         <div v-if="['/entradas', '/saidas'].includes($route.path)" class="px-0 px-lg-2 text-end">
           <div class="row m-0 pe-1 pe-lg-0 justify-content-center justify-content-sm-between">
             <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
-              class="btn fa fa-dollar-sign text-success px-1 px-lg-2"></i>
+              class="btn fa fa-dollar-sign text-success px-1 px-lg-2" />
             <b-tooltip :target="`iPagarEditar${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Pagar/Editar
               Parcela </b-tooltip>
             <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${crypto(parcela.id)}`"
-              class="btn fa fa-trash-alt text-danger px-1 px-lg-2"></i>
+              class="btn fa fa-trash-alt text-danger px-1 px-lg-2" />
             <b-tooltip :target="`iRemoveParcela${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Deletar
               Parcela
             </b-tooltip>
@@ -114,12 +114,12 @@
         this.loadingDel = true;
         this.$store.dispatch('deleteParcela', this.deletar.id)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.getParcelas(this.deletar.fk_conta_id, 'deletar');
             this.deletar = null;
             this.$refs['mDelParcela'].hide()
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loadingDel = false)
       },
       filtring(p) {

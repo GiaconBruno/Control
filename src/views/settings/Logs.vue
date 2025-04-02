@@ -6,7 +6,7 @@
     <div v-if="!visible" class="row mx-auto my-2 px-0 px-lg-2 justify-content-center col-lg-8">
       <div class="d-flex align-items-center">
         <b-button @click="visible='all'" variant="light" class="btn-sm border">
-          <b-icon icon="arrow-left-square" />
+          <i class="fa fa-arrow-left-square" />
         </b-button>
       </div>
       <div class="d-flex align-items-center">
@@ -18,8 +18,8 @@
         <div v-for="s in status" :key="s.title" @click="getLogs(s.title, $refs.page.pagination)"
           class="btn px-0 ps-1 px-lg-3 text-white smallText">
           <p :class="s.color" class="rounded py-1 px-1 m-0 d-flex align-items-center">
-            <b-icon v-if="type==s.title" icon="check-square" />
-            <b-icon v-else icon="x-square" />
+            <i v-if="type==s.title" class="fa fa-check-square" />
+            <i v-else class="fa fa-x-square" />
             <small class="px-2">{{ s.title }}</small>
           </p>
         </div>
@@ -31,7 +31,7 @@
           <div v-for="(all, a) in infoAll" :key="all.data"
             class="row mx-auto align-items-center alert alert-secondary border p-1">
             <div class="col-auto px-2">
-              <b-icon id="logs" icon="card-checklist" style="color:#dc3545" />
+              <i id="logs" class="fa fa-card-checklist" style="color:#dc3545" />
             </div>
             <div class="col-4 px-2"> {{ all.data.split('-').reverse().join('/') }} </div>
             <div class="col px-2 d-flex justify-content-around">
@@ -43,7 +43,7 @@
                 {{ all[500] }} </div>
             </div>
             <div @click.stop="showDeletar(all)" class="btn btn-sm col-auto px-0">
-              <b-icon :id="`iRemoveLog${a}`" icon="trash" variant="danger" />
+              <i :id="`iRemoveLog${a}`" class="fa fa-trash" variant="danger" />
               <b-tooltip :target="`iRemoveLog${a}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
             </div>
           </div>
@@ -64,7 +64,7 @@
               <div class="col-auto px-0"> {{ (log.ref_usuario)?`@${log.ref_usuario.usuario}`:'-' }} </div>
               <div class="col-6 px-0 text-start xSmallText"> {{ log.rota }} </div>
               <div @click.stop="showDeletar(log)" class="btn btn-sm col-auto px-0">
-                <b-icon :id="`iRemoveLog${i}`" icon="trash" variant="danger" />
+                <i :id="`iRemoveLog${i}`" class="fa fa-trash" variant="danger" />
                 <b-tooltip :target="`iRemoveLog${i}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
               </div>
             </div>
@@ -147,7 +147,7 @@
         this.loading = true;
         this.$store.dispatch('getLogsDash')
           .then((response) => this.infoAll = response)
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       getLogs(status, pagination, periodo) {
@@ -162,7 +162,7 @@
             this.info = response.rows
             this.$refs.page.update(response.count)
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       async showDeletar(payload) {
@@ -173,8 +173,8 @@
         const del = (payload) ? this.deletar.id : this.deletar.data;
         this.loadingDel = true
         this.$store.dispatch('deleteLogs', del)
-          .then(response => this.toast(response.mensagem, 'check'))
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .then(response => this.$toast(response.mensagem, 'check'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => {
             this.loadingDel = false
             this.deletar = {}

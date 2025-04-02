@@ -20,7 +20,7 @@
           class="btn text-start alert-success row m-0 px-1 px-lg-2 d-flex justify-content-between align-items-center">
           <div class="col-1 col-lg-auto px-0">
             <i :class="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
-              class="fa text-warning px-2 py-1"></i>
+              class="fa text-warning px-2 py-1" />
           </div>
           <div class="col col-lg-10 px-0">
             <div class="row m-0 align-items-center">
@@ -62,13 +62,13 @@
           <div v-if="['/entradas', '/saidas'].includes($route.path)" class="col-1 col-lg-auto px-0">
             <div class="row m-0 px-0 text-end align-items-center flex-column flex-lg-row">
               <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
-                class="fa fa-plus-circle text-success px-2 py-1"></i>
+                class="fa fa-plus-circle text-success px-2 py-1" />
               <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
-              <i @click.stop="editConta(conta.id)" :id="`iEditConta${i}`" class="fa fa-edit text-primary px-2 py-1"></i>
+              <i @click.stop="editConta(conta.id)" :id="`iEditConta${i}`" class="fa fa-edit text-primary px-2 py-1" />
               <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
               </b-tooltip>
               <i @click.stop="showDeletar(conta)" :id="`iRemoveConta${i}`"
-                class="fa fa-trash text-danger px-2 py-1"></i>
+                class="fa fa-trash text-danger px-2 py-1" />
               <b-tooltip :target="`iRemoveConta${i}`" triggers="hover" noninteractive> Deletar Conta
               </b-tooltip>
             </div>
@@ -81,8 +81,8 @@
             <div class="col px-2"> Usuário: {{ user.nome }} </div>
             <div class="col col-lg-3 text-center px-0 px-lg-2">
               {{ (user.acesso)? formatDate(user.acesso):'Nenhum' }} </div>
-            <div class="col-2 col-lg-2 px-2 text-center"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa"></i></div>
-            <div class="col-3 col-lg-2 px-2 text-center"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa"></i></div>
+            <div class="col-2 col-lg-2 px-2 text-center"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa" /></div>
+            <div class="col-3 col-lg-2 px-2 text-center"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa" /></div>
           </div>
         </template>
         <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
@@ -197,7 +197,7 @@
           .catch(er => {
             localStorage.clear();
             this.$router.push('/');
-            console.log(er)
+            console.error(er)
           })
           .finally(() => this.loading = false)
       },
@@ -214,7 +214,7 @@
           .catch(er => {
             localStorage.clear();
             this.$router.push('/');
-            console.log(er)
+            console.error(er)
           }).finally(() => this.loading = false)
       },
       crypto(payload) {
@@ -239,7 +239,7 @@
           .catch(er => {
             localStorage.clear();
             this.$router.push('/');
-            console.log(er)
+            console.error(er)
           })
           .finally(() => {
             this.formatting();
@@ -279,7 +279,7 @@
 
         this.$store.dispatch('deleteConta', this.deletar.id)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.$refs['mDelConta'].hide()
             this.getContas();
           })

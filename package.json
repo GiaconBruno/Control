@@ -15,8 +15,10 @@
     "bootstrap-vue-next": "^0.28.0",
     "buffer": "^6.0.3",
     "firebase": "^11.5.0",
+    "v-money": "^0.8.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
+    "vue3-apexcharts": "^1.8.0",
     "vue3-toastify": "^0.2.8",
     "vuex": "^4.0.2"
   },

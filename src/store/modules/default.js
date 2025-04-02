@@ -18,7 +18,9 @@ const state = {
 const mutations = {
   GET_ACCESS: (state) => {
     if (localStorage.getItem('access')) {
-      state = JSON.parse(Buffer.from(localStorage.getItem("access"), 'base64').toString('utf-8')).access;
+      // console.log(state);
+      state = JSON.parse(Buffer.from(localStorage.getItem("access"), 'base64').toString('utf-8'));
+      // console.log(state);
       axios.defaults.headers.common['token'] = state.auth.token;
     }
   },
@@ -76,11 +78,11 @@ const actions = {
       axios.post(`/autenticar`, secret)
         .then((response) => {
           context.commit('SET_AUTH', response.data);
-          axios.defaults.headers.common['token'] = context.state.access.auth.token;
+          axios.defaults.headers.common['token'] = context.state.auth.token;
           // resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -88,8 +90,8 @@ const actions = {
 
   //Dash
   getDashboard(context, payload) {
-    if (context.state.access.dash && Date.now() < context.state.access.dash.validate && !payload.force)
-      return context.state.access.dash.dash;
+    if (context.state.dash && Date.now() < context.state.dash.validate && !payload.force)
+      return context.state.dash.dash;
     let info = 'inicio&fim'
     if (payload.periodo[0]) info = info.replace('inicio', `inicio=${payload.periodo[0]}`)
     if (payload.periodo[1]) info = info.replace('fim', `fim=${payload.periodo[1]}`)
@@ -99,22 +101,22 @@ const actions = {
           context.commit('SET_DASH', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           context.commit('LOGOUT');
           reject(error.response);
         })
     })
   },
   getGraphic(context, payload) {
-    if (context.state.access.graphic && Date.now() < context.state.access.graphic.validate && !payload)
-      return context.state.access.graphic.graphic;
+    if (context.state.graphic && Date.now() < context.state.graphic.validate && !payload)
+      return context.state.graphic.graphic;
     return new Promise((resolve, reject) => {
       axios.get(`/api/graphic`)
         .then((response) => {
           context.commit('SET_GRAPHIC', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           context.commit('LOGOUT');
           reject(error.response);
         })
@@ -128,7 +130,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -140,7 +142,7 @@ const actions = {
           context.commit('SET_EDIT_USER', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -151,7 +153,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -162,7 +164,7 @@ const actions = {
         .then((response) => {
           resolve(context.dispatch('sigIn', payload))
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -172,12 +174,12 @@ const actions = {
       acesso: dateToSend(new Date())
     }
     return new Promise((resolve, reject) => {
-      axios.post(`/api/atualizar-acesso/${context.state.access.auth.id}`, payload)
+      axios.post(`/api/atualizar-acesso/${context.state.auth.id}`, payload)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
           reject(localStorage.clear());
-          console.log(error);
+          console.error(error);
           reject(error);
         })
     })
@@ -186,10 +188,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.post(`/api/atualizar-usuario/${payload.id}`, payload)
         .then((response) => {
-          if (context.state.access.auth.id == payload.id) context.dispatch('sigIn', payload)
+          if (context.state.auth.id == payload.id) context.dispatch('sigIn', payload)
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -200,7 +202,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -209,26 +211,26 @@ const actions = {
   //CONTAS
   getContasEntradas(context) {
     return new Promise((resolve, reject) => {
-      axios.get(`/api/contas-entradas/${context.state.access.auth.id}`)
+      axios.get(`/api/contas-entradas/${context.state.auth.id}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
           reject(context.commit('LOGOUT'));
           // reject(localStorage.clear());
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
   },
   getContasSaidas(context) {
     return new Promise((resolve, reject) => {
-      axios.get(`/api/contas-saidas/${context.state.access.auth.id}`)
+      axios.get(`/api/contas-saidas/${context.state.auth.id}`)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
           reject(context.commit('LOGOUT'));
           // reject(localStorage.clear());
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -241,7 +243,7 @@ const actions = {
         }).catch((error) => {
           reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -252,7 +254,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -263,18 +265,18 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
   },
   updateConta(context, payload) {
     return new Promise((resolve, reject) => {
-      axios.post(`/api/atualizar-conta/${context.state.access.contaEdit.id}`, payload)
+      axios.post(`/api/atualizar-conta/${context.state.contaEdit.id}`, payload)
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -285,7 +287,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -298,7 +300,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -309,7 +311,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -320,7 +322,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -331,7 +333,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -342,7 +344,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -355,7 +357,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -366,7 +368,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -377,7 +379,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -388,7 +390,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -399,7 +401,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -410,7 +412,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -423,7 +425,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -434,7 +436,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -447,7 +449,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -458,7 +460,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })
@@ -469,7 +471,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.log(error);
+          console.error(error);
           reject(error.response);
         })
     })

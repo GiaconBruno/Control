@@ -13,9 +13,9 @@
         <div class="col-5 col-lg-3 px-1 px-lg-3">
           <input type="date" v-model="periodo[1]" class="form-control smallText" />
         </div>
-        <b-button @click="getDash(true)" variant="outline-success" size="sm" class="mx-2">
-          <b-icon icon="arrow-repeat" aria-hidden="true"></b-icon>
-        </b-button>
+        <button @click="getDash(true)" class="col-auto btn btn-sm btn-outline-success mx-2">
+          <i class="fa fa-repeat"/>
+        </button>
       </div>
       <div class="row mx-0 justify-content-center align-items-center">
         <template v-if="!loadingDash && access.dash">
@@ -32,7 +32,7 @@
                     {{ formatMoney((x==0)?(dashboard.pagosEntradas||0):(dashboard.pagosSaidas||0)) }} </p>
                 </div>
                 <div class="icon">
-                  <b-icon :icon="i.icon"></b-icon>
+                  <i :class="`fa fa-${i.icon}`" />
                 </div>
                 <div class="small-box-footer py-2"></div>
               </div>
@@ -223,7 +223,7 @@
             this.getGraphic(force);
           })
           .catch(er => {
-            this.toast(er.data.mensagem, 'times')
+            this.$toast(er.data.mensagem)
             this.$router.push('/');
             localStorage.clear();
           })
@@ -245,7 +245,7 @@
             });
           })
           .catch(er => {
-            this.toast(er.data.mensagem, 'times')
+            this.$toast(er.data.mensagem)
             this.$router.push('/');
             localStorage.clear();
           })
@@ -311,7 +311,7 @@
     transform: scale(1.5);
   }
 
-  .small-box .icon>svg.b-icon {
+  .small-box .icon>svg.i {
     font-size: 70px;
     top: 25%;
   }

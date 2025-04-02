@@ -1,6 +1,6 @@
 <template>
-  <div class="row mx-0 px-1 h-100 flex-column justify-content-center">
-    <div v-if="usuario" class="container-fluid px-2 position-relative">
+  <div class="row mx-0 px-1 px-lg-3 h-100 flex-column justify-content-around">
+    <div v-if="usuario" class="container-fluid position-relative">
       <!-- <div class="d-block text-end p-3 pb-2"> </div> -->
       <div class="row mx-0 mt-2 my-md-3 justify-content-around">
         <div class="col col-lg-10 px-0">
@@ -17,7 +17,7 @@
         </div>
         <div class="col-1 col-lg-auto px-0 my-auto mx-2 mx-lg-auto">
           <span @click="sigOut()" class="btn px-0">
-            <i class="fas fa-sign-in-alt"></i> Sair
+            <i class="fas fa-sign-in-alt" /> Sair
           </span>
         </div>
       </div>
@@ -88,7 +88,7 @@
         this.loading = true;
         this.$store.dispatch('getUserId', payload)
           .then(() => this.changeVisible('usuario'))
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       setEditParcela(payload) {
@@ -139,8 +139,7 @@
 
 <style scoped>
   .container-fluid.position-relative {
-    min-height: 85dvh;
-    max-height: 85dvh;
+    height: 92dvh;
     border-radius: 5px;
     background: ghostwhite;
     overflow-y: hidden;
@@ -165,6 +164,12 @@
 
   .anim-enter-active {
     animation: home 0.6s;
+  }
+
+  @media screen and (max-width: 992px) {
+    .container-fluid.position-relative {
+      height: 85dvh;
+    }
   }
 
   @keyframes home {

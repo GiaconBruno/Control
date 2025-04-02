@@ -8,7 +8,7 @@
         <div class="col-12 text-start">
           <label for="nome">Nome:</label>
           <div class="position-relative">
-            <i class="fa fa-address-card text-gray"></i>
+            <i class="fa fa-address-card text-gray" />
             <input v-model="usuario.nome" type="text" name="nome" id="nome" class="form-control"
               placeholder="Digite o Nome" />
           </div>
@@ -16,7 +16,7 @@
         <div class="col-12 text-start">
           <label for="usuario">Usuário:</label>
           <div class="position-relative">
-            <i class="fa fa-user text-gray"></i>
+            <i class="fa fa-user text-gray" />
             <input v-model="usuario.usuario" :disabled="(usuario.id)" type="text" name="usuario" id="usuario"
               class="form-control" placeholder="Digite um Usuário" />
           </div>
@@ -24,10 +24,10 @@
         <div class="col-12 text-start">
           <label for="senha">Senha:</label>
           <div class="position-relative">
-            <i class="fa fa-lock text-gray"></i>
+            <i class="fa fa-lock text-gray" />
             <input v-model="usuario.senha" :type="(see) ? 'text': 'password' " name="senha" id="senha"
               class="form-control" placeholder="Digite uma Senha" />
-            <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray"></i>
+            <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray" />
           </div>
           <div v-if="access.auth && access.auth.permissao" class="row m-0">
             <div class="col-7 px-0 text-start pt-3">
@@ -89,7 +89,7 @@
     methods: {
       valid() {
         if ((!this.usuario.nome) || (!this.usuario.usuario) || (!this.usuario.senha)) {
-          this.toast('Preencha os dados', 'times')
+          this.$toast('Preencha os dados')
           return false;
         } else return true;
       },
@@ -100,10 +100,10 @@
 
         this.$store.dispatch('createUser', this.usuario)
           .then(() => {
-            this.toast('Usuário cadastrado com exito!!', 'check')
+            this.$toast('Usuário cadastrado com exito!!', 'check')
             this.$router.push('/dashboard')
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       updateUsuario() {
@@ -114,7 +114,7 @@
         this.$store.dispatch('updateUser', this.usuario)
           .then(response => {
             let msg = (response) ? response.mensagem : 'Usuário Atualizado! com exito!'
-            this.toast(msg, 'check')
+            this.$toast(msg, 'check')
             this.usuario = {
               permissao: false,
               ativo: true,
@@ -122,8 +122,8 @@
             this.$router.go(-1)
           })
           .catch(er => {
-            console.log(er);
-            this.toast(er.data.mensagem, 'times')
+            console.error(er);
+            this.$toast(er.data.mensagem)
           })
           .finally(() => this.loading = false)
       }

@@ -22,7 +22,7 @@
         <input v-model="user" @blur="valid('login')" @keyup="valid('login')" id="login" type="text" class="form-control"
           placeholder="Digite seu usuário" />
         <span class="position-absolute">
-          <i class="fa fa-user"></i>
+          <i class="fa fa-user" />
         </span>
       </div>
       <div :class="{'hasError': errors.includes('password')}" class="position-relative">
@@ -30,22 +30,22 @@
         <input v-model="password" @keypress.enter="sigIn()" @blur="valid('password')" @keyup="valid('password')"
           id="password" type="password" class="form-control" placeholder="Digite sua senha" />
         <span class="position-absolute">
-          <i class="fas fa-lock"></i>
+          <i class="fas fa-lock" />
         </span>
       </div>
       <div class="mt-3 text-end">
         <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
-          <i class="fas fa-sign-in-alt me-2 me-sm-5"></i>
+          <i class="fas fa-sign-in-alt me-2 me-sm-5" />
           <span class="text-white me-2 me-sm-5"> Entrar</span>
         </button>
         <button @click="create()" :disabled="loading" class="form-control btn btn-primary mt-3">
-          <i class="fas fa-user-circle me-2 me-sm-5"></i>
+          <i class="fas fa-user-circle me-2 me-sm-5" />
           <span class="text-white me-2 me-sm-5"> Criar</span>
         </button>
       </div>
     </div>
     <div v-if="loading" class="m-auto">
-      <i class="fas fa-4x fa-spinner fa-pulse text-light" role="status"></i>
+      <i class="fas fa-4x fa-spinner fa-pulse text-light" role="status" />
     </div>
   </div>
 </template>
@@ -104,7 +104,7 @@
       sigIn() {
         this.valid();
         if (!this.user || !this.password) {
-          this.toast('Preencha os dados', 'times')
+          this.$toast('Preencha os dados')
           return;
         }
         this.status()
@@ -121,7 +121,7 @@
             this.$router.push("/dashboard")
           })
           .catch(er => {
-            if (er) this.toast(er.data.mensagem, 'times')
+            if (er) this.$toast(er.data.mensagem)
             localStorage.clear();
           })
           .finally(() => this.loading = false)

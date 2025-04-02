@@ -7,7 +7,7 @@
         <div class="col-12 text-start">
           <label for="conta">Descrição:</label>
           <div class="position-relative">
-            <i class="fa fa-folder text-gray"></i>
+            <i class="fa fa-folder text-gray" />
             <input v-model="conta.descricao" type="text" name="conta" id="conta" class="form-control"
               placeholder="Digite a descrição da conta" />
           </div>
@@ -15,7 +15,7 @@
         <div class="col-12 text-start">
           <label for="usuario">Tipo:</label>
           <div class="position-relative">
-            <b-icon icon="arrow-down-up"></b-icon>
+            <i class="fa fa-arrow-down-up">/>
             <div class="row m-0 mb-3">
               <div class="col-12 px-0">
                 <select v-model="conta.tipo" name="tipo" id="tipo" class="form-control py-0">
@@ -24,7 +24,7 @@
                 </select>
               </div>
               <!-- <div class="col-1 p-0">
-                <i @click="addUsuario(usuario)" class="fa fa-plus btn btn-primary px-0 py-1 text-white w-100"></i>
+                <i @click="addUsuario(usuario)" class="fa fa-plus btn btn-primary px-0 py-1 text-white w-100" />
               </div> -->
             </div>
           </div>
@@ -32,7 +32,7 @@
         <div class="col-12 text-start">
           <label for="usuario">Quem pode visualizar?</label>
           <div class="position-relative">
-            <i class="fa fa-user text-gray"></i>
+            <i class="fa fa-user text-gray" />
             <div class="row m-0 mb-3">
               <div class="col-12 px-0">
                 <select v-model="usuario" @change="addUsuario(usuario)" :class="{'text-sm': (usuario==null)}"
@@ -44,7 +44,7 @@
                 </select>
               </div>
               <!-- <div class="col-1 p-0">
-                <i @click="addUsuario(usuario)" class="fa fa-plus btn btn-primary px-0 py-1 text-white w-100"></i>
+                <i @click="addUsuario(usuario)" class="fa fa-plus btn btn-primary px-0 py-1 text-white w-100" />
               </div> -->
             </div>
           </div>
@@ -56,7 +56,7 @@
               <!-- {{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].nome }}
               @{{ usuarios[usuarios.findIndex(user => (user.id == contaUsuario))].usuario }} -->
               {{ user.nome.split(' ').slice(0,2).join(' ') }} @{{ user.usuario }}
-              <i v-if="(ci>0)" @click="removeUsuario(ci)" class="fa fa-times text-danger"></i>
+              <i v-if="(ci>0)" @click="removeUsuario(ci)" class="fa fa-times text-danger" />
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
       this.loading = true
       this.$store.dispatch('getUserContas')
         .then(response => this.usuarios = response)
-        .catch(er => this.toast(er.data.mensagem, 'times'))
+        .catch(er => this.$toast(er.data.mensagem))
         .finally(() => {
           this.conta.tipo = this.$store.state.default.contaTipo;
           this.fk_usuario_id.push(this.usuarios.find(u => u.id == this.$store.state.default.auth.id));
@@ -138,11 +138,11 @@
       },
       valid() {
         if (!this.conta.descricao) {
-          this.toast('Preencha a Descrição', 'times')
+          this.$toast('Preencha a Descrição')
           return
         }
         if (!this.conta.tipo) {
-          this.toast('Preencha o Tipo da Conta', 'times')
+          this.$toast('Preencha o Tipo da Conta')
           return
         }
         return true
@@ -155,10 +155,10 @@
 
         this.$store.dispatch('createConta', this.conta)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.$router.go(-1)
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       updateConta() {
@@ -168,10 +168,10 @@
         this.conta.status = false;
         this.$store.dispatch('updateConta', this.conta)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.$router.go(-1)
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
     }
@@ -189,7 +189,7 @@ label {
 }
 
 .fa:not(.fa-plus),
-.b-icon {
+.i {
   color: dimgray;
   top: 5px;
   left: 5px;

@@ -6,6 +6,7 @@ import common from './services/common.js';
 import { Buffer } from "buffer";
 // import auth from './services/auth.js';
 import { createBootstrap } from 'bootstrap-vue-next';
+import VueApexCharts from 'vue3-apexcharts';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
@@ -22,6 +23,8 @@ app.use(store);
 app.use(router);
 app.use(createBootstrap());
 
+app.component('apexchart', VueApexCharts);
+
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 app.config.globalProperties.axios = axios;
@@ -31,8 +34,5 @@ app.config.globalProperties.Buffer = Buffer;
 app.config.productionTip = false
 
 app.mixin(common);
-
-app.config.productionTip = false
-
 
 app.mount('#app');

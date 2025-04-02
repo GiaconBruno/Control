@@ -2,7 +2,7 @@
   <div v-if="filter.length">
     <hr class="my-2">
     <div v-b-toggle.filter>
-      <b-icon :icon="`box-arrow-${(!visible)? 'down':'up'}`" />
+      <i :icon="`box-arrow-${(!visible)? 'down':'up'}`" />
         <span> {{ (!visible)?'Mostrar':'Esconder' }} </span>
         Filtros
     </div>

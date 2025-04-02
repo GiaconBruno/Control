@@ -4,7 +4,10 @@ const common = {
   computed: {
     appVersion() {
       return __APP_VERSION__
-    }
+    },
+    access() {
+      return this.$store.state.default;
+    },
   },
   methods: {
     formatDate(data) {
@@ -66,7 +69,7 @@ const common = {
     $toast(title, type, duration) {
       toast(title || 'Erro interno', {
         theme: "colored",
-        type: type, // success, error, info, warning
+        type: type || 'error', // success, error, info, warning
         autoClose: duration || 3000,
         closeOnClick: false,
       });

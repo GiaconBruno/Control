@@ -10,8 +10,8 @@
             <p class="col-9 col-lg-8 px-0 my-3 text-start">{{ i.title}}</p>
           </div>
           <div class="icon">
-            <b-icon v-if="!i.loading" :icon="i.icon" />
-            <i v-else class="fas fa-spinner fa-pulse" role="status"></i>
+            <i v-if="!i.loading" :icon="i.icon" />
+            <i v-else class="fas fa-spinner fa-pulse" role="status" />
           </div>
           <div class="small-box-footer py-2"></div>
         </div>
@@ -48,8 +48,8 @@
         this.info[i].loading = true;
         this.dashboard = [];
         this.$store.dispatch(action)
-          .then(response => this.toast(response.mensagem, 'success'))
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .then(response => this.$toast(response.mensagem, 'success'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.info[i].loading = false)
       },
     }
@@ -110,7 +110,7 @@ a {
   transform: scale(1.5);
 }
 
-.small-box .icon > svg.b-icon {
+.small-box .icon > svg.i {
   font-size: 50px;
   top: 25%;
 }

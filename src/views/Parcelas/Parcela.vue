@@ -7,7 +7,7 @@
         <div :class="{'has_errors': errors.includes('descricao')}" class="col-7 col-lg-6 px-1 px-lg-3">
           <label id="lbDescricao" for="descricao">Descrição:</label>
           <div class="position-relative">
-            <i id="iDescricao" class="fa fa-pen-alt text-gray"></i>
+            <i id="iDescricao" class="fa fa-pen-alt text-gray" />
             <input v-model="parcela.descricao" @blur="setRecebido()" type="text" name="descricao" id="descricao"
               class="form-control" placeholder="Descrição" />
           </div>
@@ -15,7 +15,7 @@
         <div :class="{'has_errors': errors.includes('vencimento')}" class="col-5 col-lg-6 px-1 px-lg-3">
           <label id="lbVencimento" for="vencimento">Vencimento:</label>
           <div class="position-relative">
-            <i id="iVencimento" class="fa fa-calendar-alt text-gray"></i>
+            <i id="iVencimento" class="fa fa-calendar-alt text-gray" />
             <input v-model="parcela.vencimento" @blur="setRecebido()" @keydown.delete="parcela.vencimento = null"
               type="date" name="vencimento" id="vencimento" class="form-control" />
           </div>
@@ -25,18 +25,18 @@
         <div :class="{'has_errors': errors.includes('valor')}" class="col-4 px-1 px-lg-3 text-red">
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
-            <i id="iValor" class="fa fa-money-bill-alt text-gray"></i>
+            <i id="iValor" class="fa fa-money-bill-alt text-gray" />
             <money v-model="parcela.valor" type="text" name="valor" id="valor" class="form-control"
               placeholder="R$ 0,00" />
           </div>
         </div>
         <div class="position-relative" style="width: 14px;">
-          <i class="fa fa-plus text-gray" style="top: auto; left: 0; bottom: 0;"></i>
+          <i class="fa fa-plus text-gray" style="top: auto; left: 0; bottom: 0;" />
         </div>
         <div class="col-4 px-1 px-lg-3">
           <label for="outros">Outros:</label>
           <div class="position-relative">
-            <i class="fa fa-money-bill-wave text-gray"></i>
+            <i class="fa fa-money-bill-wave text-gray" />
             <money v-model="parcela.outros" type="text" name="outros" id="outros" class="form-control"
               placeholder="R$ 0,00" />
           </div>
@@ -44,7 +44,7 @@
         <div class="col-3 px-0">
           <label for="total">Total:</label>
           <div class="position-relative pt-2">
-            <i class="fa fa-equals text-gray" style="top: auto; left: 0; bottom: 0;"></i>
+            <i class="fa fa-equals text-gray" style="top: auto; left: 0; bottom: 0;" />
             <span class="ps-3 ps-lg-4">{{ total }}</span>
           </div>
         </div>
@@ -55,7 +55,7 @@
         <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
-            <i id="iformaPagto" class="fa fa-dollar-sign text-gray"></i>
+            <i id="iformaPagto" class="fa fa-dollar-sign text-gray" />
             <div v-if="formaPagto">
               <select v-if="formSelect.select" v-model="parcela.forma_pagto"
                 @change="(parcela.forma_pagto == 'other')? (formSelect.select = false) : (formSelect.select = true)"
@@ -81,7 +81,7 @@
         <div :class="{'has_errors': errors.includes('recebido')}" class="col-3 ps-0 px-1 px-lg-3">
           <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
-            <i id="iRecebido" class="fa fa-donate text-gray"></i>
+            <i id="iRecebido" class="fa fa-donate text-gray" />
             <money v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control pe-0"
               placeholder="R$ 0,00" />
           </div>
@@ -89,7 +89,7 @@
         <div :class="{'has_errors': errors.includes('data_pagto')}" class="col-5 px-1 px-lg-3">
           <label id="lbPagamento" for="pagamento">Pagamento:</label>
           <div class="position-relative">
-            <i id="iPagamento" class="fa fa-calendar-check text-gray"></i>
+            <i id="iPagamento" class="fa fa-calendar-check text-gray" />
             <input v-model="parcela.data_pagto" @keydown.delete="parcela.data_pagto = null" type="date" name="pagamento"
               id="pagamento" class="form-control" />
           </div>
@@ -157,7 +157,7 @@
       this.conta = Buffer.from(`${this.$store.state.default.contaParcela}`, 'base64').toString('utf-8') / 100000
       this.$store.dispatch('getFormasPagto')
         .then((response) => this.formaPagto = response)
-        .catch(er => this.toast(er.data.mensagem, 'times'))
+        .catch(er => this.$toast(er.data.mensagem))
         .finally(() => this.loadingForm = false)
     },
     mounted() {
@@ -264,9 +264,9 @@
       },
       createParcela() {
         if (this.valid()) {
-          this.toast('Prenche os campos corretamente.', 'times')
-          this.toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'times', 8000)
-          this.toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'times', 12000)
+          this.$toast('Prenche os campos corretamente.')
+          this.$toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'error', 8000)
+          this.$toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'error', 12000)
           return
         }
         //Formating
@@ -276,17 +276,17 @@
         //GRAVANDO
         this.$store.dispatch('createParcela', payload)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.$router.go(-1)
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       updateParcela() {
         if (this.valid()) {
-          this.toast('Prenche os campos corretamente.', 'times')
-          this.toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'times', 8000)
-          this.toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'times', 12000)
+          this.$toast('Prenche os campos corretamente.')
+          this.$toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'error', 8000)
+          this.$toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'error', 12000)
           return
         }
         //Formating
@@ -296,10 +296,10 @@
         //GRAVANDO
         this.$store.dispatch('updateParcela', payload.parcela)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.$router.go(-1)
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       }
     }

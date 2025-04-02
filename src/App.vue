@@ -110,4 +110,8 @@
     -o-border-radius: 10px;
     -o-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
   }
+
+  .text-purple {
+    color: #6f42c1;
+  }
 </style>

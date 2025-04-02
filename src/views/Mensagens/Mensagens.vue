@@ -28,10 +28,9 @@
             <div class="col px-1 px-md-2"> {{ msg.titulo }} </div>
             <div class="col-3 col-md-auto px-1 px-md-2 text-center"> {{ formatDate(msg.created_at) }} </div>
             <div v-if="type" class="col-auto px-1 px-md-2">
-              <b-icon :id="`iLerMsg${m}`" :icon="`${!msg.status?'eye-fill':'eye-slash-fill'}`" class="mx-1" />
+              <i :id="`iLerMsg${m}`" :icon="`${!msg.status?'eye-fill':'eye-slash-fill'}`" class="mx-1" />
               <b-tooltip :target="`iLerMsg${m}`" triggers="hover" noninteractive> Marcar como Lido </b-tooltip>
-              <b-icon @click.prevent="showDeletar(msg)" :id="`iRemoveMsg${m}`" icon="trash-fill" variant="danger"
-                class="mx-1" />
+              <i @click.prevent="showDeletar(msg)" :id="`iRemoveMsg${m}`" class="fa fa-trash-fill mx-1" variant="danger" />
               <b-tooltip :target="`iRemoveMsg${m}`" triggers="hover" noninteractive> Deletar Mesangem </b-tooltip>
             </div>
           </div>
@@ -74,8 +73,8 @@
             <p v-else class="m-0 smallText text-start">* Essa mensagem será enviada para o administrador.</p>
             <div class="row mt-3 justify-content-around">
               <button @click="send()" :disabled="loading" class="btn btn-sm btn-success">
-                <!-- <b-icon icon="cursor"></b-icon> -->
-                <i class="fa fa-fighter-jet"></i>
+                <!-- <i class="fa fa-cursor">/> -->
+                <i class="fa fa-fighter-jet" />
                 Enviar
                 <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
               </button>
@@ -122,7 +121,7 @@
       this.getMessage('Received');
       this.$store.dispatch('getUserContas')
         .then(response => this.usuarios = response)
-        .catch(er => this.toast(er.data.mensagem, 'times'))
+        .catch(er => this.$toast(er.data.mensagem))
     },
     computed: {
       access() {
@@ -135,7 +134,7 @@
         this.type = (payload == 'Received') ? 1 : 0;
         this.$store.dispatch(`getNotify${payload}`)
           .then(response => this.mensagens = response)
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       see(payload) {
@@ -143,7 +142,7 @@
           const find = this.mensagens.findIndex(msg => msg.id == payload);
           this.mensagens[find].status = true;
           this.$store.dispatch('updateStatusNotify', payload)
-            .catch(er => this.toast(er.data.mensagem, 'times'))
+            .catch(er => this.$toast(er.data.mensagem))
         }
       },
       valid() {
@@ -153,7 +152,7 @@
         return this.sendMessage.titulo && this.sendMessage.mensagem;
       },
       send() {
-        if (!this.valid()) return this.toast('Preencha os campos', 'times')
+        if (!this.valid()) return this.$toast('Preencha os campos')
 
         this.loading = true;
         const payload = {
@@ -166,13 +165,13 @@
 
         this.$store.dispatch(`createNotify`, payload)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.sendMessage.titulo = '';
             this.sendMessage.mensagem = '';
             this.sendMessage.all = false;
             this.sendMessage.destinatario = null;
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       showDeletar(payload) {
@@ -183,12 +182,12 @@
         this.loadingDel = true;
         this.$store.dispatch(`deleteNotify`, this.deletar.id)
           .then(response => {
-            this.toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'check')
             this.getMessage(this.type ? 'Received' : 'Sent');
             this.deletar = {};
             this.$refs['mDelMensagem'].hide()
           })
-          .catch(er => this.toast(er.data.mensagem, 'times'))
+          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loadingDel = false)
       }
     }
