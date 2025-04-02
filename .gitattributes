@@ -1,8 +1,0 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-# rm -R node_modules && rm -R package-lock.json
-# npm i --package-lock-only
-# npm i --no-assign-package-lock.json
-# git rm --cached package-lock.json
-# git update-index --assume-unchanged package-lock.json

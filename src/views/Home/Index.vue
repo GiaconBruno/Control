@@ -1,9 +1,9 @@
 <template>
-  <div class="container px-0 position-relative">
-    <div class="row mx-0 h-100 flex-column justify-content-around">
+  <div class="container-fluid px-0 mx-0 position-relative">
+    <div class="row mx-0 vh-100 flex-column justify-content-around">
       <div id="login" class="row w-100 mx-0 justify-content-between align-items-center">
-        <div class="col-12 col-md-6 text-center text-lg-left align-self-start">
-          <h1 class="my-3">Control-First</h1>
+        <div class="col-12 col-md-6 text-center text-lg-left align-self-start my-0 my-lg-5">
+          <h1 class="my-0 my-lg-3">Control-First</h1>
         </div>
         <div id="signIn" class="col-12 col-sm-8 mx-auto col-md-6 mx-md-0 col-lg-4">
           <transition name="anim" mode="out-in">
@@ -12,10 +12,8 @@
         </div>
       </div>
       <div class="row mx-0 w-100 align-items-between">
-        <div class="col-12 col-lg-6 mx-auto">
-          <Footer />
-        </div>
-        <div class="col-12 mt-2 mx-auto">
+        <Footer />
+        <div class="col-12 mt-2 mx-auto smallText">
           <span class="text-white">Visualizações:
             <span v-if="!loading" id="count" class="px-2"> {{ count }} </span>
             <div v-else id="loading" class="fas fa-spinner fa-pulse" role="status"></div>
@@ -27,10 +25,11 @@
 </template>
 
 <script>
-  import Footer from './Footer.vue'
-  import firebase from "firebase/app";
-  import "firebase/firestore"
+  import Footer from './Footer.vue';
 
+  import config from '@/services/config.json';
+  import * as fireDB from '@/services/firebase.js';
+  import * as fireGets from "firebase/firestore";
   export default {
     components: {
       Footer
@@ -46,20 +45,23 @@
     },
     methods: {
       start() {
-        const config = require("@/services/config.json");
-        if (firebase && !firebase.apps.length) firebase.initializeApp(config);
-        const db = firebase.firestore()
-        const amb = (window.location.hostname === "localhost") ? config.dev : config.prod;
+        const amb =
+          import.meta.env.DEV ? config.dev : config.prod;
+        const fireDBs = fireGets.collection(fireDB.db, "sites");
         this.loading = true;
-        db.collection('sites').onSnapshot(doc => {
-          doc.docChanges().map(change => {
+        fireGets.onSnapshot(fireDBs, doc => {
+          doc.docChanges().map(async change => {
             if (change.type === 'added' && (change.doc.id === amb.main)) {
-              db.collection('sites').doc(amb.main).update({
-                count: parseInt(change.doc.data().count) + 1,
+              const docRef = fireGets.doc(fireDBs, amb.main);
+              const newCount = parseInt(change.doc.data().count) + 1;
+
+              await fireGets.updateDoc(docRef, {
+                count: newCount,
                 hash: amb.hash
               })
             } else if ((change.type === 'modified') && (change.doc.id === amb.main)) {
               this.count = change.doc.data().count
+              console.log(this.count);
               this.loading = false;
             }
           })
@@ -71,12 +73,12 @@
 
 <style scoped>
   section {
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
   }
 
-  .container {
-    height: 100vh;
+  .container-fluid {
+    height: 100dvh;
     overflow-x: hidden;
   }
 
@@ -109,7 +111,7 @@
 
   @keyframes home {
     from {
-      transform: translateX(30vw);
+      transform: translateX(30dvw);
       opacity: 0.5;
     }
 

@@ -17,7 +17,7 @@
       <div v-for="(conta,i) in contas" :key="conta.id" v-show="filtring(conta)" class="mb-3">
         <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
           :class="{'contabord': (showParcelas), 'pago': (conta.status)}"
-          class="btn text-left alert-success row m-0 px-1 px-lg-2 d-flex justify-content-between align-items-center">
+          class="btn text-start alert-success row m-0 px-1 px-lg-2 d-flex justify-content-between align-items-center">
           <div class="col-1 col-lg-auto px-0">
             <i :class="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
               class="fa text-warning px-2 py-1"></i>
@@ -36,7 +36,7 @@
                   <div class="col-6 col-lg-5 px-0 text-md">
                     <div class="row m-0 justify-content-center align-items-center">
                       <span class="px-2 text-green h-100">{{ parcelasPagas }} Pagos</span>
-                      <span class="pl-3 text-red h-100">{{ showParcelas.length-parcelasPagas }}
+                      <span class="ps-3 text-red h-100">{{ showParcelas.length-parcelasPagas }}
                         Abertos</span>
                     </div>
                     <div class="row m-0 justify-content-center align-items-center">
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div v-if="['/entradas', '/saidas'].includes($route.path)" class="col-1 col-lg-auto px-0">
-            <div class="row m-0 px-0 text-right align-items-center flex-column flex-lg-row">
+            <div class="row m-0 px-0 text-end align-items-center flex-column flex-lg-row">
               <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
                 class="fa fa-plus-circle text-success px-2 py-1"></i>
               <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
@@ -76,7 +76,7 @@
           <div v-else class="col-2 col-lg text-center text-lg-left px-0 text-sm"><small> {{ formatDate(conta.createdAt) }} </small></div>
         </div>
         <template v-if="$route.path == '/todas-contas'">
-          <div class="row mx-0 align-items-center alert-primary text-left text-sm" v-for="(user, x) in conta.Usuarios"
+          <div class="row mx-0 align-items-center alert-primary text-start text-sm" v-for="(user, x) in conta.Usuarios"
             :key="`${user.nome}-${x}`">
             <div class="col px-2"> Usuário: {{ user.nome }} </div>
             <div class="col col-lg-3 text-center px-0 px-lg-2">
@@ -97,7 +97,7 @@
       <div class="row m-0 justify-content-around">
         <button @click="$bvModal.hide('mDelConta')" class="btn btn-sm btn-danger" block>Cancelar</button>
         <button @click="deletarConta()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
-          <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </b-modal>
@@ -307,7 +307,7 @@
 #overflow {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(85vh - 80px);
+  height: calc(85dvh - 80px);
 }
 
 .mb-3:focus,
@@ -377,7 +377,7 @@ label {
   }
 
   #overflow {
-    max-height: calc(85vh - 95px);
+    max-height: calc(85dvh - 95px);
   }
 
   .btn:not(.btn-sm) {
@@ -391,7 +391,7 @@ label {
 
 @media screen and (max-width: 335px) {
   #overflow {
-    max-height: 60vh;
+    max-height: 60dvh;
   }
 }
 </style>

@@ -7,7 +7,7 @@
       <div v-for="(i, x) in info" :key="x" @click="action(i.action, x)" class="btn col-10 col-lg-4 my-lg-3 mx-0">
         <div :class="i.color" class="small-box">
           <div class="inner px-4">
-            <p class="col-9 col-lg-8 px-0 my-3 text-left">{{ i.title}}</p>
+            <p class="col-9 col-lg-8 px-0 my-3 text-start">{{ i.title}}</p>
           </div>
           <div class="icon">
             <b-icon v-if="!i.loading" :icon="i.icon" />
@@ -58,7 +58,7 @@
 
 <style scoped>
 #overflow {
-  height: calc(85vh - 155px);
+  height: calc(85dvh - 155px);
   overflow-y: auto;
 }
 
@@ -128,7 +128,7 @@ a {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    height: calc(85vh - 135px);
+    height: calc(85dvh - 135px);
   }
 }
 </style>

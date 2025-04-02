@@ -1,57 +1,38 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex'
-import routes from './routes';
-import axios from 'axios';
-import App from './App.vue';
-import store from './store/store'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
-import VueApexCharts from 'vue-apexcharts';
+import { createApp, ref } from 'vue'
+import store from './store';
+import router from './routes';
+import axios from 'axios'
+import common from './services/common.js';
+import { Buffer } from "buffer";
+// import auth from './services/auth.js';
+import { createBootstrap } from 'bootstrap-vue-next';
 
-import Toasted from 'vue-toasted';
-import money from 'v-money';
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+import 'vue3-toastify/dist/index.css';
 
-// import service from './services/auth';
-// import common from '@/services/common.js';
-import access from '@/store/access.js';
+import '@/assets/Poppins.css';
+import '@/assets/fontawesome/css/all.min.css';
+import '@/assets/fontawesome/css/fontawesome.min.css';
 
-require('@/assets/css/all.min.css');
-require('@/assets/css/fontawesome.min.css');
+import App from './App.vue'
+const app = createApp(App);
 
-const router = new VueRouter({
-  routes: routes,
-  mode: 'history',
-});
-Vue.use(VueRouter);
-Vue.use(Vuex)
-Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
-Vue.use(Toasted);
-Vue.use(money, {
-  precision: 2,
-  prefix: 'R$ ',
-  decimal: ',',
-  thousands: '.',
-});
+app.use(store);
+app.use(router);
+app.use(createBootstrap());
 
-// DEFINE VARIAVEIS GLOBAL
-axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
-Vue.prototype.axios = axios;
-Vue.prototype.api = process.env.VUE_APP_BASE_URL;
-// Vue.prototype.auth = service.auth;
-// Vue.prototype.common = common;
-Vue.mixin(access);
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
-Vue.component('Filterable', () => import('./views/components/Filter.vue'));
-Vue.component('apexchart', VueApexCharts);
+app.config.globalProperties.axios = axios;
+app.config.globalProperties.store = store;
+app.config.globalProperties.Buffer = Buffer;
 
-Vue.config.productionTip = false;
-console.log(process.env.VUE_APP_BASE_URL);
+app.config.productionTip = false
 
-new Vue({
-  store,
-  router,
-  render: h => h(App),
-}).$mount('#app');
+app.mixin(common);
+
+app.config.productionTip = false
+
+
+app.mount('#app');

@@ -1,7 +1,7 @@
 <template>
   <div class="row mx-0 px-1 h-100 flex-column justify-content-center">
-    <div v-if="usuario" class="container px-2 position-relative">
-      <!-- <div class="d-block text-right p-3 pb-2"> </div> -->
+    <div v-if="usuario" class="container-fluid px-2 position-relative">
+      <!-- <div class="d-block text-end p-3 pb-2"> </div> -->
       <div class="row mx-0 mt-2 my-md-3 justify-content-around">
         <div class="col col-lg-10 px-0">
           <div class="row mx-0 align-items-center justify-content-center">
@@ -29,7 +29,7 @@
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
       </transition>
     </div>
-    <div v-else class="spinner-border spinner-border-lg text-light mt-5 ml-2" role="status"></div>
+    <div v-else class="spinner-border spinner-border-lg text-light mt-5 ms-2" role="status"></div>
     <div class="row mx-0 w-100">
       <div class="col-12 col-lg-8 mx-auto">
         <Footer />
@@ -73,7 +73,7 @@
     },
     computed: {
       usuario() {
-        return this.access.auth;
+        return this.$store.state.default.auth;
       },
       extra() {
         return ['/dashboard', '/settings', '/logs'].includes(this.$route.path)
@@ -138,9 +138,9 @@
 </script>
 
 <style scoped>
-  .container.position-relative {
-    min-height: 85vh;
-    max-height: 85vh;
+  .container-fluid.position-relative {
+    min-height: 85dvh;
+    max-height: 85dvh;
     border-radius: 5px;
     background: ghostwhite;
     overflow-y: hidden;
@@ -169,7 +169,7 @@
 
   @keyframes home {
     from {
-      transform: translateX(30vw);
+      transform: translateX(30dvw);
       opacity: 0.5;
     }
 

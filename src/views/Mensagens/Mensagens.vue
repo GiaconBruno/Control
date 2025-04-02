@@ -19,7 +19,7 @@
         <div v-for="(msg, m) in mensagens" :key="msg.id">
           <div @click="see(msg.id)" v-b-toggle="`msg-${msg.id}`"
             :class="[(type)?'alert-info':'alert-secondary', (!msg.status && type)?'font-weight-bold':'font-weight-normal']"
-            class="row mx-0 align-items-center alert text-left my-0 px-1 px-md-2 smallText">
+            class="row mx-0 align-items-center alert text-start my-0 px-1 px-md-2 smallText">
             <div v-if="type" class="col-4 px-1 px-md-2"> de: {{ msg.ref_remetente.nome }}
               {{ (access.auth.permissao)? ` (@${msg.ref_remetente.usuario})`:'' }} </div>
             <div v-else-if="!access.auth.permissao" class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }}
@@ -37,7 +37,7 @@
           </div>
           <b-collapse v-if="!deletar.id" :id="`msg-${msg.id}`" accordion="mensagem"
             class="mx-2 rounded-bottom px-1 px-md-2 bg-dark" role="tabpanel">
-            <div class="font-weight-light smallText py-1 py-md-2 text-white text-left" v-html="msg.mensagem.replace(/[\r\n]+/g, '<br>')"> </div>
+            <div class="font-weight-light smallText py-1 py-md-2 text-white text-start" v-html="msg.mensagem.replace(/[\r\n]+/g, '<br>')"> </div>
           </b-collapse>
           <div class="mt-2 mt-md-3" />
         </div>
@@ -45,7 +45,7 @@
       </template>
       <template v-else-if="type==2">
         <div class="row mx-0 justify-content-center">
-          <div class="col-12 col-lg-6 card border-secondary p-3 text-left">
+          <div class="col-12 col-lg-6 card border-secondary p-3 text-start">
             <div :class="{'has_errors': errors.includes('titulo')}" class="mb-3">
               <label for="titulo" class="my-0">Título: </label>
               <input v-model="sendMessage.titulo" type="text" name="titulo" id="titulo" class="form-control"
@@ -58,8 +58,8 @@
             </div>
             <template v-if="access.auth.permissao">
               <b-form-checkbox v-if="!sendMessage.destinatario" v-model="sendMessage.all" type="checkbox" name="all"
-                id="all" class="text-left mb-3"> Enviar para Todos? </b-form-checkbox>
-              <label v-if="!sendMessage.all" for="usuarios" class="text-left my-0">
+                id="all" class="text-start mb-3"> Enviar para Todos? </b-form-checkbox>
+              <label v-if="!sendMessage.all" for="usuarios" class="text-start my-0">
                 Destinatário: </label>
               <select v-if="!sendMessage.all" v-model="sendMessage.destinatario"
                 :class="{'text-sm': (sendMessage.destinatario==null)}" name="usuarios" id="usuario"
@@ -71,13 +71,13 @@
               </select>
               <hr />
             </template>
-            <p v-else class="m-0 smallText text-left">* Essa mensagem será enviada para o administrador.</p>
+            <p v-else class="m-0 smallText text-start">* Essa mensagem será enviada para o administrador.</p>
             <div class="row mt-3 justify-content-around">
               <button @click="send()" :disabled="loading" class="btn btn-sm btn-success">
                 <!-- <b-icon icon="cursor"></b-icon> -->
                 <i class="fa fa-fighter-jet"></i>
                 Enviar
-                <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+                <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
               </button>
             </div>
           </div>
@@ -92,7 +92,7 @@
       <div class="row m-0 justify-content-around">
         <button @click="$bvModal.hide('mDelMensagem'); deletar={}" class="btn btn-sm btn-danger" block>Cancelar</button>
         <button @click="delMessage()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
-          <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </b-modal>
@@ -123,6 +123,11 @@
       this.$store.dispatch('getUserContas')
         .then(response => this.usuarios = response)
         .catch(er => this.toast(er.data.mensagem, 'times'))
+    },
+    computed: {
+      access() {
+        return this.$store.state.default.auth;
+      }
     },
     methods: {
       getMessage(payload) {
@@ -193,7 +198,7 @@
 <style scoped>
 #overflow {
   overflow-y: auto;
-  max-height: calc(85vh - 175px);
+  max-height: calc(85dvh - 175px);
 }
 
 .smallText {
@@ -213,7 +218,7 @@
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(85vh - 175px);
+    max-height: calc(85dvh - 175px);
   }
 
   .btn {

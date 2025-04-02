@@ -1,12 +1,12 @@
+import { createRouter, createWebHistory } from 'vue-router';
+
 const routes = [{
-  path: '*',
-  // component: () => import('./views/Login/Index.vue'),
+  path: '/:pathMatch(.*)',
   name: 'all',
   redirect: '/'
 }, {
   path: '/',
   component: () => import('./views/Home/Index.vue'),
-  // name: 'logIn',
   children: [{
     path: '/',
     component: () => import('./views/Home/Login.vue'),
@@ -14,8 +14,7 @@ const routes = [{
     path: '/cadastro',
     component: () => import('./views/Usuarios/Usuario.vue'),
   }]
-},
-{
+}, {
   path: '/home',
   component: () => import('./views/Home/Home.vue'),
   name: 'home',
@@ -55,8 +54,15 @@ const routes = [{
   }, {
     path: '/mensagens',
     component: () => import('./views/Mensagens/Mensagens.vue'),
-  },]
-},
-];
+  }]
+}]
 
-export default routes
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+  scrollBehavior: (to, from, next) => {
+    return (to.hash) ? { selector: to.hash } : { x: 0, y: 0 }
+  }
+});
+
+export default router;

@@ -4,7 +4,7 @@
       <label class="m-0"> {{ title }} </label>
       <hr class="mt-2" />
       <div class="row">
-        <div class="col-12 text-left">
+        <div class="col-12 text-start">
           <label for="conta">Descrição:</label>
           <div class="position-relative">
             <i class="fa fa-folder text-gray"></i>
@@ -12,7 +12,7 @@
               placeholder="Digite a descrição da conta" />
           </div>
         </div>
-        <div class="col-12 text-left">
+        <div class="col-12 text-start">
           <label for="usuario">Tipo:</label>
           <div class="position-relative">
             <b-icon icon="arrow-down-up"></b-icon>
@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 text-left">
+        <div class="col-12 text-start">
           <label for="usuario">Quem pode visualizar?</label>
           <div class="position-relative">
             <i class="fa fa-user text-gray"></i>
@@ -66,7 +66,7 @@
         <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="(action=='Criar')?createConta():updateConta()" :disabled="loading"
           class="btn btn-sm btn-success">{{action}}
-          <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </div>
@@ -95,22 +95,22 @@
         .then(response => this.usuarios = response)
         .catch(er => this.toast(er.data.mensagem, 'times'))
         .finally(() => {
-          this.conta.tipo = this.access.contaTipo;
-          this.fk_usuario_id.push(this.usuarios.find(u => u.id == this.access.auth.id));
-          if (this.access.contaEdit && this.access.contaEdit.id) {
-            // console.log(this.access.contaEdit.Usuarios);
-            this.conta.descricao = this.access.contaEdit.descricao;
-            this.conta.tipo = this.access.contaEdit.tipo;
+          this.conta.tipo = this.$store.state.default.contaTipo;
+          this.fk_usuario_id.push(this.usuarios.find(u => u.id == this.$store.state.default.auth.id));
+          if (this.$store.state.default.contaEdit && this.$store.state.default.contaEdit.id) {
+            // console.log(this.$store.state.default.contaEdit.Usuarios);
+            this.conta.descricao = this.$store.state.default.contaEdit.descricao;
+            this.conta.tipo = this.$store.state.default.contaEdit.tipo;
             this.title = 'Editar Conta';
             this.action = 'Alterar';
-            this.fk_usuario_id = this.access.contaEdit.Usuarios.sort(a => {
-              if (a.id == this.access.contaEdit.owner) return -1
+            this.fk_usuario_id = this.$store.state.default.contaEdit.Usuarios.sort(a => {
+              if (a.id == this.$store.state.default.contaEdit.owner) return -1
               else return 0
             });
             // this.fk_usuario_id = 
-            //   (this.access.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
+            //   (this.$store.state.default.contaEdit.fk_usuario_id.replace(/[['\]]/g, "")
             //     .split(",")).map(c => parseInt(c));
-            // this.fk_usuario_id.push(this.access.contaEdit.ref_usuario.fk_usuario_id)
+            // this.fk_usuario_id.push(this.$store.state.default.contaEdit.ref_usuario.fk_usuario_id)
           }
           this.loading = false
         })
@@ -181,7 +181,7 @@
 <style scoped>
 #overflow {
   overflow-y: auto;
-  max-height: calc(85vh - 80px);
+  max-height: calc(85dvh - 80px);
 }
 
 label {
@@ -234,7 +234,7 @@ hr {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(85vh - 95px);
+    max-height: calc(85dvh - 95px);
   }
 }
 </style>

@@ -25,10 +25,10 @@
                 <div class="inner px-4">
                   <h3><small> {{ (x==0)?(dashboard.qtdEntradas||0):(dashboard.qtdSaidas||0) }} </small>- {{ i.title}}
                   </h3>
-                  <p class="text-left">Abertos:
+                  <p class="text-start">Abertos:
                     {{ formatMoney((x==0)?(dashboard.abertoEntradas||0):(dashboard.abertoSaidas||0)) }}
                   </p>
-                  <p class="text-left">Pagos:
+                  <p class="text-start">Pagos:
                     {{ formatMoney((x==0)?(dashboard.pagosEntradas||0):(dashboard.pagosSaidas||0)) }} </p>
                 </div>
                 <div class="icon">
@@ -38,7 +38,7 @@
               </div>
             </router-link>
           </div>
-          <div class="col-11 xSmallText text-left">*Atualizado: {{ formatDate(access.dash.validate-(1000*60*30))}}
+          <div class="col-11 xSmallText text-start">*Atualizado: {{ formatDate(access.dash.validate-(1000*60*30))}}
           </div>
         </template>
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
@@ -50,7 +50,7 @@
               <apexchart height="300px" :options="chartOptions" :series="series" />
             </div>
           </div>
-          <div class="col-11 xSmallText text-left">*Atualizado: {{ formatDate(access.graphic.validate-(1000*60*30))}}
+          <div class="col-11 xSmallText text-start">*Atualizado: {{ formatDate(access.graphic.validate-(1000*60*30))}}
           </div>
         </template>
         <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
@@ -257,7 +257,7 @@
 
 <style scoped>
   #overflow {
-    height: calc(85vh - 205px);
+    height: calc(85dvh - 205px);
     overflow-y: auto;
   }
 
@@ -329,7 +329,7 @@
 
   @media screen and (max-width: 768px) {
     #overflow {
-      height: calc(85vh - 175px);
+      height: calc(85dvh - 175px);
     }
   }
 </style>

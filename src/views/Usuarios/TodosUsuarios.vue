@@ -6,8 +6,8 @@
       <div v-for="(usuario, i) in usuarios" :key="usuario.id" v-show="filtring(usuario)"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
         <div class="row align-items-center">
-          <div class="col-10 col-lg-11 pl-1 pl-lg-3 pr-0 py-lg-0">
-            <div class="row mx-0 text-left align-items-center">
+          <div class="col-10 col-lg-11 ps-1 ps-lg-3 pe-0 py-lg-0">
+            <div class="row mx-0 text-start align-items-center">
               <div class="col col-lg px-0">
                 <div class="row mx-0 justify-content-between align-items-center">
                   <span class="text-sm text-lg-sm">
@@ -19,12 +19,12 @@
               </div>
               <div class="col-12 col-lg-4 px-0 px-lg-3">
                 <div class="row justify-content-around align-items-center text-center text-sm">
-                  <div class="col-6 pr-0">
+                  <div class="col-6 pe-0">
                     <span>Permissão: </span>
                     <i :class="(usuario.permissao) ? 'fa-check text-success': 'fa-times text-danger'"
                       class="fa mx-1"></i>
                   </div>
-                  <div class="col-6 pr-0">
+                  <div class="col-6 pe-0">
                     <span>Ativo: </span>
                     <i :class="(usuario.ativo) ? 'fa-check text-success': 'fa-times text-danger'" class="fa mx-1"></i>
                   </div>
@@ -42,7 +42,7 @@
           </div>
         </div>
       </div>
-      <div class="col-3 offset-9 text-right" style="font-size: 10px; margin-top: -5px;">
+      <div class="col-3 offset-9 text-end" style="font-size: 10px; margin-top: -5px;">
         <span>@ = usuario</span>
       </div>
     </div>
@@ -59,7 +59,7 @@
       <div class="row m-0 justify-content-around">
         <button @click="$bvModal.hide('mConfirm')" class="btn btn-sm btn-danger" block>Cancelar</button>
         <button @click="deletarUsuario()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
-          <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </b-modal>
@@ -146,7 +146,7 @@
 #overflow {
   /* overflow-x: hidden; */
   overflow-y: auto;
-  max-height: calc(85vh - 80px);
+  max-height: calc(85dvh - 80px);
 }
 
 .text-sm {
@@ -169,7 +169,7 @@
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(85vh - 103px);
+    max-height: calc(85dvh - 103px);
   }
 }
 </style>

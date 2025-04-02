@@ -1,16 +1,18 @@
 <template>
-  <div class="row mx-0 flex-row-reverse justify-content-around align-items-center text-white">
-    <span class="px-2 smallText text-white font-weight-light">versão:
-      {{ require('@/../package.json').version }}</span>
-    <div>
-      <span v-for="(item,i) in contact" :key="i" :id="`icon-${i}`" class="px-2">
-        <a :href="item.link" :target="(item.icon != 'fas fa-envelope')?'_blank':'_self'">
-          <i :class="item.icon" class="text-white social"></i>
-        </a>
-        <b-tooltip :target="`icon-${i}`" triggers="hover" noninteractive> {{ item.name }} </b-tooltip>
-      </span>
+  <div class="col-12 col-lg-8 px-0 mx-auto smallerText">
+    <div class="row mx-0 justify-content-center align-items-center text-white">
+      <div class="col-12 col-lg-auto px-0 font-weight-light">Desenvolvido por: Bruno Giacon</div>
+      <div class="col-auto px-0 mx-lg-2">
+        <span v-for="(item,i) in contact" :key="i" :id="`icon-${i}`">
+          <a :href="item.link" :target="(item.icon != 'fas fa-envelope')?'_blank':'_self'" :title="item.name">
+            <i :class="item.icon" class="mx-1 text-white social"></i>
+          </a>
+        </span>
+        <span v-if="mobile">@GiaconBruno</span>
+      </div>
+      <span v-if="mobile">giacon_bruno@hotmail.com</span>
+      <div class="col-auto px-0 text-white font-weight-light">versão: {{ appVersion }} </div>
     </div>
-    <span class="mt-2 px-2 smallerText font-weight-light text-white">Desenvolvido por: Bruno Giacon</span>
   </div>
 </template>
 
@@ -36,6 +38,11 @@
           icon: 'fab fa-facebook'
         }]
       }
+    },
+    computed: {
+      mobile() {
+        return window.innerWidth < 992;
+      }
     }
   }
 </script>
@@ -50,7 +57,7 @@
     font-size: smaller;
   }
 
-  @media screen and (max-width: 992px) {
+  @media screen and (max-width: 1024px) {
     .smallerText {
       font-size: smaller;
     }

@@ -119,7 +119,7 @@
     },
     computed: {
       usuario() {
-        return this.access.auth;
+        return this.$store.state.default.auth;
       },
       extra() {
         return ['/dashboard', '/settings', '/logs'].includes(this.$route.path)

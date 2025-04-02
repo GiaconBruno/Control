@@ -3,7 +3,7 @@
     <div v-if="!loadingForm" class="col-12 col-lg-8 card border-secondary p-0">
       <label class="m-0 pt-3"> {{ title }} </label>
       <hr class="mt-2" />
-      <div class="row mx-0 text-left">
+      <div class="row mx-0 text-start">
         <div :class="{'has_errors': errors.includes('descricao')}" class="col-7 col-lg-6 px-1 px-lg-3">
           <label id="lbDescricao" for="descricao">Descrição:</label>
           <div class="position-relative">
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="row mx-0 text-left justify-content-between">
+      <div class="row mx-0 text-start justify-content-between">
         <div :class="{'has_errors': errors.includes('valor')}" class="col-4 px-1 px-lg-3 text-red">
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
@@ -45,13 +45,13 @@
           <label for="total">Total:</label>
           <div class="position-relative pt-2">
             <i class="fa fa-equals text-gray" style="top: auto; left: 0; bottom: 0;"></i>
-            <span class="pl-3 pl-lg-4">{{ total }}</span>
+            <span class="ps-3 ps-lg-4">{{ total }}</span>
           </div>
         </div>
       </div>
       <hr>
       <label class="text-center text-md-sm m-0"> Informações de pagamento </label>
-      <div class="row mx-0 text-left">
+      <div class="row mx-0 text-start">
         <div :class="{'has_errors': errors.includes('forma_pagto')}" class="col-4 px-1 px-lg-3">
           <label id="lbformaPagto" for="formaPagto">Forma de Pagto:</label>
           <div class="position-relative">
@@ -60,7 +60,7 @@
               <select v-if="formSelect.select" v-model="parcela.forma_pagto"
                 @change="(parcela.forma_pagto == 'other')? (formSelect.select = false) : (formSelect.select = true)"
                 @blur="setRecebido()" :class="{'text-sm': (parcela.forma_pagto==null)}" name="formaPagto"
-                id="formaPagto" class="form-control py-0 pl-3">
+                id="formaPagto" class="form-control py-0 ps-3">
                 <option :value="null" class="form-control">Selecione..</option>
                 <option value="other" class="form-control">Criar</option>
                 <option v-for="(forma, f) in formaPagto" :key="f" :value="forma" class="form-control">
@@ -78,11 +78,11 @@
             <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
           </div>
         </div>
-        <div :class="{'has_errors': errors.includes('recebido')}" class="col-3 pl-0 px-1 px-lg-3">
+        <div :class="{'has_errors': errors.includes('recebido')}" class="col-3 ps-0 px-1 px-lg-3">
           <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
             <i id="iRecebido" class="fa fa-donate text-gray"></i>
-            <money v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control pr-0"
+            <money v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control pe-0"
               placeholder="R$ 0,00" />
           </div>
         </div>
@@ -97,7 +97,7 @@
       </div>
       <hr />
       <template v-if="parcela.repetir!=undefined">
-        <div class="row mx-0 text-left my-2">
+        <div class="row mx-0 text-start my-2">
           <div class="col-6 col-md-4 mx-auto d-flex">
             <label id="lbRepetir" for="repetir" class="m-0">Replicar:</label>
             <input id="repetir" v-model="parcela.repetir" type="number"
@@ -122,7 +122,7 @@
         <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
         <button @click="(action=='Criar')?createParcela():updateParcela()" :disabled="loading"
           class="btn btn-sm btn-success">{{action}}
-          <div v-if="loading" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </div>
@@ -154,15 +154,15 @@
     },
     beforeMount() {
       this.loadingForm = true;
-      this.conta = Buffer.from(`${this.access.contaParcela}`, 'base64').toString('utf-8') / 100000
+      this.conta = Buffer.from(`${this.$store.state.default.contaParcela}`, 'base64').toString('utf-8') / 100000
       this.$store.dispatch('getFormasPagto')
         .then((response) => this.formaPagto = response)
         .catch(er => this.toast(er.data.mensagem, 'times'))
         .finally(() => this.loadingForm = false)
     },
     mounted() {
-      if (this.access.parcelaEdit && this.access.parcelaEdit.id) {
-        this.parcela = this.access.parcelaEdit;
+      if (this.$store.state.default.parcelaEdit && this.$store.state.default.parcelaEdit.id) {
+        this.parcela = this.$store.state.default.parcelaEdit;
         if (this.parcela.vencimento)
           this.parcela.vencimento = this.parcela.vencimento.split('/').reverse().join('-')
         if (this.parcela.data_pagto)
@@ -309,12 +309,12 @@
 <style scoped>
 #overflow {
   overflow-y: scroll;
-  max-height: calc(85vh - 80px);
+  max-height: calc(85dvh - 80px);
 }
 
 #overflow-2 {
   overflow-y: scroll;
-  height: calc(85vh - 472px);
+  height: calc(85dvh - 472px);
 }
 
 label {
@@ -379,7 +379,7 @@ hr {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(85vh - 95px);
+    max-height: calc(85dvh - 95px);
   }
 }
 </style>

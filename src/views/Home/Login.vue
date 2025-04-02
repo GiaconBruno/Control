@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-show="!loading" class="py-4 py-lg-5 px-4 bg-white w-100 text-left position-relative">
+    <div v-show="!loading" class="py-2 py-lg-3 px-4 bg-white w-100 text-start position-relative">
       <div :class="{'not-allowed':(!servidor && !loading)}" class="bg-white position-absolute"></div>
       <div v-if="loadServ" class="alert bg-warning alert-dismissible fade show" role="alert">
-        <div class="spinner-border spinner-border-sm mr-3 my-1" role="status"></div>
+        <div class="spinner-border spinner-border-sm me-3 my-1" role="status"></div>
         <strong>Aguarde!</strong> <small> ({{ timer.toString().padStart(2,0) }}) </small>
       </div>
       <div v-else :class="(servidor)? 'bg-success' : 'bg-danger' " class="alert alert-dismissible fade show text-white"
@@ -33,14 +33,14 @@
           <i class="fas fa-lock"></i>
         </span>
       </div>
-      <div class="mt-3 text-right">
+      <div class="mt-3 text-end">
         <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
-          <i class="fas fa-sign-in-alt mr-2 mr-sm-5"></i>
-          <span class="text-white mr-2 mr-sm-5"> Entrar</span>
+          <i class="fas fa-sign-in-alt me-2 me-sm-5"></i>
+          <span class="text-white me-2 me-sm-5"> Entrar</span>
         </button>
         <button @click="create()" :disabled="loading" class="form-control btn btn-primary mt-3">
-          <i class="fas fa-user-circle mr-2 mr-sm-5"></i>
-          <span class="text-white mr-2 mr-sm-5"> Criar</span>
+          <i class="fas fa-user-circle me-2 me-sm-5"></i>
+          <span class="text-white me-2 me-sm-5"> Criar</span>
         </button>
       </div>
     </div>
@@ -79,7 +79,7 @@
             this.servidor = true;
             clearInterval(this.reload);
             this.$store.commit('GET_ACCESS');
-            if (this.access.auth && this.access.auth.id) this.$router.push("/dashboard");
+            if (this.$store.state.default.auth && this.$store.state.default.auth.id) this.$router.push("/dashboard");
           })
           .catch(() => {
             this.servidor = false

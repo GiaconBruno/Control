@@ -2,7 +2,7 @@
   <div v-if="(loadingParcelas)" class="fas fa-2x fa-spinner fa-pulse text-success my-2" role="status">
   </div>
   <div v-else-if="!parcelas.length">
-    <p class="pl-5 my-0 text-black-50 text-sm">Nenhuma parcela encontrada!</p>
+    <p class="ps-5 my-0 text-black-50 text-sm">Nenhuma parcela encontrada!</p>
     <button v-if="!['/todas-contas'].includes($route.path)" @click="$router.push('/parcela')"
       class="btn btn-success btn-sm my-1">
       <span class="text-sm">Criar Parcelas</span>
@@ -12,18 +12,18 @@
     <div class="row m-0" style="background-color: #ffc10790">
       <div :class="['/entradas', '/saidas'].includes($route.path)?'col-11':'col-12'" class="px-0">
         <div class="row m-0">
-          <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0 text-sm">
+          <div class="col-12 col-lg-7 ps-2 pe-1 pe-lg-0 text-sm">
             <div class="row m-0">
-              <div class="col-4 pl-0 pr-2 text-left"> DESCRIÇÃO </div>
-              <div class="col-3 pl-0 pr-2"> VALOR </div>
-              <div class="col-3 pl-0 pr-2"> DT VENCIMENTO </div>
+              <div class="col-4 ps-0 pe-2 text-start"> DESCRIÇÃO </div>
+              <div class="col-3 ps-0 pe-2"> VALOR </div>
+              <div class="col-3 ps-0 pe-2"> DT VENCIMENTO </div>
               <div class="col-2 px-0"> STATUS </div>
             </div>
           </div>
-          <div class="col-12 col-lg-5 pl-2 pr-1 px-lg-0 text-sm">
+          <div class="col-12 col-lg-5 ps-2 pe-1 px-lg-0 text-sm">
             <div class="row m-0">
-              <div class="col-4 pr-2 pl-0"> DT PAGAMENTO </div>
-              <div class="col-4 pl-0 pr-2"> FORMA PAGTO </div>
+              <div class="col-4 pe-2 ps-0"> DT PAGAMENTO </div>
+              <div class="col-4 ps-0 pe-2"> FORMA PAGTO </div>
               <div class="col-4 px-0"> VALOR PAGTO </div>
             </div>
           </div>
@@ -37,27 +37,27 @@
       <template>
         <div class="col px-0">
           <div class="row m-0">
-            <div class="col-12 col-lg-7 pl-2 pr-1 pr-lg-0">
+            <div class="col-12 col-lg-7 ps-2 pe-1 pe-lg-0">
               <div class="row m-0 align-items-center">
-                <div class="col-4 px-2 text-left">
+                <div class="col-4 px-2 text-start">
                   {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
-                <div class="col-3 pl-0 pr-2">{{ formatMoney(parcela.valor) }}</div>
-                <div class="col-3 pl-0 pr-2">{{ parcela.vencimento}}</div>
+                <div class="col-3 ps-0 pe-2">{{ formatMoney(parcela.valor) }}</div>
+                <div class="col-3 ps-0 pe-2">{{ parcela.vencimento}}</div>
                 <div class="col-2 px-0">
                   {{ (parcela.status) ? 'Pago' : 'Aberto' }}</div>
               </div>
             </div>
-            <div class="col-12 col-lg-5 pl-2 pr-1 px-lg-0">
+            <div class="col-12 col-lg-5 ps-2 pe-1 px-lg-0">
               <div :class="{'vencido': (vencido(parcela))}" class="row m-0 h-100 align-items-center">
-                <div class="col-4 px-2 pl-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
-                <div class="col-4 pl-0 pr-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
+                <div class="col-4 px-2 ps-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
+                <div class="col-4 ps-0 pe-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
                 <div class="col-3 px-0">{{ formatMoney(parcela.recebido) }}</div>
               </div>
             </div>
           </div>
         </div>
-        <div v-if="['/entradas', '/saidas'].includes($route.path)" class="px-0 px-lg-2 text-right">
-          <div class="row m-0 pr-1 pr-lg-0 justify-content-center justify-content-sm-between">
+        <div v-if="['/entradas', '/saidas'].includes($route.path)" class="px-0 px-lg-2 text-end">
+          <div class="row m-0 pe-1 pe-lg-0 justify-content-center justify-content-sm-between">
             <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
               class="btn fa fa-dollar-sign text-success px-1 px-lg-2"></i>
             <b-tooltip :target="`iPagarEditar${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Pagar/Editar
@@ -81,7 +81,7 @@
       <div class="row m-0 justify-content-around">
         <button @click="$bvModal.hide('mDelParcela')" class="btn btn-sm btn-danger" block>Cancelar</button>
         <button @click="deletarParcela()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
-          <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </b-modal>

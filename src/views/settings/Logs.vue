@@ -16,7 +16,7 @@
       <div class="d-flex align-items-center">
         <small class="d-none d-lg-block px-3">Status: </small>
         <div v-for="s in status" :key="s.title" @click="getLogs(s.title, $refs.page.pagination)"
-          class="btn px-0 pl-1 px-lg-3 text-white smallText">
+          class="btn px-0 ps-1 px-lg-3 text-white smallText">
           <p :class="s.color" class="rounded py-1 px-1 m-0 d-flex align-items-center">
             <b-icon v-if="type==s.title" icon="check-square" />
             <b-icon v-else icon="x-square" />
@@ -62,14 +62,14 @@
               <div class="col-auto px-0"> {{ showDate(log.createdAt) }} </div>
               <div class="col-auto px-0"> {{ log.status }} </div>
               <div class="col-auto px-0"> {{ (log.ref_usuario)?`@${log.ref_usuario.usuario}`:'-' }} </div>
-              <div class="col-6 px-0 text-left xSmallText"> {{ log.rota }} </div>
+              <div class="col-6 px-0 text-start xSmallText"> {{ log.rota }} </div>
               <div @click.stop="showDeletar(log)" class="btn btn-sm col-auto px-0">
                 <b-icon :id="`iRemoveLog${i}`" icon="trash" variant="danger" />
                 <b-tooltip :target="`iRemoveLog${i}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
               </div>
             </div>
             <b-collapse :id="`log-${i}`" accordion="logs" role="tabpanel">
-              <div class="row mx-0 py-2 text-left">
+              <div class="row mx-0 py-2 text-start">
                 <div class="col col-lg px-0 my-2 mx-2 mx-lg-1 my-lg-0 bg-dark rounded">
                   <div class="code p-2 text-white" v-html="formatCode(log.request)"></div>
                 </div>
@@ -95,11 +95,11 @@
         <button @click="$bvModal.hide('mDelLog')" class="btn btn-sm btn-danger" block>Cancelar</button>
         <button v-if="deletar.createdAt" @click="deletarLog(true)" :disabled="loadingDel" class="btn btn-sm btn-success"
           block>Confirmar
-          <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
         <button v-if="deletar.data" @click="deletarLog()" :disabled="loadingDel" class="btn btn-sm btn-warning"
           block>Deletar Todos
-          <div v-if="loadingDel" class="spinner-border spinner-border-sm ml-2" role="status"></div>
+          <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
     </b-modal>
@@ -188,12 +188,12 @@
 
 <style scoped>
 #overflow {
-  height: calc(85vh - 155px);
+  height: calc(85dvh - 155px);
   overflow-y: auto;
 }
 
 #overflow-2 {
-  height: calc(85vh - 255px);
+  height: calc(85dvh - 255px);
   overflow-y: auto;
 }
 
@@ -231,11 +231,11 @@ a {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    height: calc(85vh - 135px);
+    height: calc(85dvh - 135px);
   }
 
   #overflow-2 {
-    height: calc(85vh - 240px);
+    height: calc(85dvh - 240px);
   }
 
   .smallText {
