@@ -13,7 +13,7 @@ const routes = [{
   }, {
     path: '/cadastro',
     component: () => import('./views/Usuarios/Usuario.vue'),
-  },]
+  }]
 },
 {
   path: '/home',

@@ -30,7 +30,7 @@ cd "nome do projeto"
 
 ### Instalar Dependências
 ```sh
-npm i vue-router vuex dotenv axios bootstrap-vue vue-toasted
+npm i vue-router vuex dotenv axios bootstrap-vue vue-toasted vue-apexcharts v-money firebase
 ```
 
 ### Inicia o projeto
