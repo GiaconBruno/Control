@@ -157,7 +157,6 @@
       this.conta = Buffer.from(`${this.$store.state.default.contaParcela}`, 'base64').toString('utf-8') / 100000
       this.$store.dispatch('getFormasPagto')
         .then((response) => this.formaPagto = response)
-        .catch(er => this.$toast(er.data.mensagem))
         .finally(() => this.loadingForm = false)
     },
     mounted() {
@@ -264,9 +263,9 @@
       },
       createParcela() {
         if (this.valid()) {
-          this.$toast('Prenche os campos corretamente.')
-          this.$toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'error', 8000)
-          this.$toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'error', 12000)
+          this.$toast('Prenche os campos corretamente.', 'warning')
+          this.$toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'warning')
+          this.$toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'warning')
           return
         }
         //Formating
@@ -276,17 +275,16 @@
         //GRAVANDO
         this.$store.dispatch('createParcela', payload)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success', 'warning')
             this.$router.go(-1)
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       updateParcela() {
         if (this.valid()) {
           this.$toast('Prenche os campos corretamente.')
-          this.$toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'error', 8000)
-          this.$toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'error', 12000)
+          this.$toast('Para parcela em ABERTAS, obrigatório: VENCIMENTO e VALOR', 'warning')
+          this.$toast('Para parcela PAGAS, obrigatório informações de pagamento.', 'warning')
           return
         }
         //Formating
@@ -296,10 +294,9 @@
         //GRAVANDO
         this.$store.dispatch('updateParcela', payload.parcela)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.$router.go(-1)
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       }
     }

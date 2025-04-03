@@ -89,7 +89,7 @@
     methods: {
       valid() {
         if ((!this.usuario.nome) || (!this.usuario.usuario) || (!this.usuario.senha)) {
-          this.$toast('Preencha os dados')
+          this.$toast('Preencha os dados', 'warning')
           return false;
         } else return true;
       },
@@ -100,10 +100,9 @@
 
         this.$store.dispatch('createUser', this.usuario)
           .then(() => {
-            this.$toast('Usuário cadastrado com exito!!', 'check')
+            this.$toast('Usuário cadastrado com exito!!', 'success')
             this.$router.push('/dashboard')
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       updateUsuario() {
@@ -114,16 +113,12 @@
         this.$store.dispatch('updateUser', this.usuario)
           .then(response => {
             let msg = (response) ? response.mensagem : 'Usuário Atualizado! com exito!'
-            this.$toast(msg, 'check')
+            this.$toast(msg, 'success')
             this.usuario = {
               permissao: false,
               ativo: true,
             }
             this.$router.go(-1)
-          })
-          .catch(er => {
-            console.error(er);
-            this.$toast(er.data.mensagem)
           })
           .finally(() => this.loading = false)
       }

@@ -78,12 +78,10 @@
             console.log(response.data.join('\n'));
             this.servidor = true;
             clearInterval(this.reload);
-            this.$store.commit('GET_ACCESS');
-            if (this.$store.state.default.auth && this.$store.state.default.auth.id) this.$router.push("/dashboard");
+            if (this.$store.state.default.auths && this.$store.state.default.auth.id) this.$router.push("/dashboard");
           })
           .catch(() => {
             this.servidor = false
-            localStorage.clear();
             this.reload = setTimeout(() => this.status(), 10000);
           })
           .finally(() => {
@@ -104,7 +102,7 @@
       sigIn() {
         this.valid();
         if (!this.user || !this.password) {
-          this.$toast('Preencha os dados')
+          this.$toast('Preencha os dados', 'warning')
           return;
         }
         this.status()
@@ -120,14 +118,9 @@
           .then(() => {
             this.$router.push("/dashboard")
           })
-          .catch(er => {
-            if (er) this.$toast(er.data.mensagem)
-            localStorage.clear();
-          })
           .finally(() => this.loading = false)
       },
       create() {
-        localStorage.clear();
         this.$router.push('/cadastro')
       },
     },

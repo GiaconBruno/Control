@@ -121,7 +121,6 @@
       this.getMessage('Received');
       this.$store.dispatch('getUserContas')
         .then(response => this.usuarios = response)
-        .catch(er => this.$toast(er.data.mensagem))
     },
     computed: {
       access() {
@@ -134,7 +133,6 @@
         this.type = (payload == 'Received') ? 1 : 0;
         this.$store.dispatch(`getNotify${payload}`)
           .then(response => this.mensagens = response)
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       see(payload) {
@@ -142,7 +140,6 @@
           const find = this.mensagens.findIndex(msg => msg.id == payload);
           this.mensagens[find].status = true;
           this.$store.dispatch('updateStatusNotify', payload)
-            .catch(er => this.$toast(er.data.mensagem))
         }
       },
       valid() {
@@ -152,7 +149,7 @@
         return this.sendMessage.titulo && this.sendMessage.mensagem;
       },
       send() {
-        if (!this.valid()) return this.$toast('Preencha os campos')
+        if (!this.valid()) return this.$toast('Preencha os campos', 'warning')
 
         this.loading = true;
         const payload = {
@@ -165,13 +162,12 @@
 
         this.$store.dispatch(`createNotify`, payload)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.sendMessage.titulo = '';
             this.sendMessage.mensagem = '';
             this.sendMessage.all = false;
             this.sendMessage.destinatario = null;
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       showDeletar(payload) {
@@ -182,12 +178,11 @@
         this.loadingDel = true;
         this.$store.dispatch(`deleteNotify`, this.deletar.id)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.getMessage(this.type ? 'Received' : 'Sent');
             this.deletar = {};
             this.$refs['mDelMensagem'].hide()
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loadingDel = false)
       }
     }

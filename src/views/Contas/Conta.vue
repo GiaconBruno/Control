@@ -15,7 +15,7 @@
         <div class="col-12 text-start">
           <label for="usuario">Tipo:</label>
           <div class="position-relative">
-            <i class="fa fa-arrow-down-up">/>
+            <i class="fa fa-arrow-down-up" />
             <div class="row m-0 mb-3">
               <div class="col-12 px-0">
                 <select v-model="conta.tipo" name="tipo" id="tipo" class="form-control py-0">
@@ -93,7 +93,6 @@
       this.loading = true
       this.$store.dispatch('getUserContas')
         .then(response => this.usuarios = response)
-        .catch(er => this.$toast(er.data.mensagem))
         .finally(() => {
           this.conta.tipo = this.$store.state.default.contaTipo;
           this.fk_usuario_id.push(this.usuarios.find(u => u.id == this.$store.state.default.auth.id));
@@ -138,11 +137,11 @@
       },
       valid() {
         if (!this.conta.descricao) {
-          this.$toast('Preencha a Descrição')
+          this.$toast('Preencha a Descrição', 'warning')
           return
         }
         if (!this.conta.tipo) {
-          this.$toast('Preencha o Tipo da Conta')
+          this.$toast('Preencha o Tipo da Conta', 'warning')
           return
         }
         return true
@@ -155,10 +154,9 @@
 
         this.$store.dispatch('createConta', this.conta)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.$router.go(-1)
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       updateConta() {
@@ -168,10 +166,9 @@
         this.conta.status = false;
         this.$store.dispatch('updateConta', this.conta)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.$router.go(-1)
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
     }

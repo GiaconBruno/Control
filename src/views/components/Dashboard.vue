@@ -222,11 +222,6 @@
             this.dashboard = response.dash
             this.getGraphic(force);
           })
-          .catch(er => {
-            this.$toast(er.data.mensagem)
-            this.$router.push('/');
-            localStorage.clear();
-          })
           .finally(() => this.loadingDash = false)
       },
       getGraphic(force) {
@@ -244,11 +239,6 @@
               data: response.graphic.saidas
             });
           })
-          .catch(er => {
-            this.$toast(er.data.mensagem)
-            this.$router.push('/');
-            localStorage.clear();
-          })
           .finally(() => this.loadingGraphic = false)
       }
     }
@@ -257,7 +247,7 @@
 
 <style scoped>
   #overflow {
-    height: calc(85dvh - 205px);
+    height: calc(85dvh - 140px);
     overflow-y: auto;
   }
 

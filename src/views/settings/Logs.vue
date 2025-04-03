@@ -147,7 +147,6 @@
         this.loading = true;
         this.$store.dispatch('getLogsDash')
           .then((response) => this.infoAll = response)
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       getLogs(status, pagination, periodo) {
@@ -162,7 +161,6 @@
             this.info = response.rows
             this.$refs.page.update(response.count)
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       async showDeletar(payload) {
@@ -173,8 +171,7 @@
         const del = (payload) ? this.deletar.id : this.deletar.data;
         this.loadingDel = true
         this.$store.dispatch('deleteLogs', del)
-          .then(response => this.$toast(response.mensagem, 'check'))
-          .catch(er => this.$toast(er.data.mensagem))
+          .then(response => this.$toast(response.mensagem, 'success'))
           .finally(() => {
             this.loadingDel = false
             this.deletar = {}

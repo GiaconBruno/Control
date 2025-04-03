@@ -88,7 +88,6 @@
         this.loading = true;
         this.$store.dispatch('getUserId', payload)
           .then(() => this.changeVisible('usuario'))
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loading = false)
       },
       setEditParcela(payload) {
@@ -131,7 +130,6 @@
       sigOut() {
         this.$store.commit('LOGOUT');
         this.$router.push("/");
-        localStorage.clear();
       },
     },
   };

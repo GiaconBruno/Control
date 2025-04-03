@@ -114,12 +114,11 @@
         this.loadingDel = true;
         this.$store.dispatch('deleteParcela', this.deletar.id)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.getParcelas(this.deletar.fk_conta_id, 'deletar');
             this.deletar = null;
             this.$refs['mDelParcela'].hide()
           })
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.loadingDel = false)
       },
       filtring(p) {

@@ -49,7 +49,6 @@
         this.dashboard = [];
         this.$store.dispatch(action)
           .then(response => this.$toast(response.mensagem, 'success'))
-          .catch(er => this.$toast(er.data.mensagem))
           .finally(() => this.info[i].loading = false)
       },
     }

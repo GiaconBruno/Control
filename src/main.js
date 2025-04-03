@@ -1,12 +1,12 @@
-import { createApp, ref } from 'vue'
+import { createApp } from 'vue'
 import store from './store';
 import router from './routes';
-import axios from 'axios'
-import common from './services/common.js';
+import common from './services/common';
 import { Buffer } from "buffer";
 // import auth from './services/auth.js';
 import { createBootstrap } from 'bootstrap-vue-next';
 import VueApexCharts from 'vue3-apexcharts';
+import api from './services/interceptors';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
@@ -19,20 +19,17 @@ import '@/assets/fontawesome/css/fontawesome.min.css';
 import App from './App.vue'
 const app = createApp(App);
 
-app.use(store);
-app.use(router);
-app.use(createBootstrap());
 
 app.component('apexchart', VueApexCharts);
 
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-
-app.config.globalProperties.axios = axios;
+app.config.globalProperties.axios = api;
 app.config.globalProperties.store = store;
 app.config.globalProperties.Buffer = Buffer;
 
-app.config.productionTip = false
-
 app.mixin(common);
+
+app.use(store);
+app.use(router);
+app.use(createBootstrap());
 
 app.mount('#app');

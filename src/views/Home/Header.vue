@@ -38,10 +38,11 @@
           <p v-if="extra" class="small m-0">Criar</p>
         </div>
         <div @click="$emit('CV','mensagens')" class="btn col col-md-auto px-0 py-0 pt-2 position-relative" title="Info">
-          <span class="fa-stack text-info">
-            <i class="fa fa-comment fa-stack-2x"></i>
+          <span v-if="extra" class="fa-stack text-info">
+            <i class="fa fa-message fa-stack-2x"></i>
             <i class="fa fa-ellipsis fa-stack-1x fa-inverse"></i>
           </span>
+          <i v-else class="fa fa-message text-info"></i>
           <BBadge v-if="extra && notifyCount"
             class="position-absolute start-100 translate-middle bg-danger text-white px-1 rounded"
             :style="`font-size:${(extra)?'10':'8'}px;`"><small>{{ notifyCount }}</small></BBadge>
@@ -72,7 +73,7 @@
           <p v-if="extra" class="small m-0">Criar</p>
         </div>
         <div @click="$emit('CV','usuarios');" class="btn col col-md-auto px-0 py-0 pt-2" title="Usuários">
-          <i :class="{'fa-2x':extra}" class="fa fa-user-friends text-dark" />
+          <i :class="{'fa-2x':extra}" class="fa fa-user-friends text-primary" />
           <!-- <b-iconstack id="todosUsuarios" :font-scale="(extra)?'2.5':'1.3'">
             <b-icon stacked icon="person-fill" shift-h="4" shift-v="1" variant="info" />
             <b-icon stacked icon="person-fill" shift-h="-4" shift-v="-1" style="color:#007bff" />
@@ -81,12 +82,13 @@
           <p v-if="extra" class="small m-0">Usuários</p>
         </div>
         <div @click="$emit('CV','todas-contas')" class="btn col col-md-auto px-0 py-0 pt-2" title="Todas as Conta">
-          <i :class="{'fa-2x':extra}" class="fa fa-file-alt text-primary" />
+          <i :class="{'fa-2x':extra}" class="fa-regular fa-rectangle-list text-warning" />
           <!-- <b-icon id="TodasConta" icon="card-list" :font-scale="(extra)?'2.5':'1.3'" style="color:#fd7e14" /> -->
           <!-- <b-tooltip v-if="!extra" target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip> -->
           <p v-if="extra" class="small m-0">Contas</p>
         </div>
         <div @click="$emit('CV','logs')" class="btn col col-md-auto px-0 py-0 pt-2" title="Logs">
+        <i :class="{'fa-2x':extra}" class="fa fa-list-check text-purple" />
           <!-- <b-icon id="logs" icon="card-checklist" :font-scale="(extra)?'2.5':'1.3'" style="color:#dc3545" /> -->
           <!-- <b-tooltip v-if="!extra" target="logs" triggers="hover" noninteractive> Logs </b-tooltip> -->
           <p v-if="extra" class="small m-0">Logs</p>
@@ -126,7 +128,6 @@
     beforeMount() {
       this.$store.dispatch('getNotifyCount')
         .then(response => this.notifyCount = response)
-        .catch(er => this.$toast(er.data.mensagem))
     },
     computed: {
       usuario() {
@@ -145,6 +146,7 @@ div.btn.disabled > * {
 }
 
 div.btn:not(.disabled) .fa:hover,
+div.btn:not(.disabled) .fa-stack:hover,
 .b-icon:hover {
   transition: all 0.3s;
   transform: scale(1.25);

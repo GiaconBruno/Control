@@ -1,7 +1,9 @@
-import axios from 'axios';
 import { Buffer } from "buffer";
-import common from '../../services/common';
+import axios from '@/services/interceptors';
+import common from '@/services/common';
 const { methods: { dateToSend } } = common
+
+const updateStore = (state) => localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
 
 const state = {
   auth: {},
@@ -17,10 +19,9 @@ const state = {
 
 const mutations = {
   GET_ACCESS: (state) => {
-    if (localStorage.getItem('access')) {
-      // console.log(state);
-      state = JSON.parse(Buffer.from(localStorage.getItem("access"), 'base64').toString('utf-8'));
-      // console.log(state);
+    const storage = localStorage.getItem('access');
+    if (storage) {
+      state.auth = JSON.parse(Buffer.from(storage, 'base64').toString('utf-8')).auth;
       axios.defaults.headers.common['token'] = state.auth.token;
     }
   },
@@ -29,35 +30,35 @@ const mutations = {
   },
   SET_AUTH: (state, payload) => {
     state.auth = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_DASH: (state, payload) => {
     state.dash = { dash: payload, validate: Date.now() + (1000 * 60 * 30) };
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_GRAPHIC: (state, payload) => {
     state.graphic = { graphic: payload, validate: Date.now() + (1000 * 60 * 30) };
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_EDIT_USER: (state, payload) => {
     state.userEdit = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_EDIT_CONTA: (state, payload) => {
     state.contaEdit = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_CONTA_PARCELA: (state, payload) => {
     state.contaParcela = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_EDIT_PARCELA: (state, payload) => {
     state.parcelaEdit = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
   SET_CONTA_TIPO: (state, payload) => {
     state.contaTipo = payload;
-    localStorage.setItem("access", Buffer.from(JSON.stringify(state), 'utf-8').toString('base64'));
+    updateStore(state);
   },
 }
 
@@ -78,7 +79,6 @@ const actions = {
       axios.post(`/autenticar`, secret)
         .then((response) => {
           context.commit('SET_AUTH', response.data);
-          axios.defaults.headers.common['token'] = context.state.auth.token;
           // resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
@@ -178,7 +178,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          reject(localStorage.clear());
+          // reject(localStorage.clear());
           console.error(error);
           reject(error);
         })
@@ -241,7 +241,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          reject(localStorage.clear());
+          // reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
           console.error(error);
           reject(error.response);

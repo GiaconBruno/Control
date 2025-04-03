@@ -194,11 +194,6 @@
         this.parcelas = [];
         this.$store.dispatch(this.rota.dispatch)
           .then(response => this.contas = response)
-          .catch(er => {
-            localStorage.clear();
-            this.$router.push('/');
-            console.error(er)
-          })
           .finally(() => this.loading = false)
       },
       createParcela(payload) {
@@ -211,11 +206,7 @@
             this.$store.commit('SET_EDIT_CONTA', response)
             this.$router.push('/conta')
           })
-          .catch(er => {
-            localStorage.clear();
-            this.$router.push('/');
-            console.error(er)
-          }).finally(() => this.loading = false)
+          .finally(() => this.loading = false)
       },
       crypto(payload) {
         return Buffer.from(`${payload*100000}`, 'utf-8').toString('base64')
@@ -235,11 +226,6 @@
             response.map(r => r.show = true)
             this.parcelas = response
             this.filter.map((f, i) => f.show = (i > 1) ? true : f.show);
-          })
-          .catch(er => {
-            localStorage.clear();
-            this.$router.push('/');
-            console.error(er)
           })
           .finally(() => {
             this.formatting();
@@ -279,7 +265,7 @@
 
         this.$store.dispatch('deleteConta', this.deletar.id)
           .then(response => {
-            this.$toast(response.mensagem, 'check')
+            this.$toast(response.mensagem, 'success')
             this.$refs['mDelConta'].hide()
             this.getContas();
           })

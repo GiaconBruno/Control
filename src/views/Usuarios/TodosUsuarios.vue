@@ -102,11 +102,6 @@
               if (user.acesso) user.acesso = this.formatDate(user.acesso)
             })
           })
-          .catch(er => {
-            localStorage.clear();
-            this.$router.push('/');
-            console.error(er)
-          })
           .finally(() => this.loading = false)
       },
       showDeletar(payload) {
@@ -117,8 +112,7 @@
         this.loading = true;
         //DELETAR USUARIO PERMANENTEMENTE
         this.$store.dispatch('deleteUser', this.deletar.id)
-          .then(response => this.$toast(response.mensagem, 'check'))
-          .catch(er => this.$toast(er.data.mensagem))
+          .then(response => this.$toast(response.mensagem, 'success'))
           .finally(() => {
             this.loading = false
             this.deletar = null;
