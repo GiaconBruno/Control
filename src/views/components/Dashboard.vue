@@ -14,7 +14,7 @@
           <input type="date" v-model="periodo[1]" class="form-control smallText" />
         </div>
         <button @click="getDash(true)" class="col-auto btn btn-sm btn-outline-success mx-2">
-          <i class="fa fa-repeat"/>
+          <i class="fa fa-repeat" />
         </button>
       </div>
       <div class="row mx-0 justify-content-center align-items-center">
@@ -73,12 +73,12 @@
           route: '/entradas',
           title: 'Entradas',
           color: 'bg-success',
-          icon: 'patch-plus-fill'
+          icon: 'square-plus'
         }, {
           route: '/saidas',
           title: 'Saídas',
           color: 'bg-danger',
-          icon: 'patch-minus-fill'
+          icon: 'square-minus'
         }],
         periodo: [null, null],
         dashboard: {},
@@ -93,6 +93,9 @@
           },
           chart: {
             type: 'area',
+            zoom: {
+              enabled: false
+            },
             toolbar: {
               show: false,
               tools: {
@@ -247,7 +250,7 @@
 
 <style scoped>
   #overflow {
-    height: calc(85dvh - 140px);
+    max-height: calc(85dvh - 140px);
     overflow-y: auto;
   }
 
@@ -286,7 +289,7 @@
     z-index: 0;
   }
 
-  .small-box .icon>svg {
+  .small-box .icon i {
     font-size: 90px;
     position: absolute;
     right: 10%;
@@ -296,12 +299,12 @@
     transition: transform 0.3s linear, -webkit-transform 0.3s linear;
   }
 
-  .small-box:hover .icon>svg {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.5);
+  .small-box:hover .icon i {
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3);
   }
 
-  .small-box .icon>svg.i {
+  .small-box .icon i {
     font-size: 70px;
     top: 25%;
   }
@@ -319,7 +322,7 @@
 
   @media screen and (max-width: 768px) {
     #overflow {
-      height: calc(85dvh - 175px);
+      max-height: calc(85dvh - 175px);
     }
   }
 </style>

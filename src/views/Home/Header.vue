@@ -1,15 +1,16 @@
 <template>
   <div :class="{'col-md-10':extra}" class="col-12 col-md-6 px-0 pb-2 pb-lg-0">
     <div class="row justify-content-around align-items-center rounded border border-dark p-0 m-0">
-      <div @click="$emit('CV','dashboard');" :class="{'disabled border-0':$route.path=='/dashboard'}"
-        class="btn col col-md-auto px-0 py-0 pt-2" title="algo">
+      <div @click="$emit('CV','dashboard');" :class="{'disabled border-0':($route.path=='/dashboard'),'pt-2': extra}"
+        class="btn col col-md-auto px-0 py-0" title="algo">
         <i :class="{'fa-2x':extra}" class="fa fa-house-chimney-window text-secundary" />
         <!-- <b-icon id="home" icon="house-door-fill" :font-scale="(extra)?'2.5':'1.3'" variant="secundary" /> -->
         <!-- <b-tooltip v-if="!extra" target="home" triggers="hover" noninteractive> Início </b-tooltip> -->
         <p v-if="extra" class="small m-0">Início</p>
       </div>
       <template v-if="!['/settings', '/logs'].includes($route.path)">
-        <div @click="$emit('SEU', usuario.id)" class="btn col col-md-auto px-0 py-0 pt-2" title="Editar Usuário">
+        <div @click="$emit('SEU', usuario.id)" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Editar Usuário">
           <i :class="{'fa-2x':extra}" class="fa fa-user-edit text-warning" />
           <!-- <b-iconstack id="editarUsuario" :font-scale="(extra)?'2.5':'1.3'" variant="warning">
             <b-icon stacked icon="pencil-fill" shift-h="7" shift-v="1" scale="0.3" />
@@ -18,26 +19,30 @@
           <!-- <b-tooltip v-if="!extra" target="editarUsuario" triggers="hover" noninteractive> Editar Usuário </b-tooltip> -->
           <p v-if="extra" class="small m-0">Editar</p>
         </div>
-        <div @click="$emit('CV','entradas')" class="btn col col-md-auto px-0 py-0 pt-2" title="Entradas">
+        <div @click="$emit('CV','entradas')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Entradas">
           <i :class="{'fa-2x':extra}" class="fa fa-file-upload text-success" />
           <!-- <b-icon id="contaUp" icon="file-earmark-arrow-up-fill" :font-scale="(extra)?'2.5':'1.3'" variant="success" /> -->
           <!-- <b-tooltip v-if="!extra" target="contaUp" triggers="hover" noninteractive> Entradas </b-tooltip> -->
           <p v-if="extra" class="small m-0">Entradas</p>
         </div>
-        <div @click="$emit('CV','saidas')" class="btn col col-md-auto px-0 py-0 pt-2" title="Saídas">
+        <div @click="$emit('CV','saidas')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Saídas">
           <i :class="{'fa-2x':extra}" class="fa fa-file-download text-danger" />
           <!-- <b-icon id="contaDown" icon="file-earmark-arrow-down-fill" :font-scale="(extra)?'2.5':'1.3'"
             variant="danger" /> -->
           <!-- <b-tooltip v-if="!extra" target="contaDown" triggers="hover" noninteractive> Saídas </b-tooltip> -->
           <p v-if="extra" class="small m-0">Saídas</p>
         </div>
-        <div @click="$emit('CV','conta')" class="btn col col-md-auto px-0 py-0 pt-2" title="Criar Conta">
+        <div @click="$emit('CV','conta')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Criar Conta">
           <i :class="{'fa-2x':extra}" class="fa fa-file-alt text-primary" />
           <!-- <b-icon id="criarConta" icon="file-earmark-plus-fill" :font-scale="(extra)?'2.5':'1.3'" variant="primary" /> -->
           <!-- <b-tooltip v-if="!extra" target="criarConta" triggers="hover" noninteractive> Criar Conta </b-tooltip> -->
           <p v-if="extra" class="small m-0">Criar</p>
         </div>
-        <div @click="$emit('CV','mensagens')" class="btn col col-md-auto px-0 py-0 pt-2 position-relative" title="Info">
+        <div @click="$emit('CV','mensagens')" :class="{'pt-2': extra}"
+          class="btn col col-md-auto px-0 py-0 position-relative" title="Info">
           <span v-if="extra" class="fa-stack text-info">
             <i class="fa fa-message fa-stack-2x"></i>
             <i class="fa fa-ellipsis fa-stack-1x fa-inverse"></i>
@@ -48,13 +53,13 @@
             :style="`font-size:${(extra)?'10':'8'}px;`"><small>{{ notifyCount }}</small></BBadge>
           <!-- <i :class="{'fa-2x':extra}" class="fa fa-comment-alt text-info" /> -->
           <!-- <b-icon id="mensagens" icon="chat-left-dots" :font-scale="(extra)?'2.5':'1.3'" style="color:#01a3a4" /> -->
-          <!-- <b-badge v-if="extra && notifyCount" pill variant="danger" class="position-absolute font-weight-normal px-1"
+          <!-- <b-badge v-if="extra && notifyCount" pill variant="danger" class="position-absolute fw-normal px-1"
             :style="`font-size:${(extra)?'14':'10'}px; top:3px;`"> {{ notifyCount }} </b-badge> -->
           <!-- <b-tooltip v-if="!extra" target="mensagens" triggers="hover" noninteractive> Info </b-tooltip> -->
           <p v-if="extra" class="small m-0">Info</p>
         </div>
-        <div v-if="(usuario.permissao)" @click="$emit('CV','settings')" class="btn col col-md-auto px-0 py-0 pt-2"
-          title="Settings">
+        <div v-if="(usuario.permissao)" @click="$emit('CV','settings')" :class="{'pt-2': extra}"
+          class="btn col col-md-auto px-0 py-0" title="Settings">
           <i :class="{'fa-2x':extra}" class="fa fa-screwdriver-wrench text-purple" />
           <!-- <b-icon id="settings" icon="tools" :font-scale="(extra)?'2.5':'1.3'" style="color: #7952b3;" /> -->
           <!-- <b-tooltip v-if="!extra" target="settings" triggers="hover" noninteractive> Settings </b-tooltip> -->
@@ -62,7 +67,8 @@
         </div>
       </template>
       <template v-else-if="usuario.permissao">
-        <div @click="$emit('CV','usuario')" class="btn col col-md-auto px-0 py-0 pt-2" title="Criar Usuários">
+        <div @click="$emit('CV','usuario')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Criar Usuários">
           <i :class="{'fa-2x':extra}" class="fa fa-user-plus text-success" />
           <!-- <b-iconstack id="criarUsuario" :font-scale="(extra)?'2.5':'1.3'" variant="success">
             <b-icon stacked icon="plus" shift-h="6" shift-v="1" />
@@ -72,7 +78,8 @@
           <!-- <b-tooltip v-if="!extra" target="criarUsuario" triggers="hover" noninteractive> Criar Usuários </b-tooltip> -->
           <p v-if="extra" class="small m-0">Criar</p>
         </div>
-        <div @click="$emit('CV','usuarios');" class="btn col col-md-auto px-0 py-0 pt-2" title="Usuários">
+        <div @click="$emit('CV','usuarios');" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Usuários">
           <i :class="{'fa-2x':extra}" class="fa fa-user-friends text-primary" />
           <!-- <b-iconstack id="todosUsuarios" :font-scale="(extra)?'2.5':'1.3'">
             <b-icon stacked icon="person-fill" shift-h="4" shift-v="1" variant="info" />
@@ -81,21 +88,22 @@
           <!-- <b-tooltip v-if="!extra" target="todosUsuarios" triggers="hover" noninteractive> Usuários </b-tooltip> -->
           <p v-if="extra" class="small m-0">Usuários</p>
         </div>
-        <div @click="$emit('CV','todas-contas')" class="btn col col-md-auto px-0 py-0 pt-2" title="Todas as Conta">
+        <div @click="$emit('CV','todas-contas')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0"
+          title="Todas as Conta">
           <i :class="{'fa-2x':extra}" class="fa-regular fa-rectangle-list text-warning" />
           <!-- <b-icon id="TodasConta" icon="card-list" :font-scale="(extra)?'2.5':'1.3'" style="color:#fd7e14" /> -->
           <!-- <b-tooltip v-if="!extra" target="TodasConta" triggers="hover" noninteractive> Todas as Conta </b-tooltip> -->
           <p v-if="extra" class="small m-0">Contas</p>
         </div>
-        <div @click="$emit('CV','logs')" class="btn col col-md-auto px-0 py-0 pt-2" title="Logs">
-        <i :class="{'fa-2x':extra}" class="fa fa-list-check text-purple" />
+        <div @click="$emit('CV','logs')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0" title="Logs">
+          <i :class="{'fa-2x':extra}" class="fa fa-list-check text-purple" />
           <!-- <b-icon id="logs" icon="card-checklist" :font-scale="(extra)?'2.5':'1.3'" style="color:#dc3545" /> -->
           <!-- <b-tooltip v-if="!extra" target="logs" triggers="hover" noninteractive> Logs </b-tooltip> -->
           <p v-if="extra" class="small m-0">Logs</p>
         </div>
       </template>
       <div v-if="(['/dashboard','/entradas','/saidas','/usuarios','/todas-contas', '/logs'].includes($route.path))"
-        @click="$emit('R')" class="btn col col-md-auto px-0 py-0 pt-2" title="Atualizar">
+        @click="$emit('R')" :class="{'pt-2': extra}" class="btn col col-md-auto px-0 py-0" title="Atualizar">
         <i :class="{'fa-2x':extra}" class="fa fa-repeat text-default" />
         <!-- :animation="(loading)?'spin':''" -->
         <!-- <b-icon id="atualizar" icon="arrow-clockwise" :font-scale="(extra)?'2.5':'1.3'" variant="dark" rotate="90" /> -->
@@ -104,7 +112,7 @@
           <b-icon stacked icon="dot" shift-h="-6" shift-v="-2.5" />
           <b-icon stacked icon="dot" shift-h="-3" shift-v="-5" />
           <b-icon stacked icon="dot" shift-h="0.5" shift-v="-6" scale="0.9" />
-          <b-icon stacked icon="dot" shift-h="3.5" shift-v="-4" scale="0.85" />
+          <b-icon stacked icon="dot" shift-h="3s.5" shift-v="-4" scale="0.85" />
           <b-icon stacked icon="dot" shift-h="6" shift-v="-1" scale="0.8" />
           <b-icon stacked icon="dot" shift-h="6" shift-v="3" scale="0.65" />
           <b-icon stacked icon="dot" shift-h="4" shift-v="6" scale="0.6" />
@@ -141,32 +149,33 @@
 </script>
 
 <style scoped>
-div.btn.disabled > * {
-  cursor: not-allowed;
-}
-
-div.btn:not(.disabled) .fa:hover,
-div.btn:not(.disabled) .fa-stack:hover,
-.b-icon:hover {
-  transition: all 0.3s;
-  transform: scale(1.25);
-}
-
-.fa,
-.b-icon {
-  vertical-align: middle !important;
-  padding: 0;
-}
-
-@media screen and (max-width: 768px) {
-  .border-dark .fa,
-  .border-dark .b-icon {
-    font-size: small !important;
+  div.btn.disabled>* {
+    cursor: not-allowed;
   }
 
-  .border-dark p {
-    font-size: x-small;
+  div.btn:not(.disabled) .fa:hover,
+  div.btn:not(.disabled) .fa-stack:hover,
+  .b-icon:hover {
+    transition: all 0.3s;
+    transform: scale(1.25);
+  }
+
+  .fa,
+  .b-icon {
+    vertical-align: middle !important;
     padding: 0;
   }
-}
+
+  @media screen and (max-width: 768px) {
+
+    .border-dark .fa,
+    .border-dark .b-icon {
+      font-size: small !important;
+    }
+
+    .border-dark p {
+      font-size: x-small;
+      padding: 0;
+    }
+  }
 </style>

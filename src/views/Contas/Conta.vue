@@ -63,9 +63,9 @@
       </div>
       <hr />
       <div class="row mt-4 justify-content-around">
-        <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="$router.go(-1)" class="col-auto btn btn-sm btn-danger">Cancelar</button>
         <button @click="(action=='Criar')?createConta():updateConta()" :disabled="loading"
-          class="btn btn-sm btn-success">{{action}}
+          class="col-auto btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>

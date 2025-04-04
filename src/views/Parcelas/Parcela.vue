@@ -72,7 +72,7 @@
                   <input v-model="formSelect.descricao" @keypress.enter="createForma()" id="ipformaPagto"
                     class="form-control" type="text" placeholder="Digite.." />
                 </div>
-                <button @click="createForma()" class="btn btn-primary py-0 px-1 text-sm">OK!</button>
+                <button @click="createForma()" class="col-auto btn btn-primary py-0 px-1 text-sm">OK!</button>
               </div>
             </div>
             <div v-else class="spinner-border spinner-border-sm my-2" role="status"></div>
@@ -119,9 +119,9 @@
         <hr />
       </template>
       <div class="row my-md-2 mx-0 justify-content-around">
-        <button @click="$router.go(-1)" class="btn btn-sm btn-danger">Cancelar</button>
+        <button @click="$router.go(-1)" class="col-auto btn btn-sm btn-danger">Cancelar</button>
         <button @click="(action=='Criar')?createParcela():updateParcela()" :disabled="loading"
-          class="btn btn-sm btn-success">{{action}}
+          class="col-auto btn btn-sm btn-success">{{action}}
           <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
@@ -311,7 +311,7 @@
 
 #overflow-2 {
   overflow-y: scroll;
-  height: calc(85dvh - 472px);
+  max-height: calc(85dvh - 472px);
 }
 
 label {

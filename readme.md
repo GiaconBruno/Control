@@ -7,7 +7,7 @@ nvm use 18
 
 ## Dependencies
 ```
-npm install vuex@next vue-router@4 axios bootstrap-vue-next vue3-toastify buffer firebase v-money 
+npm install vuex@next vue-router@4 axios bootstrap bootstrap-vue-next unplugin-vue-components vue3-toastify buffer firebase v-money 
 ```
 
 ## Project setup

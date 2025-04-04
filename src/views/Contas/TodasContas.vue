@@ -9,7 +9,7 @@
     <div v-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
     <div v-else-if="!contas.length">
       <p class="my-0 text-black-50 text-sm">Nenhuma conta disponivel!</p>
-      <button @click="$emit('CV', 'conta')" class="btn btn-success btn-sm my-1">
+      <button @click="$emit('CV', 'conta')" class="col-auto btn btn-success btn-sm my-1">
         <span class="text-sm">Criar Conta</span>
       </button>
     </div>
@@ -90,13 +90,13 @@
         </b-collapse>
       </div>
     </div>
-    <b-modal v-if="deletar" ref="mDelConta" id="mDelConta" hide-footer centered no-close-on-esc no-close-on-backdrop
+    <b-modal v-if="deletar" ref="mDelConta" id="mDelConta" no-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Conta">
       <p class="my-4">Deseja deletar a conta <strong> {{ deletar.descricao }} </strong>?</p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mDelConta')" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button @click="deletarConta()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
+        <button @click="$bvModal.hide('mDelConta')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="deletarConta()" :disabled="loadingDel" class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
@@ -209,7 +209,7 @@
           .finally(() => this.loading = false)
       },
       crypto(payload) {
-        return Buffer.from(`${payload*100000}`, 'utf-8').toString('base64')
+        return this.Buffer.from(`${payload*100000}`, 'utf-8').toString('base64')
       },
       getParcelas(payload, type) {
         this.loadingParcelas = true;
@@ -293,7 +293,7 @@
 #overflow {
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(85dvh - 80px);
+  max-height: calc(85dvh - 80px);
 }
 
 .mb-3:focus,

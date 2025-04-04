@@ -1,12 +1,18 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import Components from 'unplugin-vue-components/vite'
+import {BootstrapVueNextResolver} from 'bootstrap-vue-next'
 import path from "path";
 import { readFileSync } from 'fs';
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [BootstrapVueNextResolver()],
+    }),
+  ],
   server: {
     allowedHosts: ['bruno'],
   },

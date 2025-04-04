@@ -5,9 +5,9 @@
     </div>
     <div v-if="!visible" class="row mx-auto my-2 px-0 px-lg-2 justify-content-center col-lg-8">
       <div class="d-flex align-items-center">
-        <b-button @click="visible='all'" variant="light" class="btn-sm border">
+        <button @click="visible='all'" variant="light" class="btn-sm border">
           <i class="fa fa-arrow-left-square" />
-        </b-button>
+        </button>
       </div>
       <div class="d-flex align-items-center">
         <small class="d-none d-lg-block px-3">Período: </small>
@@ -36,13 +36,13 @@
             <div class="col-4 px-2"> {{ all.data.split('-').reverse().join('/') }} </div>
             <div class="col px-2 d-flex justify-content-around">
               <div @click="getLogs(200, $refs.page.pagination, all.data)"
-                class="btn btn-sm bg-success text-white status"> {{ all[200] }} </div>
+                class="col-auto btn btn-sm bg-success text-white status"> {{ all[200] }} </div>
               <div @click="getLogs(400, $refs.page.pagination,all.data)"
-                class="btn btn-sm bg-warning text-white status"> {{ all[400] }} </div>
-              <div @click="getLogs(500, $refs.page.pagination,all.data)" class="btn btn-sm bg-danger text-white status">
+                class="col-auto btn btn-sm bg-warning text-white status"> {{ all[400] }} </div>
+              <div @click="getLogs(500, $refs.page.pagination,all.data)" class="col-auto btn btn-sm bg-danger text-white status">
                 {{ all[500] }} </div>
             </div>
-            <div @click.stop="showDeletar(all)" class="btn btn-sm col-auto px-0">
+            <div @click.stop="showDeletar(all)" class="col-auto btn btn-sm col-auto px-0">
               <i :id="`iRemoveLog${a}`" class="fa fa-trash" variant="danger" />
               <b-tooltip :target="`iRemoveLog${a}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
             </div>
@@ -63,7 +63,7 @@
               <div class="col-auto px-0"> {{ log.status }} </div>
               <div class="col-auto px-0"> {{ (log.ref_usuario)?`@${log.ref_usuario.usuario}`:'-' }} </div>
               <div class="col-6 px-0 text-start xSmallText"> {{ log.rota }} </div>
-              <div @click.stop="showDeletar(log)" class="btn btn-sm col-auto px-0">
+              <div @click.stop="showDeletar(log)" class="col-auto btn btn-sm col-auto px-0">
                 <i :id="`iRemoveLog${i}`" class="fa fa-trash" variant="danger" />
                 <b-tooltip :target="`iRemoveLog${i}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
               </div>
@@ -85,19 +85,19 @@
       <div v-else-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
     </div>
     <Pagination v-show="!visible" ref="page" @change="getLogs(type, $event)" />
-    <b-modal ref="mDelLog" id="mDelLog" hide-footer centered no-close-on-esc no-close-on-backdrop title="Deletar Conta">
+    <b-modal ref="mDelLog" id="mDelLog" no-footer centered no-close-on-esc no-close-on-backdrop title="Deletar Conta">
       <p v-if="deletar.createdAt" class="my-4">Deseja deletar o log <strong> {{ deletar.id }} </strong> de <strong>
           {{ formatDate(deletar.createdAt) }} </strong> ?</p>
       <p v-if="deletar.data" class="my-4">Clique em <strong> Deletar Todos </strong> para deletar todos os registros do
         dia (<strong>{{ showDate(deletar.createdAt || deletar.data).replace('00:00:00','') || ''}} </strong>).</p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mDelLog')" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button v-if="deletar.createdAt" @click="deletarLog(true)" :disabled="loadingDel" class="btn btn-sm btn-success"
+        <button @click="$bvModal.hide('mDelLog')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button v-if="deletar.createdAt" @click="deletarLog(true)" :disabled="loadingDel" class="col-auto btn btn-sm btn-success"
           block>Confirmar
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
-        <button v-if="deletar.data" @click="deletarLog()" :disabled="loadingDel" class="btn btn-sm btn-warning"
+        <button v-if="deletar.data" @click="deletarLog()" :disabled="loadingDel" class="col-auto btn btn-sm btn-warning"
           block>Deletar Todos
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>

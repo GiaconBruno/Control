@@ -10,7 +10,7 @@
       </div>
       <div class="col-auto px-0 mx-lg-2">@GiaconBruno</div>
       <div v-if="mobile" class="col-auto px-0 mx-lg-2">giacon_bruno@hotmail.com</div>
-      <div class="col-auto px-0 mx-lg-2 text-white font-weight-light small">
+      <div class="col-auto px-0 mx-lg-2 text-white fw-light small">
         Desenvolvido por: Bruno Giacon - versão: {{ appVersion }} </div>
     </div>
   </div>

@@ -114,4 +114,8 @@
   .text-purple {
     color: #6f42c1;
   }
+
+  .pointer{
+    cursor: pointer;
+  }
 </style>

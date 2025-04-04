@@ -12,7 +12,7 @@
         <small> ({{ timer.toString().padStart(2,0) }}) </small>
       </div>
       <div v-if="(!servidor && !loading)" :class="{'alert': (loadServ)}" class="m-0 p-0 text-center">
-        <button @click="status()" type="button" class="btn btn-sm btn-outline-secondary position-relative"
+        <button @click="status()" type="button" class="col-auto btn btn-sm btn-outline-secondary position-relative"
           style="z-index:11;">
           Consultar
         </button>

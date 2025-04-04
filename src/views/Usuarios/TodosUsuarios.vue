@@ -49,16 +49,16 @@
     <div v-else class="fas fa-4x fa-spinner fa-pulse text-success my-2" role="status"></div>
     <div class="row mx-0 text-center">
       <div class="col-12 mb-3">
-        <button @click="$router.go(-1)" class="btn btn-sm btn-light border border-secondary">Voltar</button>
+        <button @click="$router.go(-1)" class="col-auto btn btn-sm btn-light border border-secondary">Voltar</button>
       </div>
     </div>
-    <b-modal v-if="deletar" ref="mConfirm" id="mConfirm" hide-footer centered no-close-on-esc no-close-on-backdrop
+    <b-modal v-if="deletar" ref="mConfirm" id="mConfirm" no-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Usuário">
       <p class="my-4">Deseja deletar o usuário <strong> {{ deletar.nome }} </strong>?</p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mConfirm')" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button @click="deletarUsuario()" :disabled="loading" class="btn btn-sm btn-success" block>Confirmar
+        <button @click="$bvModal.hide('mConfirm')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="deletarUsuario()" :disabled="loading" class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>

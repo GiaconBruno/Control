@@ -29,7 +29,7 @@
               class="form-control" placeholder="Digite uma Senha" />
             <i @click="see=!see" :class="(see) ? 'fa-eye' : 'fa-eye-slash' " class="fa text-gray" />
           </div>
-          <div v-if="access.auth && access.auth.permissao" class="row m-0">
+          <div v-if="access && access.permissao" class="row m-0">
             <div class="col-7 px-0 text-start pt-3">
               <span class="d-flex p-0">
                 <b-form-checkbox v-model="usuario.permissao" switch>
@@ -129,7 +129,7 @@
 <style scoped>
   #overflow {
     overflow-y: auto;
-    max-height: calc(85dvh - 80px);
+    max-height: calc(95dvh - 80px);
   }
 
   label {

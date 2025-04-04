@@ -57,7 +57,7 @@
 
 <style scoped>
 #overflow {
-  height: calc(85dvh - 155px);
+  max-height: calc(85dvh - 155px);
   overflow-y: auto;
 }
 
@@ -127,7 +127,7 @@ a {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    height: calc(85dvh - 135px);
+    max-height: calc(85dvh - 135px);
   }
 }
 </style>

@@ -3,41 +3,42 @@
     <h3 class="my-md-2">Mensagens</h3>
     <div class="row mx-0 my-2 my-md-3 justify-content-center">
       <div class="col col-md-auto px-0 px-md-3">
-        <b-button @click="getMessage('Received')" :variant="type==1?'info':'outline-info'" class="btn-sm ">Recebidas
-        </b-button>
+        <button @click="getMessage('Received')" :class="`btn-${type==1?'':'outline-'}info`"
+          class="col-auto btn btn-sm">Recebidas
+        </button>
       </div>
       <div class="col col-md-auto px-0 px-md-3">
-        <b-button @click="getMessage('Send')" :variant="!type?'secondary':'outline-secondary'" class="btn-sm">Enviadas
-        </b-button>
+        <button @click="getMessage('Send')" :class="`btn-${!type?'':'outline-'}secondary`" class="col-auto btn btn-sm">Enviadas
+        </button>
       </div>
       <div class="col col-md-auto px-0 px-md-3">
-        <b-button @click="type=2" :variant="type==2?'success':'outline-success'" class="btn-sm">Criar</b-button>
+        <button @click="type=2" :class="`btn-${type==2?'':'outline-'}success`" class="col-auto btn btn-sm">Criar</button>
       </div>
     </div>
     <section id="overflow">
       <template v-if="!loading && type!=2">
         <div v-for="(msg, m) in mensagens" :key="msg.id">
           <div @click="see(msg.id)" v-b-toggle="`msg-${msg.id}`"
-            :class="[(type)?'alert-info':'alert-secondary', (!msg.status && type)?'font-weight-bold':'font-weight-normal']"
-            class="row mx-0 align-items-center alert text-start my-0 px-1 px-md-2 smallText">
+            :class="[`alert-${(type)?'info':'secondary'}`, `fw-${(!msg.status && type)?'bold':'normal'}`]"
+            class="row mx-0 align-items-center alert text-start my-0 px-1 px-md-2 py-2 smallText pointer">
             <div v-if="type" class="col-4 px-1 px-md-2"> de: {{ msg.ref_remetente.nome }}
-              {{ (access.auth.permissao)? ` (@${msg.ref_remetente.usuario})`:'' }} </div>
-            <div v-else-if="!access.auth.permissao" class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }}
+              {{ (access.permissao)? ` (@${msg.ref_remetente.usuario})`:'' }} </div>
+            <div v-else-if="!access.permissao" class="col px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }}
             </div>
             <div v-else class="col-4 px-1 px-md-2"> para: {{ msg.ref_destinatario.nome }} </div>
             <div class="col px-1 px-md-2"> {{ msg.titulo }} </div>
             <div class="col-3 col-md-auto px-1 px-md-2 text-center"> {{ formatDate(msg.created_at) }} </div>
             <div v-if="type" class="col-auto px-1 px-md-2">
-              <i :id="`iLerMsg${m}`" :icon="`${!msg.status?'eye-fill':'eye-slash-fill'}`" class="mx-1" />
-              <b-tooltip :target="`iLerMsg${m}`" triggers="hover" noninteractive> Marcar como Lido </b-tooltip>
-              <i @click.prevent="showDeletar(msg)" :id="`iRemoveMsg${m}`" class="fa fa-trash-fill mx-1" variant="danger" />
-              <b-tooltip :target="`iRemoveMsg${m}`" triggers="hover" noninteractive> Deletar Mesangem </b-tooltip>
+              <i :id="`iLerMsg${m}`" :class="`fa-${!msg.status?'eye':'eye-slash'}`" class="fa mx-1" />
+              <!-- <b-tooltip :target="`iLerMsg${m}`" triggers="hover" noninteractive> Marcar como Lido </b-tooltip> -->
+              <i @click.prevent="showDeletar(msg)" :id="`iRemoveMsg${m}`" class="fa fa-trash-can text-danger mx-1" />
+              <!-- <b-tooltip :target="`iRemoveMsg${m}`" triggers="hover" noninteractive> Deletar Mesangem </b-tooltip> -->
             </div>
           </div>
-          <b-collapse v-if="!deletar.id" :id="`msg-${msg.id}`" accordion="mensagem"
-            class="mx-2 rounded-bottom px-1 px-md-2 bg-dark" role="tabpanel">
-            <div class="font-weight-light smallText py-1 py-md-2 text-white text-start" v-html="msg.mensagem.replace(/[\r\n]+/g, '<br>')"> </div>
-          </b-collapse>
+          <BCollapse v-if="!deletar.id" :id="`msg-${msg.id}`">
+            <div class="fw-light smallText px-1 px-md-2 py-1 py-md-2 mx-2 text-white text-start rounded-bottom bg-dark"
+              v-html="msg.mensagem.replace(/[\r\n]+/g, '<br>')"> </div>
+          </BCollapse>
           <div class="mt-2 mt-md-3" />
         </div>
         <p v-if="mensagens.length==0" class="smallText text-secondary mx-0">Nenhuma Mensagem Encontrada!</p>
@@ -52,10 +53,10 @@
             </div>
             <div :class="{'has_errors': errors.includes('mensagem')}" class="mb-3">
               <label for="mensagem" class="my-0">Mensagem: </label>
-              <textarea v-model="sendMessage.mensagem" name="mensagem" id="mensagem"
-                rows="3" class="form-control" placeholder="Digite sua mensagem..."> </textarea>
+              <textarea v-model="sendMessage.mensagem" name="mensagem" id="mensagem" rows="3" class="form-control"
+                placeholder="Digite sua mensagem..."> </textarea>
             </div>
-            <template v-if="access.auth.permissao">
+            <template v-if="access.permissao">
               <b-form-checkbox v-if="!sendMessage.destinatario" v-model="sendMessage.all" type="checkbox" name="all"
                 id="all" class="text-start mb-3"> Enviar para Todos? </b-form-checkbox>
               <label v-if="!sendMessage.all" for="usuarios" class="text-start my-0">
@@ -72,10 +73,9 @@
             </template>
             <p v-else class="m-0 smallText text-start">* Essa mensagem será enviada para o administrador.</p>
             <div class="row mt-3 justify-content-around">
-              <button @click="send()" :disabled="loading" class="btn btn-sm btn-success">
+              <button @click="send()" :disabled="loading" class="col-auto btn btn-sm btn-success">
                 <!-- <i class="fa fa-cursor">/> -->
-                <i class="fa fa-fighter-jet" />
-                Enviar
+                <i class="fa fa-fighter-jet" /> Enviar
                 <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
               </button>
             </div>
@@ -84,17 +84,18 @@
       </template>
       <div v-else class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
     </section>
-    <b-modal ref="mDelMensagem" id="mDelMensagem" hide-footer centered no-close-on-esc no-close-on-backdrop
-      title="Deletar Mensagem">
+    <BModal id="mDelMensagem" v-model="modalDelete" title="Deletar Mensagem" no-footer centered no-close-on-esc
+      no-close-on-backdrop>
       <p class="my-4">Deseja deletar a mensagem <strong> {{ deletar.titulo }} </strong> ? </p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mDelMensagem'); deletar={}" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button @click="delMessage()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
+        <button @click="modalDelete=!modalDelete; deletar={}" class="col-auto btn btn-sm btn-danger"
+          block>Cancelar</button>
+        <button @click="delMessage()" :disabled="loadingDel" class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
-    </b-modal>
+    </BModal>
   </section>
 </template>
 
@@ -113,6 +114,7 @@
           all: false,
           destinatario: null
         },
+        modalDelete: false,
         deletar: {},
         errors: [],
       }
@@ -172,7 +174,8 @@
       },
       showDeletar(payload) {
         this.deletar = payload;
-        this.$bvModal.show('mDelMensagem');
+        // this.$bvModal.show('mDelMensagem');
+        this.modalDelete = true;
       },
       delMessage() {
         this.loadingDel = true;
@@ -190,33 +193,33 @@
 </script>
 
 <style scoped>
-#overflow {
-  overflow-y: auto;
-  max-height: calc(85dvh - 175px);
-}
-
-.smallText {
-  font-size: small;
-}
-
-.btn {
-  min-width: 120px;
-}
-
-.has_errors label,
-.has_errors input,
-.has_errors textarea {
-  color: #dc3545;
-  border-color: #dc3545;
-}
-
-@media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(85dvh - 175px);
+    overflow-y: auto;
+    max-height: calc(95dvh - 190px);
+  }
+
+  .smallText {
+    font-size: small;
   }
 
   .btn {
     min-width: 120px;
   }
-}
+
+  .has_errors label,
+  .has_errors input,
+  .has_errors textarea {
+    color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  @media screen and (max-width: 768px) {
+    #overflow {
+      max-height: calc(85dvh - 155px);
+    }
+
+    .btn {
+      min-width: 120px;
+    }
+  }
 </style>

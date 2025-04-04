@@ -4,7 +4,7 @@
   <div v-else-if="!parcelas.length">
     <p class="ps-5 my-0 text-black-50 text-sm">Nenhuma parcela encontrada!</p>
     <button v-if="!['/todas-contas'].includes($route.path)" @click="$router.push('/parcela')"
-      class="btn btn-success btn-sm my-1">
+      class="col-auto btn btn-success btn-sm my-1">
       <span class="text-sm">Criar Parcelas</span>
     </button>
   </div>
@@ -71,7 +71,7 @@
         </div>
       </template>
     </div>
-    <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" hide-footer centered no-close-on-esc no-close-on-backdrop
+    <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" no-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Parcela">
       <p class="my-4">Deseja deletar a parcela de valor
         <strong> {{ formatMoney(deletar.valor) }} </strong>
@@ -79,8 +79,8 @@
       </p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mDelParcela')" class="btn btn-sm btn-danger" block>Cancelar</button>
-        <button @click="deletarParcela()" :disabled="loadingDel" class="btn btn-sm btn-success" block>Confirmar
+        <button @click="$bvModal.hide('mDelParcela')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="deletarParcela()" :disabled="loadingDel" class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
       </div>
