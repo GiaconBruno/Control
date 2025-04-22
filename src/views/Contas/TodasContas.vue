@@ -15,9 +15,8 @@
     </div>
     <div v-else class="accordion" role="tablist">
       <div v-for="(conta,i) in contas" :key="conta.id" v-show="filtring(conta)" class="mb-3">
-        <div @click="getParcelas(conta.id)" v-b-toggle="`parcelas-${conta.id}`"
-          :class="{'contabord': (showParcelas), 'pago': (conta.status)}"
-          class="btn text-start alert-success row m-0 px-1 px-lg-2 d-flex justify-content-between align-items-center">
+        <div @click="getParcelas(conta.id, i)" :class="{'rounded-bottom-0': conta.collapse, 'pago': conta.status}"
+          class="pointer text-start alert alert-success row m-0 px-1 px-lg-2 py-1 justify-content-between align-items-center">
           <div class="col-1 col-lg-auto px-0">
             <i :class="((showParcelas.length) && (parcelas[0].fk_conta_id == conta.id)) ? 'fa-folder-open' : 'fa-folder'"
               class="fa text-warning px-2 py-1" />
@@ -34,15 +33,16 @@
                     <small>Parcelas: </small> <span>{{ showParcelas.length }}</span>
                   </div>
                   <div class="col-6 col-lg-5 px-0 text-md">
-                    <div class="row m-0 justify-content-center align-items-center">
-                      <span class="px-2 text-green h-100">{{ parcelasPagas }} Pagos</span>
-                      <span class="ps-3 text-red h-100">{{ showParcelas.length-parcelasPagas }}
-                        Abertos</span>
+                    <div class="row m-0 justify-content-around align-items-center">
+                      <small class="col-auto px-1 text-green h-100">{{ parcelasPagas }} Pagos</small>
+                      <!-- <small class="col-auto px-1"> | </small> -->
+                      <small class="col-auto px-1 text-red h-100">{{ showParcelas.length-parcelasPagas }}
+                        Abertos</small>
                     </div>
-                    <div class="row m-0 justify-content-center align-items-center">
-                      <span class="text-green">{{ formatMoney(totalPago) }} </span>
-                      <span class="px-1"> | </span>
-                      <span class="text-red"> {{ formatMoney(totalAberto) }}</span>
+                    <div class="row m-0 justify-content-around align-items-center">
+                      <small class="col-auto px-1 text-green border-right">{{ formatMoney(totalPago) }} </small>
+                      <!-- <small class="col-auto px-1"> | </small> -->
+                      <small class="col-auto px-1 text-red"> {{ formatMoney(totalAberto) }}</small>
                     </div>
                   </div>
                   <div class="col col-lg-4 px-0">
@@ -62,18 +62,20 @@
           <div v-if="['/entradas', '/saidas'].includes($route.path)" class="col-1 col-lg-auto px-0">
             <div class="row m-0 px-0 text-end align-items-center flex-column flex-lg-row">
               <i @click.stop="createParcela(crypto(conta.id))" :id="`iParela${i}`"
-                class="fa fa-plus-circle text-success px-2 py-1" />
-              <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip>
-              <i @click.stop="editConta(conta.id)" :id="`iEditConta${i}`" class="fa fa-edit text-primary px-2 py-1" />
-              <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
-              </b-tooltip>
+                class="col-4 fa fa-plus-circle text-success px-2 py-1" />
+              <!-- <b-tooltip :target="`iParela${i}`" triggers="hover" noninteractive> Criar Parcela </b-tooltip> -->
+              <i @click.stop="editConta(conta.id)" :id="`iEditConta${i}`"
+                class="col-4 fa fa-edit text-primary px-2 py-1" />
+              <!-- <b-tooltip :target="`iEditConta${i}`" triggers="hover" noninteractive> Editar Conta
+              </b-tooltip> -->
               <i @click.stop="showDeletar(conta)" :id="`iRemoveConta${i}`"
-                class="fa fa-trash text-danger px-2 py-1" />
-              <b-tooltip :target="`iRemoveConta${i}`" triggers="hover" noninteractive> Deletar Conta
-              </b-tooltip>
+                class="col-4 fa fa-trash text-danger px-2 py-1" />
+              <!-- <b-tooltip :target="`iRemoveConta${i}`" triggers="hover" noninteractive> Deletar Conta
+              </b-tooltip> -->
             </div>
           </div>
-          <div v-else class="col-2 col-lg text-center text-lg-left px-0 text-sm"><small> {{ formatDate(conta.createdAt) }} </small></div>
+          <div v-else class="col-2 col-lg text-center text-lg-left px-0 text-sm"><small>
+              {{ formatDate(conta.createdAt) }} </small></div>
         </div>
         <template v-if="$route.path == '/todas-contas'">
           <div class="row mx-0 align-items-center alert-primary text-start text-sm" v-for="(user, x) in conta.Usuarios"
@@ -81,13 +83,15 @@
             <div class="col px-2"> Usuário: {{ user.nome }} </div>
             <div class="col col-lg-3 text-center px-0 px-lg-2">
               {{ (user.acesso)? formatDate(user.acesso):'Nenhum' }} </div>
-            <div class="col-2 col-lg-2 px-2 text-center"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'" class="fa" /></div>
-            <div class="col-3 col-lg-2 px-2 text-center"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'" class="fa" /></div>
+            <div class="col-2 col-lg-2 px-2 text-center"> Ativo: <i :class="(user.ativo)?'fa-check':'fa-times'"
+                class="fa" /></div>
+            <div class="col-3 col-lg-2 px-2 text-center"> Permissao: <i :class="(user.permissao)?'fa-check':'fa-times'"
+                class="fa" /></div>
           </div>
         </template>
-        <b-collapse :id="`parcelas-${conta.id}`" accordion="parcelas" class="bord" role="tabpanel">
+        <BCollapse :id="`parcelas-${conta.id}`" v-model="conta.collapse" accordion="parcelas" class="border-0 rounded">
           <TodasParcelas v-bind="{parcelas, crypto, getParcelas, filter, loadingParcelas}" />
-        </b-collapse>
+        </BCollapse>
       </div>
     </div>
     <b-modal v-if="deletar" ref="mDelConta" id="mDelConta" no-footer centered no-close-on-esc no-close-on-backdrop
@@ -193,7 +197,11 @@
         this.loading = true;
         this.parcelas = [];
         this.$store.dispatch(this.rota.dispatch)
-          .then(response => this.contas = response)
+          .then(response => {
+            this.contas = response;
+            this.contas.map(c => c.loading = false)
+            this.contas.map(c => c.collapse = false)
+          })
           .finally(() => this.loading = false)
       },
       createParcela(payload) {
@@ -211,16 +219,20 @@
       crypto(payload) {
         return this.Buffer.from(`${payload*100000}`, 'utf-8').toString('base64')
       },
-      getParcelas(payload, type) {
-        this.loadingParcelas = true;
+      getParcelas(payload, i, type) {
+        if (this.loadingParcelas) return;
+        const collapse = this.contas[i].collapse;
+        this.contas.map(c => c.collapse = false);
+        this.contas[i].collapse = !collapse;
         this.$store.commit('SET_CONTA_PARCELA', this.crypto(payload))
         this.conta = payload;
         let conta = 0;
         if (this.parcelas.length) conta = this.parcelas[0].fk_conta_id;
         this.parcelas = [];
-        this.filter.map((f, i) => f.show = (i > 1) ? false : f.show);
         if ((conta == payload) && (type != 'deletar')) return;
+        this.filter.map((f, i) => f.show = (i > 1) ? false : f.show);
 
+        this.loadingParcelas = true;
         this.$store.dispatch('getParcelas', payload)
           .then(response => {
             response.map(r => r.show = true)

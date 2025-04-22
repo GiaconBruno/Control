@@ -26,8 +26,7 @@
           <label id="lbValor" for="valor">Valor:</label>
           <div class="position-relative">
             <i id="iValor" class="fa fa-money-bill-alt text-gray" />
-            <money v-model="parcela.valor" type="text" name="valor" id="valor" class="form-control"
-              placeholder="R$ 0,00" />
+            <money3 v-model="parcela.valor" type="text" name="valor" id="valor" class="form-control" v-bind="config" />
           </div>
         </div>
         <div class="position-relative" style="width: 14px;">
@@ -37,8 +36,8 @@
           <label for="outros">Outros:</label>
           <div class="position-relative">
             <i class="fa fa-money-bill-wave text-gray" />
-            <money v-model="parcela.outros" type="text" name="outros" id="outros" class="form-control"
-              placeholder="R$ 0,00" />
+            <money3 v-model="parcela.outros" type="text" name="outros" id="outros" class="form-control"
+              v-bind="config" />
           </div>
         </div>
         <div class="col-3 px-0">
@@ -82,8 +81,8 @@
           <label id="lbRecebido" for="recebido">Recebido:</label>
           <div class="position-relative">
             <i id="iRecebido" class="fa fa-donate text-gray" />
-            <money v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control pe-0"
-              placeholder="R$ 0,00" />
+            <money3 v-model="parcela.recebido" type="text" name="recebido" id="recebido" class="form-control pe-0"
+              v-bind="config" />
           </div>
         </div>
         <div :class="{'has_errors': errors.includes('data_pagto')}" class="col-5 px-1 px-lg-3">
@@ -141,7 +140,8 @@
         conta: null,
         parcela: {
           forma_pagto: null,
-          vencimento: new Date(new Date()).toLocaleString('pt-BR').replace(',', '').slice(0, 10).split('/').reverse().join('-'),
+          vencimento: new Date(new Date()).toLocaleString('pt-BR').replace(',', '').slice(0, 10).split('/').reverse()
+            .join('-'),
           repetir: 0,
         },
         formaPagto: [],
@@ -150,11 +150,27 @@
           select: true,
         },
         errors: [],
+        config: {
+          masked: false,
+          prefix: 'R$ ',
+          suffix: '',
+          thousands: ',',
+          decimal: ',',
+          precision: 2,
+          disableNegative: false,
+          disabled: false,
+          min: null,
+          max: null,
+          allowBlank: false,
+          minimumNumberOfCharacters: 0,
+          shouldRound: true,
+          focusOnRight: false,
+        }
       }
     },
     beforeMount() {
       this.loadingForm = true;
-      this.conta = Buffer.from(`${this.$store.state.default.contaParcela}`, 'base64').toString('utf-8') / 100000
+      this.conta = this.Buffer.from(`${this.$store.state.default.contaParcela}`, 'base64').toString('utf-8') / 100000
       this.$store.dispatch('getFormasPagto')
         .then((response) => this.formaPagto = response)
         .finally(() => this.loadingForm = false)
@@ -207,7 +223,7 @@
         }
       },
       showVencto(pos) {
-        const vencto = new Date(Date.parse(this.parcela.vencimento)+ (3 * 60 * 60 * 1000));
+        const vencto = new Date(Date.parse(this.parcela.vencimento) + (3 * 60 * 60 * 1000));
         const v = new Date(vencto.getFullYear(), vencto.getMonth() + pos, vencto.getDate());
         return this.showDate(v).slice(0, 10)
       },
@@ -330,6 +346,7 @@ label {
   left: 2px;
 }
 
+money,
 input,
 select {
   height: 25px;

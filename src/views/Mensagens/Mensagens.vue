@@ -8,11 +8,13 @@
         </button>
       </div>
       <div class="col col-md-auto px-0 px-md-3">
-        <button @click="getMessage('Send')" :class="`btn-${!type?'':'outline-'}secondary`" class="col-auto btn btn-sm">Enviadas
+        <button @click="getMessage('Send')" :class="`btn-${!type?'':'outline-'}secondary`"
+          class="col-auto btn btn-sm">Enviadas
         </button>
       </div>
       <div class="col col-md-auto px-0 px-md-3">
-        <button @click="type=2" :class="`btn-${type==2?'':'outline-'}success`" class="col-auto btn btn-sm">Criar</button>
+        <button @click="type=2" :class="`btn-${type==2?'':'outline-'}success`"
+          class="col-auto btn btn-sm">Criar</button>
       </div>
     </div>
     <section id="overflow">

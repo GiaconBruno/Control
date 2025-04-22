@@ -4,6 +4,7 @@ import router from './routes';
 import common from './services/common';
 import { Buffer } from "buffer";
 // import auth from './services/auth.js';
+import money from 'v-money3';
 import { createBootstrap } from 'bootstrap-vue-next';
 import VueApexCharts from 'vue3-apexcharts';
 import api from './services/interceptors';
@@ -30,6 +31,7 @@ app.mixin(common);
 
 app.use(store);
 app.use(router);
+app.use(money);
 app.use(createBootstrap());
 
 app.mount('#app');

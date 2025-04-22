@@ -4,7 +4,7 @@ import { toast } from 'vue3-toastify';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
-  timeout: 5000
+  // timeout: 30000
 });
 
 api.interceptors.response.use(

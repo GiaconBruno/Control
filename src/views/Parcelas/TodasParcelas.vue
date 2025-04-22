@@ -1,6 +1,5 @@
 <template>
-  <div v-if="(loadingParcelas)" class="fas fa-2x fa-spinner fa-pulse text-success my-2" role="status">
-  </div>
+  <div v-if="(loadingParcelas)" class="fas fa-2x fa-spinner fa-pulse text-success my-2" role="status"></div>
   <div v-else-if="!parcelas.length">
     <p class="ps-5 my-0 text-black-50 text-sm">Nenhuma parcela encontrada!</p>
     <button v-if="!['/todas-contas'].includes($route.path)" @click="$router.push('/parcela')"
@@ -31,45 +30,45 @@
       </div>
     </div>
     <hr class="m-0">
-    <div v-for="(parcela, i) in parcelas" :key="parcela.id" :class="{'pago':(parcela.status)}"
+    <div v-for="(parcela, i) in parcelas" :key="parcela.id"
+      :class="{'pago':(parcela.status),'rounded-bottom': i+1==parcelas.length}"
       class="row m-0 align-items-center border-bottom" v-show="filtring(parcela)"
       :style="`background-color: ${(vencido(parcela)) ? '#dc354580' : '#ffc10790'}`">
-      <template>
-        <div class="col px-0">
-          <div class="row m-0">
-            <div class="col-12 col-lg-7 ps-2 pe-1 pe-lg-0">
-              <div class="row m-0 align-items-center">
-                <div class="col-4 px-2 text-start">
-                  {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
-                <div class="col-3 ps-0 pe-2">{{ formatMoney(parcela.valor) }}</div>
-                <div class="col-3 ps-0 pe-2">{{ parcela.vencimento}}</div>
-                <div class="col-2 px-0">
-                  {{ (parcela.status) ? 'Pago' : 'Aberto' }}</div>
-              </div>
+      <!-- <template> -->
+      <div class="col px-0">
+        <div class="row m-0">
+          <div class="col-12 col-lg-7 ps-2 pe-1 pe-lg-0">
+            <div class="row m-0 align-items-center">
+              <div class="col-4 px-2 text-start">
+                {{ (parcela.descricao) ? parcela.descricao : `Parcela ${i+1} / ${parcelas.length}`}}</div>
+              <div class="col-3 ps-0 pe-2">{{ formatMoney(parcela.valor) }}</div>
+              <div class="col-3 ps-0 pe-2">{{ parcela.vencimento}}</div>
+              <div class="col-2 px-0">
+                {{ (parcela.status) ? 'Pago' : 'Aberto' }}</div>
             </div>
-            <div class="col-12 col-lg-5 ps-2 pe-1 px-lg-0">
-              <div :class="{'vencido': (vencido(parcela))}" class="row m-0 h-100 align-items-center">
-                <div class="col-4 px-2 ps-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
-                <div class="col-4 ps-0 pe-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
-                <div class="col-3 px-0">{{ formatMoney(parcela.recebido) }}</div>
-              </div>
+          </div>
+          <div class="col-12 col-lg-5 ps-2 pe-1 px-lg-0">
+            <div :class="{'vencido': (vencido(parcela))}" class="row m-0 h-100 align-items-center">
+              <div class="col-4 px-2 ps-lg-0"> {{ (parcela.data_pagto) ? parcela.data_pagto : '-' }} </div>
+              <div class="col-4 ps-0 pe-2 text-xs">{{ (parcela.forma_pagto) ? parcela.forma_pagto : '-' }}</div>
+              <div class="col-3 px-0">{{ formatMoney(parcela.recebido) }}</div>
             </div>
           </div>
         </div>
-        <div v-if="['/entradas', '/saidas'].includes($route.path)" class="px-0 px-lg-2 text-end">
-          <div class="row m-0 pe-1 pe-lg-0 justify-content-center justify-content-sm-between">
-            <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
-              class="btn fa fa-dollar-sign text-success px-1 px-lg-2" />
-            <b-tooltip :target="`iPagarEditar${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Pagar/Editar
-              Parcela </b-tooltip>
-            <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${crypto(parcela.id)}`"
-              class="btn fa fa-trash-alt text-danger px-1 px-lg-2" />
-            <b-tooltip :target="`iRemoveParcela${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Deletar
-              Parcela
-            </b-tooltip>
-          </div>
+      </div>
+      <div v-if="['/entradas', '/saidas'].includes($route.path)" class="col-auto px-0 px-lg-2 text-end">
+        <div class="row m-0 pe-1 pe-lg-0 justify-content-center justify-content-sm-between">
+          <i @click="editParcela(parcela)" :id="`iPagarEditar${i}-${crypto(parcela.id)}`"
+            class="col-auto btn fa fa-dollar-sign text-success px-1 px-lg-2" />
+          <!-- <b-tooltip :target="`iPagarEditar${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Pagar/Editar
+            Parcela </b-tooltip> -->
+          <i @click="showDeletar(parcela)" :id="`iRemoveParcela${i}-${crypto(parcela.id)}`"
+            class="col-auto btn fa fa-trash-alt text-danger px-1 px-lg-2" />
+          <!-- <b-tooltip :target="`iRemoveParcela${i}-${crypto(parcela.id)}`" triggers="hover" noninteractive> Deletar
+            Parcela </b-tooltip> -->
         </div>
-      </template>
+      </div>
+      <!-- </template> -->
     </div>
     <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" no-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Parcela">
@@ -115,7 +114,7 @@
         this.$store.dispatch('deleteParcela', this.deletar.id)
           .then(response => {
             this.$toast(response.mensagem, 'success')
-            this.getParcelas(this.deletar.fk_conta_id, 'deletar');
+            this.getParcelas(this.deletar.fk_conta_id, null, 'deletar');
             this.deletar = null;
             this.$refs['mDelParcela'].hide()
           })

@@ -82,7 +82,7 @@ const actions = {
           // resolve(context.dispatch('updateAcessUser'));
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -101,7 +101,7 @@ const actions = {
           context.commit('SET_DASH', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           context.commit('LOGOUT');
           reject(error.response);
         })
@@ -116,7 +116,7 @@ const actions = {
           context.commit('SET_GRAPHIC', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           context.commit('LOGOUT');
           reject(error.response);
         })
@@ -130,7 +130,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -142,7 +142,7 @@ const actions = {
           context.commit('SET_EDIT_USER', response.data);
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -153,7 +153,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -164,7 +164,7 @@ const actions = {
         .then((response) => {
           resolve(context.dispatch('sigIn', payload))
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -179,7 +179,7 @@ const actions = {
           resolve(response.data);
         }).catch((error) => {
           // reject(localStorage.clear());
-          console.error(error);
+          // console.error(error);
           reject(error);
         })
     })
@@ -191,7 +191,7 @@ const actions = {
           if (context.state.auth.id == payload.id) context.dispatch('sigIn', payload)
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -202,7 +202,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -217,7 +217,7 @@ const actions = {
         }).catch((error) => {
           reject(context.commit('LOGOUT'));
           // reject(localStorage.clear());
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -230,7 +230,7 @@ const actions = {
         }).catch((error) => {
           reject(context.commit('LOGOUT'));
           // reject(localStorage.clear());
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -243,7 +243,7 @@ const actions = {
         }).catch((error) => {
           // reject(localStorage.clear());
           reject(context.commit('LOGOUT'));
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -254,7 +254,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -265,7 +265,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -276,7 +276,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -287,7 +287,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -300,7 +300,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -311,7 +311,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -322,7 +322,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -333,7 +333,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -344,7 +344,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -357,7 +357,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -368,7 +368,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -379,7 +379,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -390,7 +390,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -401,7 +401,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -412,7 +412,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -425,7 +425,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -436,7 +436,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -449,7 +449,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -460,7 +460,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
@@ -471,7 +471,7 @@ const actions = {
         .then((response) => {
           resolve(response.data);
         }).catch((error) => {
-          console.error(error);
+          // console.error(error);
           reject(error.response);
         })
     })
