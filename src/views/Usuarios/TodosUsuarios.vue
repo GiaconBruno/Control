@@ -1,7 +1,7 @@
 <template>
   <div id="overflow">
     <h5 class="smallText my-0 text-center">({{ usuarios.length }}) Usuários: </h5>
-    <filterable v-bind="{filter}" @change="filter=$event" />
+    <filterable v-bind="{filter}" @hasChange="filter=$event" />
     <div v-if="usuarios.length" class="row m-0">
       <div v-for="(usuario, i) in usuarios" :key="usuario.id" v-show="filtring(usuario)"
         class="col-12 card border-secondary alert-info mb-2 py-1 rounded">
@@ -57,7 +57,7 @@
       <p class="my-4">Deseja deletar o usuário <strong> {{ deletar.nome }} </strong>?</p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mConfirm')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="$refs.mConfirm.hide()" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
         <button @click="deletarUsuario()" :disabled="loading" class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loading" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
@@ -140,7 +140,7 @@
 #overflow {
   /* overflow-x: hidden; */
   overflow-y: auto;
-  max-height: calc(85dvh - 80px);
+  height: calc(85dvh - 40px);
 }
 
 .text-sm {
@@ -163,7 +163,7 @@
 
 @media screen and (max-width: 768px) {
   #overflow {
-    max-height: calc(85dvh - 103px);
+    height: calc(85dvh - 85px);
   }
 }
 </style>

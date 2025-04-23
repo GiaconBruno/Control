@@ -9,13 +9,13 @@
           <div class="position-relative">
             <i class="fa fa-folder text-gray" />
             <input v-model="conta.descricao" type="text" name="conta" id="conta" class="form-control"
-              placeholder="Digite a descrição da conta" />
+              placeholder="Digite uma descrição para a conta" />
           </div>
         </div>
         <div class="col-12 text-start">
           <label for="usuario">Tipo:</label>
           <div class="position-relative">
-            <i class="fa fa-arrow-down-up" />
+            <i class="fa fa-right-left fa-rotate-90" />
             <div class="row m-0 mb-3">
               <div class="col-12 px-0">
                 <select v-model="conta.tipo" name="tipo" id="tipo" class="form-control py-0">

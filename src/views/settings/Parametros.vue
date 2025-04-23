@@ -10,7 +10,7 @@
             <p class="col-9 col-lg-8 px-0 my-3 text-start">{{ i.title}}</p>
           </div>
           <div class="icon">
-            <i v-if="!i.loading" :icon="i.icon" />
+            <i v-if="!i.loading" :class="`fa fa-${i.icon}`" />
             <i v-else class="fas fa-spinner fa-pulse" role="status" />
           </div>
           <div class="small-box-footer py-2"></div>
@@ -32,13 +32,13 @@
           action: 'statusContas',
           title: 'Corrigir Status de Contas',
           color: 'bg-success',
-          icon: 'file-earmark-check-fill',
+          icon: 'check-square',
           loading: false
         }, {
           action: 'vincUsuariosConta',
           title: 'Corrigir Vinculação de Usuários',
           color: 'bg-success',
-          icon: 'file-earmark-person-fill',
+          icon: 'user-circle',
           loading: false
         }],
       }
@@ -93,9 +93,8 @@ a {
   z-index: 0;
 }
 
-.small-box .icon > svg,
-.small-box .icon > i {
-  font-size: 50px;
+.small-box .icon i {
+  font-size: 90px;
   position: absolute;
   right: 10%;
   top: 20%;
@@ -104,13 +103,13 @@ a {
   transition: transform 0.3s linear, -webkit-transform 0.3s linear;
 }
 
-.small-box:hover .icon > svg {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.5);
+.small-box:hover .icon i {
+  -webkit-transform: scale(1.3);
+  transform: scale(1.3);
 }
 
-.small-box .icon > svg.i {
-  font-size: 50px;
+.small-box .icon i {
+  font-size: 60px;
   top: 25%;
 }
 

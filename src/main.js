@@ -17,11 +17,14 @@ import '@/assets/Poppins.css';
 import '@/assets/fontawesome/css/all.min.css';
 import '@/assets/fontawesome/css/fontawesome.min.css';
 
+import filter from './views/components/Filter.vue';
+
 import App from './App.vue'
 const app = createApp(App);
 
 
 app.component('apexchart', VueApexCharts);
+app.component('filterable', filter);
 
 app.config.globalProperties.axios = api;
 app.config.globalProperties.store = store;

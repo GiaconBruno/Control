@@ -15,10 +15,8 @@
             <Header v-if="!extra" @CV="changeVisible($event)" @SEU="setEditUsuario($event)" @R="refresh()" />
           </div>
         </div>
-        <div class="col-1 col-lg-auto px-0 my-auto mx-2 mx-lg-auto">
-          <span @click="sigOut()" class="btn px-0">
-            <i class="fas fa-sign-in-alt" /> Sair
-          </span>
+        <div @click="sigOut()" class="col-auto px-0 my-auto mx-2 mx-lg-auto pointer">
+          <i class="fas fa-sign-in-alt me-2" /><span>Sair</span>
         </div>
       </div>
       <!-- <hr class="my-2" /> -->
@@ -110,20 +108,20 @@
       async refresh() {
         switch (this.$route.path) {
           case '/dashboard':
-            // this.$refs.All.getMessage();
-            await this.$refs.All.getDash(true);
-            // await this.$refs.All.getGraphic(true);
+            // this.$refs.All.$.subTree.component.proxy.getMessage();
+            await this.$refs.All.$.subTree.component.proxy.getDash(true);
+            // await this.$refs.All.$.subTree.component.proxy.getGraphic(true);
             break;
           case '/entradas':
           case '/saidas':
           case '/todas-contas':
-            this.$refs.All.getContas();
+            this.$refs.All.$.subTree.component.proxy.getContas();
             break;
           case '/usuarios':
-            this.$refs.All.getUsuarios();
+            this.$refs.All.$.subTree.component.proxy.getUsuarios();
             break;
           case '/logs':
-            this.$refs.All.getLogsDash();
+            this.$refs.All.$.subTree.component.proxy.getLogsDash();
             break;
         }
       },

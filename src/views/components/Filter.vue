@@ -1,41 +1,44 @@
 <template>
   <div v-if="filter.length">
-    <hr class="my-2">
-    <div v-b-toggle.filter>
-      <i :icon="`box-arrow-${(!visible)? 'down':'up'}`" />
-        <span> {{ (!visible)?'Mostrar':'Esconder' }} </span>
-        Filtros
+    <hr class="my-1">
+    <div @click="visible=!visible" class="pointer">
+      <i :class="`fa fa-circle-chevron-${(!visible)? 'down':'up'}`" class="me-1" />
+      <span> {{ (!visible)?'Mostrar':'Esconder' }} </span> Filtros
     </div>
-    <b-collapse id="filter" v-model="visible" class="col-12 px-0">
+    <BCollapse id="filter" v-model="visible" class="col-12 px-0" accordion="filter">
       <div class="row mx-0">
         <template v-for="f in filter">
+          <div v-if="f.type=='Text' && f.show!=false" :key="f.name"
+            class="col-12 col-lg-6 mt-1 px-0 pe-2 d-flex align-items-center">
+            <label class="col-3 col-lg-3 text-start smallText my-0" :for="f.name">{{ f.name }}:</label>
+            <input v-model="f.value" @keypress="change()" :name="f.name" type="text" class="form-control ms-2 smallText"
+              :placeholder="`Digite para buscar...`" />
+          </div>
           <div v-if="Array.isArray(f.type) && f.show!=false" :key="f.name"
-            class="col-12 col-lg-2 my-1 my-lg-0 px-0 d-flex align-items-center">
-            <label class="w-75 text-start text-lg-right smallText my-0 pe-2" :for="f.name"> {{ f.name }}: </label>
+            class="col-12 col-lg-6 mt-1 px-0 pe-2 d-flex align-items-center">
+            <label class="col-3 col-lg- text-start smallText my-0" :for="f.name">{{ f.name }}:</label>
             <select v-model="f.value" @change="change()" :name="f.name" :id="f.name"
-              class="form-control px-1 smallText">
+              class="form-control smallText ms-2">
               <option v-for="(t,i) in f.type" :key="`${t}${i}`" :value="(i==0?null:(i==1))"> {{ t }} </option>
             </select>
           </div>
-          <div v-if="f.type=='Text' && f.show!=false" :key="f.name"
-            class="col-12 col-lg-4 my-1 my-lg-0 px-0 d-flex align-items-center">
-            <label class="w-25 text-start text-lg-right smallText my-0 pe-2" :for="f.name"> {{ f.name }}: </label>
-            <input v-model="f.value" @keypress="change()" :name="f.name" type="text" class="form-control smallText"
-              :placeholder="`Digite para buscar...`" />
-          </div>
-          <div v-if="f.type=='Date' && f.show!=false" :key="f.name" class="col-12 col-lg-6 mt-1 px-0">
+          <div v-if="f.type=='Date' && f.show!=false" :key="f.name" class="col-12 col-lg-6 mt-1 px-0 pe-2">
             <div class="row mx-0 align-items-center">
-              <span class="col px-0 text-start text-lg-right smallText my-0 pe-2" :for="f.name"> {{ f.name }}: </span>
-              <input v-model="f.value[0]" @change="change()" :name="f.name" type="date"
-                class="col-5 px-1 form-control smallText" />
-              <input v-model="f.value[1]" @change="change()" :name="f.name" type="date"
-                class="col-5 px-1 form-control smallText" />
+              <span class="col-3 px-0 text-start smallText my-0" :for="f.name"> {{ f.name }}: </span>
+              <div class="col ps-2 pe-0">
+                <input v-model="f.value[0]" @change="change()" :name="f.name" type="date"
+                  class="form-control smallText" />
+              </div>
+              <div class="col ps-2 pe-0">
+                <input v-model="f.value[1]" @change="change()" :name="f.name" type="date"
+                  class="form-control smallText" />
+              </div>
             </div>
           </div>
         </template>
       </div>
-    </b-collapse>
-    <hr class="my-2">
+    </BCollapse>
+    <hr class="my-1">
   </div>
 </template>
 
@@ -56,7 +59,7 @@
     },
     methods: {
       change() {
-        this.$emit('change', this.filter)
+        this.$emit('hasChange', this.filter)
       },
     }
   }
@@ -64,6 +67,6 @@
 
 <style scoped>
 .smallText {
-  font-size: small;
+  font-size: x-small;
 }
 </style>

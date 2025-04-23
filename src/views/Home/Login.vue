@@ -13,25 +13,19 @@
       </div>
       <div v-if="(!servidor && !loading)" :class="{'alert': (loadServ)}" class="m-0 p-0 text-center">
         <button @click="status()" type="button" class="col-auto btn btn-sm btn-outline-secondary position-relative"
-          style="z-index:11;">
-          Consultar
-        </button>
+          style="z-index:11;"> Consultar </button>
       </div>
       <div :class="{'hasError': errors.includes('login')}" class="position-relative">
         <label for="login">Usuário:</label>
         <input v-model="user" @blur="valid('login')" @keyup="valid('login')" id="login" type="text" class="form-control"
           placeholder="Digite seu usuário" />
-        <span class="position-absolute">
-          <i class="fa fa-user" />
-        </span>
+        <span class="position-absolute"> <i class="fa fa-user" /> </span>
       </div>
       <div :class="{'hasError': errors.includes('password')}" class="position-relative">
         <label for="password">Senha:</label>
         <input v-model="password" @keypress.enter="sigIn()" @blur="valid('password')" @keyup="valid('password')"
           id="password" type="password" class="form-control" placeholder="Digite sua senha" />
-        <span class="position-absolute">
-          <i class="fas fa-lock" />
-        </span>
+        <span class="position-absolute"> <i class="fas fa-lock" /> </span>
       </div>
       <div class="mt-3 text-end">
         <button @click="sigIn()" :disabled="loading" class="form-control btn btn-success">
@@ -128,63 +122,63 @@
 </script>
 
 <style scoped>
-  .not-allowed {
-    cursor: not-allowed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0.4;
-    z-index: 10;
-  }
+.not-allowed {
+  cursor: not-allowed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.4;
+  z-index: 10;
+}
 
-  .alert {
-    z-index: 11;
-  }
+.alert {
+  z-index: 11;
+}
 
-  [class*="bg-"] {
-    transition: all 0.3s;
-  }
+[class*="bg-"] {
+  transition: all 0.3s;
+}
 
-  .bg-white {
-    border-radius: 5px;
-    background-color: #ffffffcc !important;
-  }
+.bg-white {
+  border-radius: 5px;
+  background-color: #ffffffcc !important;
+}
 
-  label {
-    margin: 1.5rem 0 0.5rem 0;
-    color: dimgray;
-  }
+label {
+  margin: 1.5rem 0 0.5rem 0;
+  color: dimgray;
+}
 
-  input.form-control {
-    height: 30px;
-    padding: 0 0 0 2.5rem;
-    border: 0;
-    border-radius: 0;
-    border-bottom: 1px solid #333;
-    background-color: transparent;
-  }
+input.form-control {
+  height: 30px;
+  padding: 0 0 0 2.5rem;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #333;
+  background-color: transparent;
+}
 
-  input.form-control:focus {
-    outline-width: 0;
-    box-shadow: none;
-  }
+input.form-control:focus {
+  outline-width: 0;
+  box-shadow: none;
+}
 
-  span {
-    top: 60px;
-    left: 10px;
-  }
+span {
+  top: 60px;
+  left: 10px;
+}
 
-  span {
-    color: dimgray;
-  }
+span {
+  color: dimgray;
+}
 
-  .hasError label,
-  .hasError span {
-    color: #dc3545;
-  }
+.hasError label,
+.hasError span {
+  color: #dc3545;
+}
 
-  .hasError input {
-    border-color: #dc3545;
-  }
+.hasError input {
+  border-color: #dc3545;
+}
 </style>

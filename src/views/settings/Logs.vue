@@ -3,25 +3,28 @@
     <div class="row mx-0 justify-content-center">
       <Header @R="$emit('R')" @CV="$emit('CV', $event)" @SEU="$emit('SEU',$event)" />
     </div>
-    <div v-if="!visible" class="row mx-auto my-2 px-0 px-lg-2 justify-content-center col-lg-8">
-      <div class="d-flex align-items-center">
-        <button @click="visible='all'" variant="light" class="btn-sm border">
-          <i class="fa fa-arrow-left-square" />
-        </button>
+    <div v-if="!visible" class="row mx-auto my-2 px-0 small align-items-center justify-content-center">
+      <div class="col-auto col-lg-auto px-0">
+        <button @click="$refs.page.reset();visible='all'" class="btn btn-sm btn-secondary">
+          <i class="fa fa-arrow-left" /></button>
       </div>
-      <div class="d-flex align-items-center">
-        <small class="d-none d-lg-block px-3">Período: </small>
-        <small><input v-model="periodo" type="date" class="form-control px-1" /></small>
+      <div class="col-auto col-lg-auto">
+        <div class="row mx-0 align-items-center">
+          <small class="col-auto d-none d-lg-block px-3">Período: </small>
+          <input v-model="periodo" type="date" class="form-control w-auto px-1" />
+        </div>
       </div>
-      <div class="d-flex align-items-center">
-        <small class="d-none d-lg-block px-3">Status: </small>
-        <div v-for="s in status" :key="s.title" @click="getLogs(s.title, $refs.page.pagination)"
-          class="btn px-0 ps-1 px-lg-3 text-white smallText">
-          <p :class="s.color" class="rounded py-1 px-1 m-0 d-flex align-items-center">
-            <i v-if="type==s.title" class="fa fa-check-square" />
-            <i v-else class="fa fa-x-square" />
-            <small class="px-2">{{ s.title }}</small>
-          </p>
+      <div class="col-12 col-lg-auto px-0">
+        <div class="row mx-0 justify-content-center align-items-center">
+          <small class="col-auto d-none d-lg-block px-3">Status: </small>
+          <div v-for="s in status" :key="s.title" @click="getLogs(s.title, $refs.page.pagination)"
+            class="col-auto btn px-0 ps-1 px-lg-3 text-white smallText">
+            <p :class="s.color" class="rounded py-1 px-1 m-0 d-flex align-items-center">
+              <i v-if="type==s.title" class="fa fa-check-square" />
+              <i v-else class="fa fa-x-square" />
+              <small class="px-2">{{ s.title }}</small>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -39,11 +42,11 @@
                 class="col-auto btn btn-sm bg-success text-white status"> {{ all[200] }} </div>
               <div @click="getLogs(400, $refs.page.pagination,all.data)"
                 class="col-auto btn btn-sm bg-warning text-white status"> {{ all[400] }} </div>
-              <div @click="getLogs(500, $refs.page.pagination,all.data)" class="col-auto btn btn-sm bg-danger text-white status">
-                {{ all[500] }} </div>
+              <div @click="getLogs(500, $refs.page.pagination,all.data)"
+                class="col-auto btn btn-sm bg-danger text-white status"> {{ all[500] }} </div>
             </div>
             <div @click.stop="showDeletar(all)" class="col-auto btn btn-sm col-auto px-0">
-              <i :id="`iRemoveLog${a}`" class="fa fa-trash" variant="danger" />
+              <i :id="`iRemoveLog${a}`" class="fa fa-trash text-danger" />
               <b-tooltip :target="`iRemoveLog${a}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
             </div>
           </div>
@@ -57,14 +60,14 @@
         <template v-if="info.length">
           <div v-for="(log, i) in info" :key="`info-${i}`" v-b-toggle="`log-${i}`"
             :class="(log.status==200)?'alert-success':(log.status==500)?'alert-danger':'alert-warning'"
-            class="btn w-100 mx-0 mb-2 mb-lg-3 px-2 mx-0 alert smallText">
+            class="pointer w-100 mx-0 mb-2 mb-lg-3 py-1 px-2 mx-0 alert smallText">
             <div class="row justify-content-around align-items-center mx-0">
               <div class="col-auto px-0"> {{ showDate(log.createdAt) }} </div>
               <div class="col-auto px-0"> {{ log.status }} </div>
               <div class="col-auto px-0"> {{ (log.ref_usuario)?`@${log.ref_usuario.usuario}`:'-' }} </div>
               <div class="col-6 px-0 text-start xSmallText"> {{ log.rota }} </div>
               <div @click.stop="showDeletar(log)" class="col-auto btn btn-sm col-auto px-0">
-                <i :id="`iRemoveLog${i}`" class="fa fa-trash" variant="danger" />
+                <i :id="`iRemoveLog${i}`" class="fa fa-trash text-danger" />
                 <b-tooltip :target="`iRemoveLog${i}`" triggers="hover" noninteractive> Deletar Log </b-tooltip>
               </div>
             </div>
@@ -84,7 +87,7 @@
       </template>
       <div v-else-if="loading" class="fas fa-4x fa-spinner fa-pulse text-success m-5" role="status"></div>
     </div>
-    <Pagination v-show="!visible" ref="page" @change="getLogs(type, $event)" />
+    <Pagination v-show="!visible" ref="page" @hasChange="getLogs(type, $event)" />
     <b-modal ref="mDelLog" id="mDelLog" no-footer centered no-close-on-esc no-close-on-backdrop title="Deletar Conta">
       <p v-if="deletar.createdAt" class="my-4">Deseja deletar o log <strong> {{ deletar.id }} </strong> de <strong>
           {{ formatDate(deletar.createdAt) }} </strong> ?</p>
@@ -92,9 +95,9 @@
         dia (<strong>{{ showDate(deletar.createdAt || deletar.data).replace('00:00:00','') || ''}} </strong>).</p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mDelLog')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
-        <button v-if="deletar.createdAt" @click="deletarLog(true)" :disabled="loadingDel" class="col-auto btn btn-sm btn-success"
-          block>Confirmar
+        <button @click="$refs.mDelLog.hide()" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button v-if="deletar.createdAt" @click="deletarLog(true)" :disabled="loadingDel"
+          class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
         <button v-if="deletar.data" @click="deletarLog()" :disabled="loadingDel" class="col-auto btn btn-sm btn-warning"
@@ -185,12 +188,12 @@
 
 <style scoped>
 #overflow {
-  height: calc(85dvh - 155px);
+  height: calc(85dvh - 100px);
   overflow-y: auto;
 }
 
 #overflow-2 {
-  height: calc(85dvh - 255px);
+  height: calc(85dvh - 200px);
   overflow-y: auto;
 }
 
@@ -228,11 +231,11 @@ a {
 
 @media screen and (max-width: 768px) {
   #overflow {
-    height: calc(85dvh - 135px);
+    height: calc(85dvh - 115px);
   }
 
   #overflow-2 {
-    height: calc(85dvh - 240px);
+    height: calc(85dvh - 250px);
   }
 
   .smallText {

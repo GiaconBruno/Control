@@ -23,17 +23,17 @@
             <router-link :to="i.route">
               <div :class="i.color" class="small-box">
                 <div class="inner px-4">
-                  <h3><small> {{ (x==0)?(dashboard.qtdEntradas||0):(dashboard.qtdSaidas||0) }} </small>- {{ i.title}}
+                  <h3>
+                    <small> {{ (x==0)?(dashboard.qtdEntradas||0):(dashboard.qtdSaidas||0) }} </small>- {{ i.title}}
                   </h3>
                   <p class="text-start">Abertos:
                     {{ formatMoney((x==0)?(dashboard.abertoEntradas||0):(dashboard.abertoSaidas||0)) }}
                   </p>
                   <p class="text-start">Pagos:
-                    {{ formatMoney((x==0)?(dashboard.pagosEntradas||0):(dashboard.pagosSaidas||0)) }} </p>
+                    {{ formatMoney((x==0)?(dashboard.pagosEntradas||0):(dashboard.pagosSaidas||0)) }}
+                  </p>
                 </div>
-                <div class="icon">
-                  <i :class="`fa fa-${i.icon}`" />
-                </div>
+                <div class="icon"><i :class="`fa fa-${i.icon}`" /></div>
                 <div class="small-box-footer py-2"></div>
               </div>
             </router-link>

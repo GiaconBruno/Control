@@ -118,4 +118,8 @@
   .pointer{
     cursor: pointer;
   }
+
+  .btn:active{
+    border: none !important;
+  }
 </style>

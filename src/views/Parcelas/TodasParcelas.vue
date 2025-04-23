@@ -72,13 +72,12 @@
     </div>
     <b-modal v-if="deletar" ref="mDelParcela" id="mDelParcela" no-footer centered no-close-on-esc no-close-on-backdrop
       title="Deletar Parcela">
-      <p class="my-4">Deseja deletar a parcela de valor
-        <strong> {{ formatMoney(deletar.valor) }} </strong>
+      <p class="my-4">Deseja deletar a parcela de valor <strong> {{ formatMoney(deletar.valor) }} </strong>
         e vencimento <strong> {{ deletar.vencimento }} </strong> ?
       </p>
       <hr>
       <div class="row m-0 justify-content-around">
-        <button @click="$bvModal.hide('mDelParcela')" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
+        <button @click="$refs['mDelParcela'].hide()" class="col-auto btn btn-sm btn-danger" block>Cancelar</button>
         <button @click="deletarParcela()" :disabled="loadingDel" class="col-auto btn btn-sm btn-success" block>Confirmar
           <div v-if="loadingDel" class="spinner-border spinner-border-sm ms-2" role="status"></div>
         </button>
@@ -89,7 +88,7 @@
 
 <script>
   export default {
-    props: ['parcelas', 'crypto', 'getParcelas', 'filter', 'loadingParcelas'],
+    props: ['parcelas', 'crypto', 'getParcelas', 'i', 'filter', 'loadingParcelas'],
     data() {
       return {
         deletar: '',
@@ -110,11 +109,12 @@
         this.$refs['mDelParcela'].show()
       },
       async deletarParcela() {
+        if (this.loadingDel) return;
         this.loadingDel = true;
         this.$store.dispatch('deleteParcela', this.deletar.id)
           .then(response => {
             this.$toast(response.mensagem, 'success')
-            this.getParcelas(this.deletar.fk_conta_id, null, 'deletar');
+            this.getParcelas(this.deletar.fk_conta_id, this.i, 'deletar');
             this.deletar = null;
             this.$refs['mDelParcela'].hide()
           })
@@ -145,69 +145,69 @@
 </script>
 
 <style scoped>
-.text-sm {
-  font-size: 0.8em;
-  align-self: center;
-}
-
-.text-xs {
-  font-size: 0.7em;
-  align-self: center;
-}
-
-.parcela {
-  border-bottom: 1px solid dimgray;
-  background-color: #ffc10735;
-}
-
-.pago {
-  overflow: hidden;
-  position: relative;
-}
-
-.pago::before {
-  content: "Pago";
-  padding: 0 20px;
-  font-size: 8px;
-  color: white;
-  background-color: seagreen;
-  /* box-shadow: 0 0 5px 3px #eee; */
-  /* border-radius: 50%; */
-  display: block;
-  text-align: center;
-  position: absolute;
-  top: 35%;
-  left: -24px;
-  /* bottom: calc(50% - 5px); */
-  z-index: 10;
-  transform: rotate(-90deg);
-}
-
-.vencido {
-  overflow: hidden;
-  position: relative;
-}
-
-.vencido::before {
-  content: "vencido";
-  padding: 0 30px;
-  font-size: 10px;
-  color: #fff;
-  background-color: #dc3545;
-  box-shadow: 0 0 5px 0.5px #eee;
-  border-radius: 5px;
-  display: block;
-  position: absolute;
-  top: 20%;
-  left: 10px;
-  z-index: 10;
-  /* transform: rotate(-0deg); */
-}
-
-@media screen and (max-width: 992px) {
-  .vencido::before {
-    top: 0;
-    font-size: 8px;
+  .text-sm {
+    font-size: 0.8em;
+    align-self: center;
   }
-}
+
+  .text-xs {
+    font-size: 0.7em;
+    align-self: center;
+  }
+
+  .parcela {
+    border-bottom: 1px solid dimgray;
+    background-color: #ffc10735;
+  }
+
+  .pago {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .pago::before {
+    content: "Pago";
+    padding: 0 20px;
+    font-size: 8px;
+    color: white;
+    background-color: seagreen;
+    /* box-shadow: 0 0 5px 3px #eee; */
+    /* border-radius: 50%; */
+    display: block;
+    text-align: center;
+    position: absolute;
+    top: 35%;
+    left: -24px;
+    /* bottom: calc(50% - 5px); */
+    z-index: 10;
+    transform: rotate(-90deg);
+  }
+
+  .vencido {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .vencido::before {
+    content: "vencido";
+    padding: 0 30px;
+    font-size: 10px;
+    color: #fff;
+    background-color: #dc3545;
+    box-shadow: 0 0 5px 0.5px #eee;
+    border-radius: 5px;
+    display: block;
+    position: absolute;
+    top: 20%;
+    left: 10px;
+    z-index: 10;
+    /* transform: rotate(-0deg); */
+  }
+
+  @media screen and (max-width: 992px) {
+    .vencido::before {
+      top: 0;
+      font-size: 8px;
+    }
+  }
 </style>
